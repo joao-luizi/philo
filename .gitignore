@@ -1,0 +1,12 @@
+
+obj/
+bin/
+lib/
+.vscode/
+*.o
+*.out
+*.a
+*.so
+*.exe
+.DS_Store
+Thumbs.db
