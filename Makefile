@@ -1,7 +1,7 @@
 .SILENT:
 
 CC				=	cc
-CFLAGS 			= -Wall -Wextra -Werror -I$(INC_DIR) -I$(MLX_PATH) 
+CFLAGS 			= -Wall -Wextra -Werror -I$(INC_DIR)
 RM				=	rm -rf
 
 SRC_DIR			= ./src
@@ -13,7 +13,9 @@ NAME			=	${BIN_DIR}/philo
 NAME_BONUS		=	${BIN_DIR}/philo_bonus
 
 
-SRC			=		
+SRC			=		${SRC_DIR}/philo.c ${SRC_DIR}/aux.c \
+					${SRC_DIR}/parser/parser.c ${SRC_DIR}/parser/custom_atol.c
+
 
 SRC_BONUS	=
 OBJS 		= 		${patsubst ${SRC_DIR}/%.c, ${OBJ_DIR}/%.o, ${SRC}}
@@ -33,11 +35,11 @@ $(BIN_DIR):
 bonus: 			$(NAME_BONUS)
 
 
-$(NAME):		libs $(OBJS) | $(BIN_DIR)
+$(NAME):		$(OBJS) | $(BIN_DIR)
 				printf 'Compiling $(NAME)\n'
 				$(CC) $(CFLAGS) $(OBJS) -o $@ 
 
-$(NAME_BONUS):	libs $(OBJS_BONUS) | $(BIN_DIR)
+$(NAME_BONUS):	$(OBJS_BONUS) | $(BIN_DIR)
 				printf 'Compiling $(NAME_BONUS)\n'
 				$(CC) $(CFLAGS) $(OBJS_BONUS) -o $@ 
 
