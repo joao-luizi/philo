@@ -18,8 +18,8 @@ typedef struct s_philo
     long        meal_counter;
     long        last_meal_time;
     int         full;
-    t_fork      *left_fork;
-    t_fork      *right_fork;
+    t_fork      *first_fork;
+    t_fork      *second_fork;
     pthread_t   thread_id;
 	t_table		*table;
 }   t_philo;
@@ -32,7 +32,7 @@ typedef struct s_table
     long	time_to_sleep;
     long	nbr_limit_meals;
     long	start_simulation;
-    int		end_simulation;
+    bool	end_simulation;
 	t_fork	*forks;
 	t_philo	*philos;
 

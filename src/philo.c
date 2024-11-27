@@ -11,6 +11,7 @@ int main(int argc, char **argv)
         parse_input(&table, argv);
         printf("Simulation starting with P: %ld TTD: %ld TTS %ld TTE %ld (Meals: %ld)\n",
          table.philo_number, table.time_to_die, table.time_to_sleep, table.time_to_eat, table.nbr_limit_meals);
+        data_init(&table);
     }
     else
         error_exit("Wrong input\n"\
