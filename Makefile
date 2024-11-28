@@ -26,10 +26,12 @@ OBJS_BONUS	= 		${patsubst ${SRC_DIR}/%.c, ${OBJ_DIR}/%.o, ${SRC_BONUS}}
 all:			$(NAME)
 
 
+
 $(OBJ_DIR)/%.o:	$(SRC_DIR)/%.c
 				printf "Compiling $(NAME) objects... %-33.33s\r" $(notdir $@)
 				@mkdir -p $(dir $@)
 				$(CC) $(CFLAGS) -c $< -o $@
+				
 
 $(BIN_DIR):
 				@mkdir -p $(BIN_DIR)
@@ -56,5 +58,9 @@ fclean:			clean
 				$(RM) $(NAME_BONUS)
 
 re:				fclean all
+
+debug:
+	@echo "SRC: $(SRC)"
+	@echo "OBJS: $(OBJS)"
 
 .PHONY:			all clean fclean re
