@@ -33,6 +33,8 @@ typedef struct s_table
     long	nbr_limit_meals;
     long	start_simulation;
     bool	end_simulation;
+    bool    all_threads_ready;
+    t_mtx   table_mutex;
 	t_fork	*forks;
 	t_philo	*philos;
 

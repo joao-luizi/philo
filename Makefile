@@ -13,10 +13,10 @@ NAME			=	${BIN_DIR}/philo
 NAME_BONUS		=	${BIN_DIR}/philo_bonus
 
 
-SRC			=		${SRC_DIR}/philo.c ${SRC_DIR}/aux.c ${SRC_DIR}/init.c		\
-					${SRC_DIR}/parser/parser.c ${SRC_DIR}/parser/custom_atol.c 	\
-					${SRC_DIR}/mutex/error_handler.c \
-					${SRC_DIR}/threads/error_handler.c 
+SRC			=		${SRC_DIR}/philo.c ${SRC_DIR}/aux.c ${SRC_DIR}/init.c					\
+					${SRC_DIR}/parser/parser.c ${SRC_DIR}/parser/custom_atol.c 				\
+					${SRC_DIR}/mutex/error_handler.c ${SRC_DIR}/mutex/safe_accessors.c  	\
+					${SRC_DIR}/threads/error_handler.c ${SRC_DIR}/threads/synchronization.c \
 
 
 SRC_BONUS	=

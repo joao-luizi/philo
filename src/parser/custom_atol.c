@@ -21,12 +21,12 @@ static const char *valid_input(const char *str)
     while (*str && is_signal(*str))
     {
         if (*str == '-')
-            error_exit(R "Only positive numbers allowed\n" RST);
+            error_exit("Only positive numbers allowed\n", "custom_atol @ parser/custom_atol.c");
         else
             str++;
     }
     if (!is_digit(*str))
-        error_exit(R "Invalid character found\n" RST);
+        error_exit("Invalid character found\n", "custom_atol @ parser/custom_atol.c");
     return (str);
 }
 long custom_atol(const char *str)
@@ -39,7 +39,7 @@ long custom_atol(const char *str)
     {
         num = (num * 10) + (*str - '0');
         if (num > INT_MAX)
-            error_exit(R "Invalid Input: INT_MAX is the maximun allowed\n" RST);
+            error_exit("Invalid Input: INT_MAX is the maximun allowed\n", "custom_atol @ parser/custom_atol.c");
         str++;
     }
     return (num);

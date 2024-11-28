@@ -11,6 +11,7 @@
 # include <string.h>
 # include <errno.h>
 
+# define DEBUG true
 //default color
 # define RST "\033[0m" 
 //RED Color (Bold)
@@ -38,5 +39,13 @@ typedef enum e_opcode
     JOIN,
     DETACH
 }t_opcode;
+
+typedef enum e_time_code
+{
+    SECOND, 
+    MILLISECOND,
+    MICROSECOND,
+
+} t_time_code;
 
 #endif
