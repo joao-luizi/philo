@@ -20,6 +20,7 @@ typedef struct s_philo
     int         full;
     t_fork      *first_fork;
     t_fork      *second_fork;
+    t_mtx       philo_mutex;
     pthread_t   thread_id;
 	t_table		*table;
 }   t_philo;
@@ -34,7 +35,10 @@ typedef struct s_table
     long	start_simulation;
     bool	end_simulation;
     bool    all_threads_ready;
+    long    thread_running_count;
     t_mtx   table_mutex;
+    t_mtx   write_mutex;
+    pthread_t   monitor;
 	t_fork	*forks;
 	t_philo	*philos;
 

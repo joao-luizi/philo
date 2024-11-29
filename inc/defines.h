@@ -48,4 +48,13 @@ typedef enum e_time_code
 
 } t_time_code;
 
+typedef enum e_status
+{
+    EATING, 
+    SLEEPING,
+    THINKING,
+    TAKE_FIRST_FORK,
+    TAKE_SECOND_FORK,
+    DEAD,
+}   t_status;
 #endif

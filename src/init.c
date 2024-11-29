@@ -30,6 +30,7 @@ static void philo_init(t_table *table)
         philo->full = false;
         philo->meal_counter = 0;
         philo->table = table;
+        safe_mutex_handle(&philo->philo_mutex, INIT);
         assign_forks(philo, table->forks, i);
         i++;
     }

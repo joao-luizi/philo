@@ -34,3 +34,10 @@ void set_long(t_mtx *mutex, long *dest, long value)
     *dest = value;
     safe_mutex_handle(mutex, UNLOCK);
 }
+
+void increase_long(t_mtx *mutex, long *dest)
+{
+    safe_mutex_handle(mutex, LOCK);
+    (*dest)++;
+    safe_mutex_handle(mutex, UNLOCK);
+}
