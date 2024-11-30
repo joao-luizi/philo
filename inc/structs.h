@@ -17,7 +17,7 @@ typedef struct s_philo
     int         id;
     long        meal_counter;
     long        last_meal_time;
-    int         full;
+    bool         full;
     t_fork      *first_fork;
     t_fork      *second_fork;
     t_mtx       philo_mutex;
