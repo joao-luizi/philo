@@ -15,9 +15,7 @@ void custom_usleep(long usec, t_table *table)
         if (remaining < 500)
         {
             while (get_time(MICROSECOND) - start < usec)
-            {
-
-            }
+                ;
         }
         else 
             usleep(remaining / 2);

@@ -1,4 +1,23 @@
 # include "../inc/philo.h"
+void clean(t_table *table)
+{
+    t_philo *philo;
+    int i;
+
+    i = 0;
+    while (i < table->philo_number)
+    {
+        philo = table->philos + i;
+        safe_mutex_handle(&philo->philo_mutex, DESTROY);
+        i++;
+    }
+    safe_mutex_handle(&table->write_mutex, DESTROY);
+    safe_mutex_handle(&table->table_mutex, DESTROY);
+    if (table->forks)
+        free(table->forks);
+    if (table->philos)
+        free(table->philos);
+}
 
 t_table *get_table(char **argv)
 {
@@ -36,6 +55,7 @@ void error_exit(const char *error, char *function_name)
         printf(R "%s (%s)\n" RST, error, function_name);
     else
         printf(R "%s \n" RST, error);
+    clean(table);
     exit(EXIT_FAILURE);
 }
 
@@ -52,6 +72,7 @@ int main(int argc, char **argv)
         table_init(table);
         philo_init(table);
         dinner_init(table);
+        clean(table);
     }
     else
         error_exit("Wrong input\n"\

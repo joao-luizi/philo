@@ -52,5 +52,6 @@ void custom_usleep(long usec, t_table *table);
 void error_exit(const char *error, char *function_name);
 void *safe_malloc(size_t bytes);
 t_table *get_table(char **argv);
+void clean(t_table *table);
 
 #endif

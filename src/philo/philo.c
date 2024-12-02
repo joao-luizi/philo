@@ -35,7 +35,8 @@ void philo_eat(t_philo *philo)
     set_long(&philo->philo_mutex, &philo->last_meal_time, get_time(MILLISECOND));
     philo->meal_counter++;
     write_status(EATING,philo);
-    custom_usleep(table->time_to_eat, table);
+    printf("Im going to eat for %ld\n", table->time_to_eat / 1000);
+    custom_usleep(table->time_to_eat / 1000, table);
     if (table->nbr_limit_meals > 0 && philo->meal_counter == table->nbr_limit_meals)
         set_bool(&philo->philo_mutex, &philo->full, true);
     safe_mutex_handle(&philo->first_fork->fork, UNLOCK);

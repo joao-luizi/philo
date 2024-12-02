@@ -13,7 +13,8 @@ void *lone_philo(void * data)
     increase_long(&table->table_mutex, &table->thread_running_count);
     write_status(TAKE_FIRST_FORK, philo);
     while (!get_bool(&table->table_mutex, &table->end_simulation))
-        usleep(200);
+        usleep(40);
+    printf("Reached the end of lone philo\n");
     return (NULL);
 }
 void *monitor_dinner(void *data)
@@ -24,6 +25,7 @@ void *monitor_dinner(void *data)
     table = (t_table *)data;
     while (!all_threads_running(&table->table_mutex, &table->thread_running_count, table->philo_number))
         ;
+    printf("Monitor: All threads running!\n");
     while (!get_bool(&table->table_mutex, &table->end_simulation))
     {
         i = 0;
@@ -31,13 +33,14 @@ void *monitor_dinner(void *data)
         {
             if (philo_died(table->philos + i, table))
             {
-                printf("philo dead %d ID:(%d)\n", i, (table->philos + i)->id);
-                set_bool(&table->table_mutex, &table->end_simulation, true);
                 write_status(DEAD, table->philos + i);
+                set_bool(&table->table_mutex, &table->end_simulation, true);
             }
+            //usleep(40);
             i++;
         }
     }
+    printf("Reached the end of monitor dinner\n");
     return (NULL);
 }
 
@@ -57,6 +60,7 @@ void *dinner_simulation(void *data)
             break ;
         philo_eat(philo);
         write_status(SLEEPING, philo);
+        printf("Im going to sleep for %ld\n", table->time_to_sleep);
         custom_usleep(table->time_to_sleep, table);
         philo_think(philo);
     }
@@ -71,9 +75,7 @@ void dinner_init(t_table *table)
     if (table->nbr_limit_meals == 0 || table->philo_number == 0)
         return ;
     if (table->philo_number < 2)
-    {
         safe_thread_handle(&table->philos[0].thread_id, lone_philo, &table->philos[0], CREATE);
-    }
     else
     {
         i = 0;
@@ -83,18 +85,18 @@ void dinner_init(t_table *table)
             i++;
         }
     }
-
     safe_thread_handle(&table->monitor, monitor_dinner, table, CREATE);
     table->start_simulation = get_time(MILLISECOND);
     set_bool(&table->table_mutex, &table->all_threads_ready, true);
-   
     i = 0;
     while (i < table->philo_number)
     {
-        printf("i is %d philo id is %d and table->philo_number is %ld\n", i, table->philos[i].id, table->philo_number);
         safe_thread_handle(&table->philos[i].thread_id, NULL, NULL, JOIN);
         i++;
     }
+    set_bool(&table->table_mutex, &table->end_simulation, true);
+    safe_thread_handle(&table->monitor, NULL, NULL, JOIN);
+    printf("reached the end of dinner init\n");
 }
 
 void table_init(t_table *table)

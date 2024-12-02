@@ -24,9 +24,7 @@ void safe_thread_handle(pthread_t *thread, void *(*foo)(void *), void *data, t_o
     if (opcode == CREATE)
         handle_thread_error(pthread_create(thread, NULL, foo, data), opcode);
     else if (opcode == JOIN)
-    {
         handle_thread_error(pthread_join(*thread, NULL), opcode);
-    }
     else if (opcode == DETACH)
         handle_thread_error(pthread_detach(*thread), opcode);
     else
