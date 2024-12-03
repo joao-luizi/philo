@@ -10,12 +10,15 @@ void custom_usleep(long usec, t_table *table)
     {
         elapsed = get_time(MICROSECOND) - start;  
         remaining = usec - elapsed;  
+        //printf("Custom u elapsed is %ld remaining is %ld\n", elapsed, remaining);
         if (remaining <= 0 || get_bool(&table->table_mutex, &table->end_simulation))
             break;  
         if (remaining < 500)
         {
             while (get_time(MICROSECOND) - start < usec)
-                ;
+            {
+
+            }
         }
         else 
             usleep(remaining / 2);

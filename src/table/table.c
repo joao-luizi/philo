@@ -2,7 +2,6 @@
 
 void *lone_philo(void * data)
 {
-    printf("Started Lone Philo\n");
     t_philo *philo;
     t_table *table;
 
@@ -13,8 +12,7 @@ void *lone_philo(void * data)
     increase_long(&table->table_mutex, &table->thread_running_count);
     write_status(TAKE_FIRST_FORK, philo);
     while (!get_bool(&table->table_mutex, &table->end_simulation))
-        usleep(40);
-    printf("Reached the end of lone philo\n");
+        usleep(30);
     return (NULL);
 }
 void *monitor_dinner(void *data)
@@ -25,7 +23,7 @@ void *monitor_dinner(void *data)
     table = (t_table *)data;
     while (!all_threads_running(&table->table_mutex, &table->thread_running_count, table->philo_number))
         ;
-    printf("Monitor: All threads running!\n");
+    //printf("Monitor: All threads running!\n");
     while (!get_bool(&table->table_mutex, &table->end_simulation))
     {
         i = 0;
@@ -40,10 +38,26 @@ void *monitor_dinner(void *data)
             i++;
         }
     }
-    printf("Reached the end of monitor dinner\n");
+    //printf("Reached the end of monitor dinner\n");
     return (NULL);
 }
+void de_sync_philos(t_philo *philo)
+{
+    t_table *table;
 
+    table = get_table(NULL);
+
+    if (table->philo_number % 2 == 0)
+    {
+        if (philo->id % 2 == 0)
+            custom_usleep(30000, table);
+    }
+    else
+    {
+        if (philo->id % 2 == 0)
+            philo_think(philo);
+    }
+}
 void *dinner_simulation(void *data)
 {
     t_philo *philo;
@@ -54,13 +68,14 @@ void *dinner_simulation(void *data)
     wait_all_threads(table);
     set_long(&philo->philo_mutex, &philo->last_meal_time, get_time(MILLISECOND));
     increase_long(&table->table_mutex, &table->thread_running_count);
+    de_sync_philos(philo);
     while (!get_bool(&table->table_mutex, &table->end_simulation))
     {
         if (philo->full)
             break ;
         philo_eat(philo);
         write_status(SLEEPING, philo);
-        printf("Im going to sleep for %ld\n", table->time_to_sleep);
+        //printf("Im going to sleep for %ld\n", table->time_to_sleep);
         custom_usleep(table->time_to_sleep, table);
         philo_think(philo);
     }
@@ -96,7 +111,6 @@ void dinner_init(t_table *table)
     }
     set_bool(&table->table_mutex, &table->end_simulation, true);
     safe_thread_handle(&table->monitor, NULL, NULL, JOIN);
-    printf("reached the end of dinner init\n");
 }
 
 void table_init(t_table *table)
