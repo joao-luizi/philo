@@ -19,14 +19,16 @@ void clean(t_table *table)
         free(table->philos);
 }
 
-t_table *get_table(char **argv)
+t_state *get_state(t_config* config)
 {
-    static t_table table;
+    static t_state state;
 
-    if (argv)
-        parse_input(&table, argv);
+    if (config)
+    {
+        
+    }
 
-    return (&table);
+    return (&state);
 }
 
 void *safe_malloc(size_t bytes)
@@ -58,11 +60,20 @@ void error_exit(const char *error, char *function_name)
     clean(table);
     exit(EXIT_FAILURE);
 }
+void display_help_msg()
+{
+    error_exit("Wrong input\n"G"Example usage: ./philo (number of philosophers) \
+    (time to die) (time to eat) (time to sleep) [number of meals]\n\
+    ./philo 5 800 200 200\n\
+    () - required [] - optional"RST, "main @ philo.c");
 
+}
 int main(int argc, char **argv)
 {
     (void)argv;
     t_table *table;
+    t_config *config;
+
     if (argc == 5 || argc == 6)
     {
         table = get_table(argv);
@@ -75,10 +86,5 @@ int main(int argc, char **argv)
         clean(table);
     }
     else
-        error_exit("Wrong input\n"\
-            G"Example usage: ./philo (number of philosophers) \
-(time to die) (time to eat) (time to sleep) [number of meals]\n\
-./philo 5 800 200 200\n\
-() - required [] - optional"RST, "main @ philo.c");
     return (0);
 }
