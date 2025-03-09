@@ -24,7 +24,39 @@ void custom_usleep(long usec, t_state *state)
             usleep(remaining / 2);
     }
 }
+void debug_state(t_state *state)
+{
+    int i;
 
+    printf("\n===== DEBUG STATE =====\n");
+    
+    // Print Config Details
+    printf("Philosophers: %ld | Time to Die: %ld | Time to Eat: %ld | Time to Sleep: %ld | Max Meals: %ld\n",
+           state->config->number_of_philos, state->config->time_to_die, 
+           state->config->time_to_eat, state->config->time_to_sleep, 
+           state->config->max_meals);
+    
+    // Print State Info
+    printf("Simulation Start: %ld | Finished: %d | Running Threads: %ld | Dead Philosophers: %ld\n",
+           state->simulation_start_time, state->simulation_finished, 
+           state->running_threads, state->dead_philos);
+    
+    // Print Forks Info
+    printf("\nForks:\n");
+    for (i = 0; i < state->config->number_of_philos; i++)
+        printf("Fork[%d]: ID = %d\n", i, state->forks[i].fork_id);
+
+    // Print Philosophers Info
+    printf("\nPhilosophers:\n");
+    for (i = 0; i < state->config->number_of_philos; i++)
+    {
+        t_philo *philo = &state->philos[i];
+        printf("Philo[%d]: ID = %d | Meals: %ld | Last Meal Time: %ld | Forks: [%d, %d]\n",
+               i, philo->id, philo->meal_counter, philo->last_meal_time, 
+               philo->first_fork->fork_id, philo->second_fork->fork_id);
+    }
+    printf("=======================\n\n");
+}
 
 void print_config(const t_config *config)
 {

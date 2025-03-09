@@ -5,6 +5,7 @@
 # include "structs.h"
 
 void print_config(const t_config *config);
+void debug_state(t_state *state);
 //mutex/error_handler.c
 void safe_mutex_handle(t_mtx *mutex, t_opcode opcode);
 //mutex/safe_accessors.c
@@ -26,7 +27,7 @@ void philo_think(t_philo *philo, t_state *state);
 void philo_init(t_state *table);
 
 //table/table.c
-void table_init(t_state *state);
+void state_init(t_state *state);
 void dinner_init(t_state *state);
 void *dinner_simulation(void *data);
 

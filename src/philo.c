@@ -69,11 +69,12 @@ int main(int argc, char **argv)
     {
         parse_input(&config, argv);
         state = get_state(&config);
-        print_config(&config);
-        //table_init(table);
-        //philo_init(table);
-        //dinner_init(table);
-        clean(state);
+        //print_config(&config);
+        state_init(state);
+        philo_init(state);
+        debug_state(state);
+        dinner_init(state);
+        //clean(state);
     }
     else
         display_help_msg();

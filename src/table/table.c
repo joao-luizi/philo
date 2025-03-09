@@ -7,13 +7,22 @@ void *lone_philo(void * data)
 
     state = get_state(NULL);
     philo = (t_philo *)data;
-    wait_all_threads(state);
-    //set_long(&philo->philo_mutex, &philo->last_meal_time, get_time(MILLISECOND));
-    philo->last_meal_time = get_time(MILLISECOND);
+    while (philo->last_meal_time < 0)
+        philo->last_meal_time = get_long(&state->state_mutex, &state->simulation_start_time);
+    printf("Simulation Start Time: %ld Philo Start Time: %ld\n", 
+        get_long(&state->state_mutex, &state->simulation_start_time), philo->last_meal_time); //they should be the same
     increase_long(&state->state_mutex, &state->running_threads);
     write_status(TAKE_FIRST_FORK, philo);
-    while (!get_bool(&state->state_mutex, &state->simulation_finished)) // we have no monitor thread so we need to update the dead_philos _count from here
+    while (!get_bool(&state->state_mutex, &state->simulation_finished))
+    {
+        if (philo_died(philo, state))
+        {
+            write_status(DEAD, philo);
+            set_bool(&state->state_mutex, &state->simulation_finished, true);
+            break;
+        }
         usleep(30);
+    }
     return (NULL);
 }
 void de_sync_philos(t_philo *philo, t_state *state)
@@ -74,7 +83,7 @@ void dinner_init(t_state *state)
             i++;
         }
     }
-    state->simulation_start_time = get_time(MILLISECOND);
+    state->simulation_start_time = get_time(MILLISECOND); //this replaces setting the boll all_threads_ready
     //set_bool(&state->state_mutex, &state->all_threads_ready, true);
     i = 0;
     while (i < state->config->number_of_philos)
@@ -85,7 +94,7 @@ void dinner_init(t_state *state)
     
 }
 
-void table_init(t_state *state)
+void state_init(t_state *state)
 {
 	int i;
 
@@ -103,5 +112,4 @@ void table_init(t_state *state)
 		state->forks[i].fork_id = i;
 		i++;
 	}
-	philo_init(state);
 }

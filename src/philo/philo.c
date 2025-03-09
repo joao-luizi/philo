@@ -16,6 +16,10 @@ bool philo_died(t_philo *philo, t_state *state)
     last_meal_time = philo->last_meal_time; //MILLISECONDS
     elapsed = get_time(MILLISECOND) - last_meal_time; // SHOULD BE MILLISENDS
     time_to_die = state->config->time_to_die;
+
+    printf("Philosopher %d - Last meal time: %ld ms, Elapsed time: %ld ms, Time to die: %ld ms\n", 
+        philo->id, last_meal_time, elapsed, time_to_die);
+        
     if (elapsed > time_to_die)
         return (true);
     return (false);
@@ -82,7 +86,8 @@ void philo_init(t_state *state)
         philo = state->philos + i;
         philo->id = i + 1;
         philo->meal_counter = 0;
-        safe_mutex_handle(&philo->philo_mutex, INIT);
+        philo->last_meal_time = -1;
+        //safe_mutex_handle(&philo->philo_mutex, INIT); --the intention is to not use a mutex
         assign_forks(philo, state, i);
         i++;
     }
