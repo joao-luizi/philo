@@ -1,7 +1,7 @@
 .SILENT:
 
 CC				=	cc
-CFLAGS 			= -Wall -Wextra -Werror -I$(INC_DIR)
+CFLAGS 			= -Wall -Wextra -Werror -g -I$(INC_DIR)
 RM				=	rm -rf
 
 SRC_DIR			= ./src

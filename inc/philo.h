@@ -4,7 +4,7 @@
 # include "defines.h"
 # include "structs.h"
 
-
+void print_config(const t_config *config);
 //mutex/error_handler.c
 void safe_mutex_handle(t_mtx *mutex, t_opcode opcode);
 //mutex/safe_accessors.c
@@ -17,24 +17,24 @@ void increase_long(t_mtx *mutex, long *dest);
 //parser/custom_atol.c
 long custom_atol(const char *str);
 //parser/parser.c
-void parse_input(t_table *table, char **argv);
-
+void parse_input(t_config *config, char **argv);
+bool is_philo_full(t_philo *philo, t_config *config);
 //philo/philo.c
-bool philo_died(t_philo *philo, t_table *table);
+bool philo_died(t_philo *philo, t_state *table);
 void philo_eat(t_philo *philo);
-void philo_think(t_philo *philo);
-void philo_init(t_table *table);
+void philo_think(t_philo *philo, t_state *state);
+void philo_init(t_state *table);
 
 //table/table.c
-void table_init(t_table *table);
-void dinner_init(t_table *table);
+void table_init(t_state *state);
+void dinner_init(t_state *state);
 void *dinner_simulation(void *data);
-void *monitor_dinner(void *data);
+
 
 //threads/error_handler.c
 void safe_thread_handle(pthread_t *thread, void *(*foo)(void *), void *data, t_opcode opcode);
 //threads/auxiliary.c
-void wait_all_threads(t_table *table);
+void wait_all_threads(t_state *state);
 bool all_threads_running(t_mtx *mutex, long *threads, long philo_nbr);
 //threads/write_output.c
 void write_status(t_status status, t_philo *philo);
@@ -47,11 +47,11 @@ void write_take_fork(t_philo *philo, long elapsed, t_status status);
 
 //philo_aux.c
 long get_time(t_time_code timecode);
-void custom_usleep(long usec, t_table *table);
+void custom_usleep(long usec, t_state *state);
 //philo.c
 void error_exit(const char *error, char *function_name);
 void *safe_malloc(size_t bytes);
-t_table *get_table(char **argv);
-void clean(t_table *table);
+t_state *get_state(t_config *config);
+void clean(t_state *state);
 
 #endif

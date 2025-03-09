@@ -1,22 +1,22 @@
 # include "../inc/philo.h"
-void clean(t_table *table)
+void clean(t_state *state)
 {
     t_philo *philo;
     int i;
 
     i = 0;
-    while (i < table->philo_number)
+    while (i < state->config->number_of_philos)
     {
-        philo = table->philos + i;
+        philo = state->philos + i;
         safe_mutex_handle(&philo->philo_mutex, DESTROY);
         i++;
     }
-    safe_mutex_handle(&table->write_mutex, DESTROY);
-    safe_mutex_handle(&table->table_mutex, DESTROY);
-    if (table->forks)
-        free(table->forks);
-    if (table->philos)
-        free(table->philos);
+    safe_mutex_handle(&state->console_mutex, DESTROY);
+    safe_mutex_handle(&state->state_mutex, DESTROY);
+    if (state->forks)
+        free(state->forks);
+    if (state->philos)
+        free(state->philos);
 }
 
 t_state *get_state(t_config* config)
@@ -24,10 +24,7 @@ t_state *get_state(t_config* config)
     static t_state state;
 
     if (config)
-    {
-        
-    }
-
+        state.config = config;
     return (&state);
 }
 
@@ -44,20 +41,14 @@ void *safe_malloc(size_t bytes)
 
 void error_exit(const char *error, char *function_name)
 {
-    t_table *table;
-    int i;
-    
-    i = 0;
-    table = get_table(NULL);
-    while (i < table->philo_number)
-    {
-       i++;
-    }
+    t_state *state;
+
+    state = get_state(NULL);
     if (DEBUG)
         printf(R "%s (%s)\n" RST, error, function_name);
     else
         printf(R "%s \n" RST, error);
-    clean(table);
+    clean(state);
     exit(EXIT_FAILURE);
 }
 void display_help_msg()
@@ -70,21 +61,21 @@ void display_help_msg()
 }
 int main(int argc, char **argv)
 {
-    (void)argv;
-    t_table *table;
-    t_config *config;
+    
+    t_state *state;
+    t_config config;
 
     if (argc == 5 || argc == 6)
     {
-        table = get_table(argv);
-        if (DEBUG)
-            printf("Simulation starting with P: %ld TTD: %ld TTS %ld TTE %ld (Meals: %ld)\n",
-            table->philo_number, table->time_to_die, table->time_to_sleep, table->time_to_eat, table->nbr_limit_meals);
-        table_init(table);
-        philo_init(table);
-        dinner_init(table);
-        clean(table);
+        parse_input(&config, argv);
+        state = get_state(&config);
+        print_config(&config);
+        //table_init(table);
+        //philo_init(table);
+        //dinner_init(table);
+        clean(state);
     }
     else
+        display_help_msg();
     return (0);
 }
