@@ -2,13 +2,16 @@
 void clean(t_table *table)
 {
     t_philo *philo;
+    t_fork *fork;
     int i;
 
     i = 0;
     while (i < table->philo_number)
     {
         philo = table->philos + i;
+        fork = table->forks + i;
         safe_mutex_handle(&philo->philo_mutex, DESTROY);
+        safe_mutex_handle(&fork->fork, DESTROY);
         i++;
     }
     safe_mutex_handle(&table->write_mutex, DESTROY);
@@ -61,7 +64,6 @@ void error_exit(const char *error, char *function_name)
 
 int main(int argc, char **argv)
 {
-    (void)argv;
     t_table *table;
     if (argc == 5 || argc == 6)
     {

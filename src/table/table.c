@@ -34,11 +34,9 @@ void *monitor_dinner(void *data)
                 write_status(DEAD, table->philos + i);
                 set_bool(&table->table_mutex, &table->end_simulation, true);
             }
-            //usleep(40);
             i++;
         }
     }
-    //printf("Reached the end of monitor dinner\n");
     return (NULL);
 }
 void de_sync_philos(t_philo *philo)

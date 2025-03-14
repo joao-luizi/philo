@@ -6,7 +6,6 @@ bool philo_died(t_philo *philo, t_table *table)
     long time_to_die;
     long last_meal_time;
 
-
     if (get_bool(&philo->philo_mutex, &philo->full))
         return (false);
     last_meal_time = get_long(&philo->philo_mutex, &philo->last_meal_time);
