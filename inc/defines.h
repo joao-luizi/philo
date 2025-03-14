@@ -29,6 +29,12 @@
 //WHITE Color (Bold)
 # define W   "\033[1;37m"
 
+typedef enum e_parser
+{
+    OK,
+    ERROR,
+}t_parser;
+
 typedef enum e_opcode
 {
     LOCK,

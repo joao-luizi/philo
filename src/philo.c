@@ -5,11 +5,14 @@ void clean(t_state *state)
     int i;
 
     i = 0;
-    while (i < state->config->number_of_philos)
+    if (state->config)
     {
-        philo = state->philos + i;
-        safe_mutex_handle(&philo->philo_mutex, DESTROY);
-        i++;
+        while (i < state->config->number_of_philos)
+        {
+            philo = state->philos + i;
+            safe_mutex_handle(&philo->philo_mutex, DESTROY);
+            i++;
+        }
     }
     safe_mutex_handle(&state->console_mutex, DESTROY);
     safe_mutex_handle(&state->state_mutex, DESTROY);
@@ -69,12 +72,12 @@ int main(int argc, char **argv)
     {
         parse_input(&config, argv);
         state = get_state(&config);
-        //print_config(&config);
+        print_config(&config);
         state_init(state);
         philo_init(state);
         debug_state(state);
         dinner_init(state);
-        //clean(state);
+        clean(state);
     }
     else
         display_help_msg();
