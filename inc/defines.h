@@ -11,7 +11,7 @@
 # include <limits.h>
 # include <string.h>
 # include <errno.h>
-#include <fcntl.h>           /* For O_* constants */
+#include <fcntl.h>
 #include <semaphore.h>
 #include <signal.h>
 

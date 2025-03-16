@@ -24,12 +24,12 @@ void write_sleeping(int id, long elapsed)
         printf(W "%-6ld" RST " %d is sleeping\n", elapsed, id);
 }
 
-void write_eating(int id, long elapsed, long meal_counter)
+void write_eating(int id, long elapsed)
 {
     if (DEBUG)
-        printf(W "%-6ld" RST " %d is eating (Meals: %ld).\n", elapsed, id, meal_counter);
+        printf(W "%-6ld" RST " %d is eating.\n", elapsed, id);
     else
-        printf(W "%-6ld" RST " %d is eating\n", elapsed, id);
+        printf(W "%-6ld" RST " %d is eating.\n", elapsed, id);
 }
 
 void write_take_fork(int id, long elapsed, t_status status)

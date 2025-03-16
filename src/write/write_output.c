@@ -7,7 +7,7 @@ void write_status(int id, t_status status)
 
     //have a check to see if meals eaten equals maxMeals
     table = get_table(NULL);
-    sem_wait(&table->console_sem);// from the starting value 1 to 0
+    safe_sem_handle(table->console_sem, NULL, LOCK);
     elapsed = get_time(MILLISECOND) - table->start_simulation;
     if ((status == TAKE_FIRST_FORK || status == TAKE_SECOND_FORK))
         write_take_fork(id, elapsed, status);//how to have philo id?
@@ -19,7 +19,7 @@ void write_status(int id, t_status status)
         write_thinking(id, elapsed);
     else if (status == DEAD)
         write_dead(id, elapsed);
-    sem_post(&table->console_sem);// from the value 0 to 1
+    safe_sem_handle(table->console_sem, NULL, UNLOCK);
 }
 
 

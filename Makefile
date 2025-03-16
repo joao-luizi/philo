@@ -15,15 +15,19 @@ NAME_BONUS		=	${BIN_DIR}/philo_bonus
 
 SRC			=		${SRC_DIR}/philo.c ${SRC_DIR}/philo_aux.c 								\
 					${SRC_DIR}/parser/parser.c ${SRC_DIR}/parser/custom_atol.c 				\
-					${SRC_DIR}/threads/error_handler.c ${SRC_DIR}/threads/threads_aux.c 	\
-					${SRC_DIR}/threads/write_output.c ${SRC_DIR}/threads/write_aux.c		\
+					${SRC_DIR}/semaphores/error_handler.c ${SRC_DIR}/pid_list/pid_list.c	\
+					${SRC_DIR}/write/write_output.c ${SRC_DIR}/write/write_aux.c			\
 					${SRC_DIR}/mutex/error_handler.c ${SRC_DIR}/mutex/safe_accessors.c  	\
 					${SRC_DIR}/philo/philo.c   												\
 					${SRC_DIR}/table/table.c   												\
 
 
+SRC_BONUS	=		${SRC_DIR}/philo.c ${SRC_DIR}/philo_aux.c 								\
+					${SRC_DIR}/parser/parser.c ${SRC_DIR}/parser/custom_atol.c 				\
+					${SRC_DIR}/semaphores/error_handler.c ${SRC_DIR}/pid_list/pid_list.c	\
+					${SRC_DIR}/write/write_output.c ${SRC_DIR}/write/write_aux.c		 	\
+					${SRC_DIR}/table/table.c   												\
 
-SRC_BONUS	=
 OBJS 		= 		${patsubst ${SRC_DIR}/%.c, ${OBJ_DIR}/%.o, ${SRC}}
 OBJS_BONUS	= 		${patsubst ${SRC_DIR}/%.c, ${OBJ_DIR}/%.o, ${SRC_BONUS}}
 

@@ -1,8 +1,14 @@
 # include "../inc/philo.h"
 void clean(t_table *table)
 {
-    sem_destroy(&table->console_sem);
-    sem_destroy(&table->forks_sem);
+    if (table->console_sem)
+        safe_sem_handle(table->console_sem, NULL, UNLINK);
+    if (table->forks_sem)
+        safe_sem_handle(table->forks_sem, NULL, UNLINK);
+    if (table->end_simulation)
+        safe_sem_handle(table->end_simulation, NULL, UNLINK);
+    if (table->pids)
+        free(table->pids);
 }
 
 t_table *get_table(char **argv)
@@ -29,14 +35,8 @@ void *safe_malloc(size_t bytes)
 void error_exit(const char *error, char *function_name)
 {
     t_table *table;
-    int i;
     
-    i = 0;
     table = get_table(NULL);
-    while (i < table->philo_number)
-    {
-       i++;
-    }
     if (DEBUG)
         printf(R "%s (%s)\n" RST, error, function_name);
     else
@@ -54,7 +54,7 @@ int main(int argc, char **argv)
         if (DEBUG)
             printf("Simulation starting with P: %ld TTD: %ld TTS %ld TTE %ld (Meals: %ld)\n",
             table->philo_number, table->time_to_die, table->time_to_sleep, table->time_to_eat, table->nbr_limit_meals);
-        table_init(table);
+        start_dinner(table);
         clean(table);
     }
     else

@@ -1,5 +1,5 @@
 # include "../inc/philo.h"
-void custom_usleep(long usec, t_table *table)
+void custom_usleep(long usec)
 {
     long start;
     long elapsed;
@@ -11,7 +11,7 @@ void custom_usleep(long usec, t_table *table)
         elapsed = get_time(MICROSECOND) - start;  
         remaining = usec - elapsed;  
         //printf("Custom u elapsed is %ld remaining is %ld\n", elapsed, remaining);
-        if (remaining <= 0 || get_bool(&table->table_mutex, &table->end_simulation))
+        if (remaining <= 0)
             break;  
         if (remaining < 500)
         {
