@@ -1,25 +1,8 @@
 # include "../inc/philo.h"
 void clean(t_table *table)
 {
-    t_philo *philo;
-    t_fork *fork;
-    int i;
-
-    i = 0;
-    while (i < table->philo_number)
-    {
-        philo = table->philos + i;
-        fork = table->forks + i;
-        safe_mutex_handle(&philo->philo_mutex, DESTROY);
-        safe_mutex_handle(&fork->fork, DESTROY);
-        i++;
-    }
-    safe_mutex_handle(&table->write_mutex, DESTROY);
-    safe_mutex_handle(&table->table_mutex, DESTROY);
-    if (table->forks)
-        free(table->forks);
-    if (table->philos)
-        free(table->philos);
+    sem_destroy(&table->console_sem);
+    sem_destroy(&table->forks_sem);
 }
 
 t_table *get_table(char **argv)
@@ -72,8 +55,6 @@ int main(int argc, char **argv)
             printf("Simulation starting with P: %ld TTD: %ld TTS %ld TTE %ld (Meals: %ld)\n",
             table->philo_number, table->time_to_die, table->time_to_sleep, table->time_to_eat, table->nbr_limit_meals);
         table_init(table);
-        philo_init(table);
-        dinner_init(table);
         clean(table);
     }
     else

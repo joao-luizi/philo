@@ -6,6 +6,7 @@
 typedef pthread_mutex_t t_mtx;
 typedef struct s_table t_table;
 
+
 typedef struct s_fork
 {
     t_mtx   fork;
@@ -33,15 +34,19 @@ typedef struct s_table
     long	time_to_sleep;
     long	nbr_limit_meals;
     long	start_simulation;
-    bool	end_simulation;
-    bool    all_threads_ready;
-    long    thread_running_count;
-    t_mtx   table_mutex;
-    t_mtx   write_mutex;
-    pthread_t   monitor;
-	t_fork	*forks;
-	t_philo	*philos;
+    pid_t   *pids;
+    sem_t   forks_sem;
+    sem_t   console_sem;
+    sem_t   end_simulation;
 
 }t_table;
+
+typedef struct s_pid_list
+{
+    pid_t   pid;
+    int     id;
+    struct s_pid_list *next;
+
+}t_pid_list;
 
 #endif

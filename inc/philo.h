@@ -27,23 +27,17 @@ void philo_init(t_table *table);
 
 //table/table.c
 void table_init(t_table *table);
-void dinner_init(t_table *table);
-void *dinner_simulation(void *data);
-void *monitor_dinner(void *data);
 
 //threads/error_handler.c
-void safe_thread_handle(pthread_t *thread, void *(*foo)(void *), void *data, t_opcode opcode);
-//threads/auxiliary.c
-void wait_all_threads(t_table *table);
-bool all_threads_running(t_mtx *mutex, long *threads, long philo_nbr);
+void safe_sem_handle(sem_t *sem, const char *name, t_opcode opcode);
 //threads/write_output.c
-void write_status(t_status status, t_philo *philo);
+void write_status(int id, t_status status);
 //threads/write_aux.c
-void write_dead(t_philo *philo, long elapsed);
-void write_thinking(t_philo *philo, long elapsed);
-void write_sleeping(t_philo *philo, long elapsed);
-void write_eating(t_philo *philo, long elapsed);
-void write_take_fork(t_philo *philo, long elapsed, t_status status);
+void write_dead(int id, long elapsed);
+void write_thinking(int id, long elapsed);
+void write_sleeping(int id, long elapsed);
+void write_eating(int id, long elapsed, long meal_counter);
+void write_take_fork(int id, long elapsed, t_status status);
 
 //philo_aux.c
 long get_time(t_time_code timecode);

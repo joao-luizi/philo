@@ -7,9 +7,13 @@
 # include <pthread.h>
 # include <stdbool.h>
 # include <sys/time.h>
+ #include <sys/wait.h>
 # include <limits.h>
 # include <string.h>
 # include <errno.h>
+#include <fcntl.h>           /* For O_* constants */
+#include <semaphore.h>
+#include <signal.h>
 
 # define DEBUG false
 //default color
@@ -33,11 +37,9 @@ typedef enum e_opcode
 {
     LOCK,
     UNLOCK, 
-    INIT,
-    DESTROY,
+    UNLINK,
     CREATE,
-    JOIN,
-    DETACH
+    CLOSE
 }t_opcode;
 
 typedef enum e_time_code

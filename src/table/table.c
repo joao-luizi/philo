@@ -1,132 +1,58 @@
 # include "../inc/philo.h"
 
-void *lone_philo(void * data)
-{
-    t_philo *philo;
-    t_table *table;
 
-    table = get_table(NULL);
-    philo = (t_philo *)data;
-    wait_all_threads(table);
-    set_long(&philo->philo_mutex, &philo->last_meal_time, get_time(MILLISECOND));
-    increase_long(&table->table_mutex, &table->thread_running_count);
-    write_status(TAKE_FIRST_FORK, philo);
-    while (!get_bool(&table->table_mutex, &table->end_simulation))
-        usleep(30);
-    return (NULL);
-}
-void *monitor_dinner(void *data)
-{
-    t_table *table;
-    int i;
 
-    table = (t_table *)data;
-    while (!all_threads_running(&table->table_mutex, &table->thread_running_count, table->philo_number))
-        ;
-    //printf("Monitor: All threads running!\n");
-    while (!get_bool(&table->table_mutex, &table->end_simulation))
-    {
-        i = 0;
-        while (i < table->philo_number && !get_bool(&table->table_mutex, &table->end_simulation))
-        {
-            if (philo_died(table->philos + i, table))
-            {
-                write_status(DEAD, table->philos + i);
-                set_bool(&table->table_mutex, &table->end_simulation, true);
-            }
-            i++;
-        }
-    }
-    return (NULL);
-}
-void de_sync_philos(t_philo *philo)
-{
-    t_table *table;
-
-    table = get_table(NULL);
-
-    if (table->philo_number % 2 == 0)
-    {
-        if (philo->id % 2 == 0)
-            custom_usleep(30000, table);
-    }
-    else
-    {
-        if (philo->id % 2 == 0)
-            philo_think(philo);
-    }
-}
-void *dinner_simulation(void *data)
-{
-    t_philo *philo;
-    t_table *table;
-
-    philo = (t_philo *)data;
-    table = get_table(NULL);
-    wait_all_threads(table);
-    set_long(&philo->philo_mutex, &philo->last_meal_time, get_time(MILLISECOND));
-    increase_long(&table->table_mutex, &table->thread_running_count);
-    de_sync_philos(philo);
-    while (!get_bool(&table->table_mutex, &table->end_simulation))
-    {
-        if (philo->full)
-            break ;
-        philo_eat(philo);
-        write_status(SLEEPING, philo);
-        //printf("Im going to sleep for %ld\n", table->time_to_sleep);
-        custom_usleep(table->time_to_sleep, table);
-        philo_think(philo);
-    }
-
-    return (NULL);
-}
-
-void dinner_init(t_table *table)
-{
-    int i;
-
-    if (table->nbr_limit_meals == 0 || table->philo_number == 0)
-        return ;
-    if (table->philo_number < 2)
-        safe_thread_handle(&table->philos[0].thread_id, lone_philo, &table->philos[0], CREATE);
-    else
-    {
-        i = 0;
-        while (i < table->philo_number)
-        {
-            safe_thread_handle(&table->philos[i].thread_id, dinner_simulation, &table->philos[i], CREATE);
-            i++;
-        }
-    }
-    safe_thread_handle(&table->monitor, monitor_dinner, table, CREATE);
-    table->start_simulation = get_time(MILLISECOND);
-    set_bool(&table->table_mutex, &table->all_threads_ready, true);
-    i = 0;
-    while (i < table->philo_number)
-    {
-        safe_thread_handle(&table->philos[i].thread_id, NULL, NULL, JOIN);
-        i++;
-    }
-    set_bool(&table->table_mutex, &table->end_simulation, true);
-    safe_thread_handle(&table->monitor, NULL, NULL, JOIN);
-}
 
 void table_init(t_table *table)
 {
-	int i;
+    pid_t pid;
+    int i = 0;
 
-	table->end_simulation = false;
-	table->all_threads_ready = false;
-    table->thread_running_count = 0;
-	table->philos = safe_malloc(sizeof(t_philo) * table->philo_number);
-	safe_mutex_handle(&table->table_mutex, INIT);
-	table->forks = safe_malloc(sizeof(t_fork) * table->philo_number);
-	i = 0;
-	while (i < table->philo_number)
-	{
-		safe_mutex_handle(&table->forks[i].fork, INIT);
-		table->forks[i].fork_id = i;
-		i++;
-	}
-	philo_init(table);
+    // Initialize semaphores
+    sem_init(&table->end_simulation, 1, 1); // Binary semaphore
+    sem_init(&table->console_sem, 1, 1);    // Binary semaphore
+    sem_init(&table->forks_sem, 1, table->philo_number); // Counting semaphore
+
+    // Allocate memory for storing PIDs
+    table->pids = malloc(sizeof(pid_t) * table->philo_number);
+    if (!table->pids)
+        error_exit("Malloc error", "table_init");
+
+    // Fork philosophers
+    while (i < table->philo_number)
+    {
+        pid = fork();
+        if (pid < 0)
+            error_exit("Fork error", "table_init");
+
+        if (pid == 0) // Child process
+        {
+            printf("Child Process %d started\n", i + 1); // ID starts at 1
+
+            usleep(1000);
+            exit(0);
+        }
+        else // Parent process
+        {
+            table->pids[i] = pid; // Store philosopher PID
+        }
+        i++;
+    }
+
+    // Wait for any philosopher to die
+    while (1)
+    {
+        int status;
+        pid_t dead_philo = waitpid(-1, &status, 0);
+        
+        if (dead_philo > 0) // A philosopher exited
+        {
+            printf("Philosopher %d has died\n", dead_philo);
+            for (int j = 0; j < table->philo_number; j++)
+            {
+                kill(table->pids[j], SIGTERM); // Kill all remaining processes
+            }
+            break;
+        }
+    }
 }
