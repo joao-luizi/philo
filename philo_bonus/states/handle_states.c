@@ -1,0 +1,59 @@
+# include "../inc/philo.h"
+
+
+void philo_eat(t_table *table, long *last_meal, int id, long *meal_counter)
+{
+    safe_sem_handle(table->forks_sem, NULL, LOCK);
+    write_status(id, TAKE_FIRST_FORK);
+    safe_sem_handle(table->forks_sem, NULL, LOCK);
+    write_status(id, TAKE_SECOND_FORK);  
+    *last_meal = get_time(MILLISECOND);
+    if (table->nbr_limit_meals > 0)
+        (*meal_counter)++;
+    write_status(id, EATING);
+    while (get_time(MILLISECOND) < *last_meal + table->time_to_eat)
+    {
+        if (philo_dead(*last_meal, table->time_to_die))
+        {
+            safe_sem_handle(table->forks_sem, NULL, UNLOCK);
+            safe_sem_handle(table->forks_sem, NULL, UNLOCK);
+            exit(1);
+        }
+        custom_usleep(10);
+    }
+    safe_sem_handle(table->forks_sem, NULL, UNLOCK);
+    safe_sem_handle(table->forks_sem, NULL, UNLOCK);
+}
+
+void philo_think(t_table *table, long *last_meal, int id)
+{
+    long start = get_time(MILLISECOND);
+    long time_to_think = (table ->time_to_die - table->time_to_eat - table->time_to_sleep) * 0.5;
+    if (time_to_think < 0)
+        time_to_think = 0;
+    long end = start + time_to_think;
+    write_status(id, THINKING);
+    while (get_time(MILLISECOND) < end)
+    {
+        if (philo_dead(*last_meal, table->time_to_die))
+            exit(1);
+        custom_usleep(10);
+    }
+}
+
+void philo_sleep(t_table *table, long *last_meal, int id)
+{
+    long start = get_time(MILLISECOND);
+    long end = start + table->time_to_sleep;
+    write_status(id, SLEEPING);
+    while (get_time(MILLISECOND) < end)
+    {
+        if (philo_dead(*last_meal, table->time_to_die))
+            exit(1);
+        custom_usleep(10);
+    }
+}
+
+
+
+
