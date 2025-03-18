@@ -4,6 +4,11 @@
 # include "defines.h"
 # include "structs.h"
 
+bool philo_full(long meal_counter, long nbr_limit_meals);
+bool philo_dead(long last_meal, long time_to_die);
+void philo_eat(t_table *table, long *last_meal, int id, long *meal_counter);
+void philo_think(t_table *table, long *last_meal, int id);
+void philo_sleep(t_table *table, long *last_meal, int id);
 
 //parser/custom_atol.c
 long custom_atol(const char *str);
@@ -20,7 +25,7 @@ void handle_sem_error(int status, t_opcode opcode);
 //table/table.c
 void start_dinner(t_table *table);
 //write/write_output.c
-void write_status(int id, t_status status);
+void write_status(int id, t_status status, t_table *table);
 //write/write_aux.c
 void write_dead(int id, long elapsed);
 void write_thinking(int id, long elapsed);
@@ -31,9 +36,7 @@ void write_take_fork(int id, long elapsed, t_status status);
 long get_time(t_time_code timecode);
 void custom_usleep(long usec);
 //philo.c
-void error_exit(const char *error, char *function_name);
-void *safe_malloc(size_t bytes);
-t_table *get_table(char **argv);
+void error_exit(const char *error, char *function_name, t_table *table);
 void clean(t_table *table);
 
 #endif

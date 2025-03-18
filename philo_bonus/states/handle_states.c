@@ -4,13 +4,13 @@
 void philo_eat(t_table *table, long *last_meal, int id, long *meal_counter)
 {
     safe_sem_handle(table->forks_sem, NULL, LOCK);
-    write_status(id, TAKE_FIRST_FORK);
+    write_status(id, TAKE_FIRST_FORK, table);
     safe_sem_handle(table->forks_sem, NULL, LOCK);
-    write_status(id, TAKE_SECOND_FORK);  
+    write_status(id, TAKE_SECOND_FORK, table);  
     *last_meal = get_time(MILLISECOND);
     if (table->nbr_limit_meals > 0)
         (*meal_counter)++;
-    write_status(id, EATING);
+    write_status(id, EATING, table);
     while (get_time(MILLISECOND) < *last_meal + table->time_to_eat)
     {
         if (philo_dead(*last_meal, table->time_to_die))
@@ -32,7 +32,7 @@ void philo_think(t_table *table, long *last_meal, int id)
     if (time_to_think < 0)
         time_to_think = 0;
     long end = start + time_to_think;
-    write_status(id, THINKING);
+    write_status(id, THINKING, table);
     while (get_time(MILLISECOND) < end)
     {
         if (philo_dead(*last_meal, table->time_to_die))
@@ -45,7 +45,7 @@ void philo_sleep(t_table *table, long *last_meal, int id)
 {
     long start = get_time(MILLISECOND);
     long end = start + table->time_to_sleep;
-    write_status(id, SLEEPING);
+    write_status(id, SLEEPING, table);
     while (get_time(MILLISECOND) < end)
     {
         if (philo_dead(*last_meal, table->time_to_die))

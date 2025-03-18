@@ -15,11 +15,9 @@ bool philo_dead(long last_meal, long time_to_die)
 }
 
 
-void write_status(int id, t_status status)
+void write_status(int id, t_status status, t_table *table)
 {
-    t_table *table;
     long elapsed;
-    table = get_table(NULL);
     safe_sem_handle(table->console_sem, NULL, LOCK);
     elapsed = get_time(MILLISECOND) - table->start_simulation;
     if ((status == TAKE_FIRST_FORK || status == TAKE_SECOND_FORK))

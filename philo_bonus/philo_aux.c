@@ -1,4 +1,4 @@
-# include "../inc/philo.h"
+# include "inc/philo.h"
 void custom_usleep(long usec)
 {
     long start;
