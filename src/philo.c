@@ -1,12 +1,9 @@
 # include "../inc/philo.h"
 void clean(t_table *table)
 {
-    if (table->console_sem)
-        safe_sem_handle(table->console_sem, NULL, UNLINK);
-    if (table->forks_sem)
-        safe_sem_handle(table->forks_sem, NULL, UNLINK);
-    if (table->end_simulation)
-        safe_sem_handle(table->end_simulation, NULL, UNLINK);
+    safe_sem_handle(table->console_sem, "/console_sem", UNLINK);
+    safe_sem_handle(table->forks_sem, "/forks_sem", UNLINK);
+    safe_sem_handle(table->end_simulation, "/end_simulation", UNLINK);
     if (table->pids)
         free(table->pids);
 }

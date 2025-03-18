@@ -13,6 +13,7 @@ void parse_input(t_table *table, char **argv);
 t_pid_list *find_node(t_pid_list *head, pid_t pid);
 t_pid_list *pid_list_new(pid_t pid, int id);
 void pid_list_append(t_pid_list **head, pid_t pid, int id);
+void free_pid_list(t_pid_list *head);
 //semaphores/error_handler.c
 void safe_sem_handle(sem_t *sem, const char *name, t_opcode opcode);
 void handle_sem_error(int status, t_opcode opcode);

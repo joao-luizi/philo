@@ -1,4 +1,17 @@
 # include "../inc/philo.h"
+
+void free_pid_list(t_pid_list *head)
+{
+    t_pid_list *current = head;
+    t_pid_list *next;
+
+    while (current)
+    {
+        next = current->next;
+        free(current);
+        current = next;
+    }
+}
 t_pid_list *find_node(t_pid_list *head, pid_t pid)
 {
     t_pid_list *current = head;
