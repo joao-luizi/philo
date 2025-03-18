@@ -9,7 +9,6 @@ void write_status(t_status status, t_philo *philo)
         return ;
     table = get_table(NULL);
     elapsed = get_time(MILLISECOND) - table->start_simulation;
-    //printf("Start is %ld elapsed is %ld\n", table->start_simulation, elapsed);
     safe_mutex_handle(&table->write_mutex, LOCK);
     if ((status == TAKE_FIRST_FORK || status == TAKE_SECOND_FORK) && !get_bool(&table->table_mutex,&table->end_simulation))
         write_take_fork(philo, elapsed, status);

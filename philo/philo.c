@@ -1,4 +1,4 @@
-# include "../inc/philo.h"
+# include "inc/philo.h"
 void clean(t_table *table)
 {
     t_philo *philo;

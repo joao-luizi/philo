@@ -2,39 +2,49 @@
 
 CC				=	cc
 CFLAGS 			= -Wall -Wextra -Werror -I$(INC_DIR)
+CFLAGS_BO 		= -Wall -Wextra -Werror -I$(INC_DIR_BO)
 RM				=	rm -rf
 
-SRC_DIR			= ./src
+SRC_DIR			= ./philo
+SRC_DIR_BO		= ./philo_bonus
 OBJ_DIR 		= ./obj
-INC_DIR			= ./inc
+OBJ_DIR_BO 		= ./obj_bo
+INC_DIR			= ./philo/inc
+INC_DIR_BO		= ./philo_bonus/inc
 BIN_DIR			= ./bin
-LIB_DIR			= ./lib
 NAME			=	${BIN_DIR}/philo
 NAME_BONUS		=	${BIN_DIR}/philo_bonus
 
 
 SRC			=		${SRC_DIR}/philo.c ${SRC_DIR}/philo_aux.c 								\
-					${SRC_DIR}/parser/parser.c ${SRC_DIR}/parser/custom_atol.c 				\
-					${SRC_DIR}/threads/error_handler.c ${SRC_DIR}/threads/threads_aux.c 	\
-					${SRC_DIR}/threads/write_output.c ${SRC_DIR}/threads/write_aux.c		\
 					${SRC_DIR}/mutex/error_handler.c ${SRC_DIR}/mutex/safe_accessors.c  	\
+					${SRC_DIR}/parser/parser.c ${SRC_DIR}/parser/custom_atol.c 				\
+					${SRC_DIR}/table/table.c   					\
+					${SRC_DIR}/threads/error_handler.c ${SRC_DIR}/threads/threads_aux.c		\
+					${SRC_DIR}/threads/write_aux.c ${SRC_DIR}/threads/write_output.c		\
 					${SRC_DIR}/philo/philo.c   												\
-					${SRC_DIR}/table/table.c   												\
 
+SRC_BONUS	=		${SRC_DIR_BO}/philo.c ${SRC_DIR_BO}/philo_aux.c 							\
+					${SRC_DIR_BO}/parser/parser.c ${SRC_DIR_BO}/parser/custom_atol.c 			\
+					${SRC_DIR_BO}/table/table.c   												\
+					${SRC_DIR_BO}/semaphores/error_handler.c ${SRC_DIR_BO}/pid_list/pid_list.c	\
+					${SRC_DIR_BO}/states/write_output.c ${SRC_DIR_BO}/states/write_states.c		\
+					${SRC_DIR_BO}/states/handle_states.c		 	\
 
-
-SRC_BONUS	=
 OBJS 		= 		${patsubst ${SRC_DIR}/%.c, ${OBJ_DIR}/%.o, ${SRC}}
-OBJS_BONUS	= 		${patsubst ${SRC_DIR}/%.c, ${OBJ_DIR}/%.o, ${SRC_BONUS}}
+OBJS_BONUS	= 		${patsubst ${SRC_DIR_BO}/%.c, ${OBJ_DIR_BO}/%.o, ${SRC_BONUS}}
 
 all:			$(NAME)
-
-
 
 $(OBJ_DIR)/%.o:	$(SRC_DIR)/%.c
 				printf "Compiling $(NAME) objects... %-33.33s\r" $(notdir $@)
 				@mkdir -p $(dir $@)
 				$(CC) $(CFLAGS) -c $< -o $@
+
+$(OBJ_DIR_BO)/%.o:	$(SRC_DIR_BO)/%.c
+				printf "Compiling $(NAME_BONUS) objects... %-33.33s\r" $(notdir $@)
+				@mkdir -p $(dir $@)
+				$(CC) $(CFLAGS_BO) -c $< -o $@
 				
 
 $(BIN_DIR):
@@ -49,22 +59,17 @@ $(NAME):		$(OBJS) | $(BIN_DIR)
 
 $(NAME_BONUS):	$(OBJS_BONUS) | $(BIN_DIR)
 				printf 'Compiling $(NAME_BONUS)\n'
-				$(CC) $(CFLAGS) $(OBJS_BONUS) -o $@ 
+				$(CC) $(CFLAGS_BO) $(OBJS_BONUS) -o $@ 
 
 
 clean:
-				@if [ -d $(OBJ_DIR) ]; then $(RM) $(OBJ_DIR); fi
-				@if [ -f $(NAME) ]; then $(RM) $(NAME); fi
-				@if [ -f $(NAME_BONUS) ]; then $(RM) $(NAME_BONUS); fi
+	@$(RM) $(OBJ_DIR) $(OBJ_DIR_BO)
+	@$(RM) $(NAME) $(NAME_BONUS)
 
-fclean:			clean
-				$(RM) $(NAME)
-				$(RM) $(NAME_BONUS)
+fclean: clean
+	@$(RM) $(BIN_DIR)
 
-re:				fclean all
+re:				fclean all bonus
 
-debug:
-	@echo "SRC: $(SRC)"
-	@echo "OBJS: $(OBJS)"
 
 .PHONY:			all clean fclean re
