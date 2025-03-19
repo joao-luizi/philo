@@ -1,34 +1,39 @@
 
 # include "../inc/philo.h"
 
-static void handle_mutex_error (int status, t_opcode opcode)
+static bool handle_mutex_error (int status, t_opcode opcode)
 {
     if (status == 0)
-        return ;
+        return (true);
     else if (status == EINVAL && (opcode == LOCK || opcode == UNLOCK))
-        error_exit("The value specified by mutex is invalid." , "handle_mutex_error @ mutes/error_handler.c");
+        return (printf(R "The value specified by mutex is invalid." RST), false);
     else if (status == EINVAL && opcode == INIT )
-        error_exit("The value specified by attr is invalid." , "handle_mutex_error @ mutes/error_handler.c");
+        return (printf(R "The value specified by attr is invalid." RST), false);
     else if (status == EDEADLK)
-        error_exit("A deadlock would occur if the thread blocked waiting for mutex." , "handle_mutex_error @ mutes/error_handler.c");
+        return (printf(R "A deadlock would occur if the thread blocked waiting for mutex." RST), false);
     else if (status == EPERM)
-        error_exit("The current thread does not hold a lock on mutex." , "handle_mutex_error @ mutes/error_handler.c");
+        return (printf(R "The current thread does not hold a lock on mutex." RST), false);
     else if (status == ENOMEM)
-        error_exit("The process cannot allocate enough memory to create another mutex.", "handle_mutex_error @ mutes/error_handler.c");
+        return (printf(R "The process cannot allocate enough memory to create another mutex." RST), false);
     else if (status == EBUSY)
-        error_exit("Mutex is locked." , "handle_mutex_error @ mutes/error_handler.c");
+        return (printf(R "Mutex is locked." RST), false);
+    else 
+        return (printf(R "Unknown error\n" RST), false);
 }
 
-void safe_mutex_handle(t_mtx *mutex, t_opcode opcode)
+bool safe_mutex_handle(t_mtx *mutex, t_opcode opcode)
 {
     if (opcode == LOCK)
-        handle_mutex_error(pthread_mutex_lock(mutex), opcode);
+        return (handle_mutex_error(pthread_mutex_lock(mutex), opcode));
     else if (opcode == UNLOCK)
-        handle_mutex_error(pthread_mutex_unlock(mutex), opcode);
+        return (handle_mutex_error(pthread_mutex_unlock(mutex), opcode));
     else if (opcode == INIT)
-        handle_mutex_error(pthread_mutex_init(mutex, NULL), opcode);
+        return (handle_mutex_error(pthread_mutex_init(mutex, NULL), opcode));
     else if (opcode == DESTROY)
-        handle_mutex_error(pthread_mutex_destroy(mutex), opcode);
+        return(handle_mutex_error(pthread_mutex_destroy(mutex), opcode));
     else
-        error_exit("Unrecognized mutex operation", "safe_mutex_handle @ mutes/error_handler.c");
+    {
+        printf(R "Unrecognized mutex operation\n" RST);
+        return (false);
+    }
 }

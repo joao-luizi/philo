@@ -1,17 +1,15 @@
 # include "../inc/philo.h"
 
-void write_status(t_status status, t_philo *philo)
+void write_status(t_status status, t_philo *philo, t_table *table)
 {
-    t_table *table;
     long elapsed;
 
     if (philo->full)
         return ;
-    table = get_table(NULL);
     elapsed = get_time(MILLISECOND) - table->start_simulation;
     safe_mutex_handle(&table->write_mutex, LOCK);
     if ((status == TAKE_FIRST_FORK || status == TAKE_SECOND_FORK) && !get_bool(&table->table_mutex,&table->end_simulation))
-        write_take_fork(philo, elapsed, status);
+        write_take_fork(philo, elapsed);
     else if (status == EATING && !get_bool(&table->table_mutex,&table->end_simulation))
         write_eating(philo, elapsed);
     else if (status == SLEEPING && !get_bool(&table->table_mutex,&table->end_simulation))

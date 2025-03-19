@@ -14,32 +14,48 @@ static bool is_digit(char c)
 {
     return (c >= '0' && c <= '9');
 }
-static const char *valid_input(const char *str)
+static const char *valid_input(const char *str, bool *error)
 {
     while (*str && is_space(*str))
         str++;
     while (*str && is_signal(*str))
     {
         if (*str == '-')
-            error_exit("Only positive numbers allowed\n", "custom_atol @ parser/custom_atol.c");
+        {
+            *error = true;
+            printf(R "Invalid Input: Only positive numbers allowed\n" RST);
+            return (str);
+        }
         else
             str++;
     }
     if (!is_digit(*str))
-        error_exit("Invalid character found\n", "custom_atol @ parser/custom_atol.c");
+    {
+        *error = true;
+        printf(R "Invalid Input: Only numbers allowed\n" RST);
+        return (str);
+    }
     return (str);
 }
-long custom_atol(const char *str)
+long custom_atol(const char *str, bool *error)
 {
     long num;
-    
+   
+    if (*error)
+        return (0);
     num = 0;
-    str = valid_input(str);
+    str = valid_input(str, error);
+    if (*error)
+        return (0);
     while (*str && is_digit(*str))
     {
         num = (num * 10) + (*str - '0');
         if (num > INT_MAX)
-            error_exit("Invalid Input: INT_MAX is the maximun allowed\n", "custom_atol @ parser/custom_atol.c");
+        {
+            *error = true;
+            printf(R "Invalid Input: INT_MAX is the maximun allowed\n" RST);
+            return (0);
+        }
         str++;
     }
     return (num);

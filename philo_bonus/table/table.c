@@ -40,7 +40,7 @@ void handle_lone_philo(t_table *table)
     long last_meal = table->start_simulation;
     write_status(1, TAKE_FIRST_FORK, table);
     while (!philo_dead(table, last_meal, table->time_to_die))
-        custom_usleep(10, table);
+        custom_usleep(10, table, last_meal);
     write_status(1, DEAD, table);
     exit(0);
 }
@@ -56,8 +56,19 @@ void handle_child_process(int id, t_table *table)
         if (philo_full(meal_counter, table->nbr_limit_meals))
             exit(0);
         philo_sleep(table, &last_meal, id);
+        if (philo_dead(table, last_meal, table->time_to_die))
+        {
+            write_status(id, DEAD, table);
+            exit(1);
+        }
         philo_think(table, &last_meal, id);
+        if (philo_dead(table, last_meal, table->time_to_die))
+        {
+            write_status(id, DEAD, table);
+            exit(1);
+        }
     }
+    write_status(id, DEAD, table);
     exit(1);
 }
 

@@ -11,22 +11,16 @@ bool philo_died(t_philo *philo, t_table *table)
     last_meal_time = get_long(&philo->philo_mutex, &philo->last_meal_time);
     elapsed = get_time(MILLISECOND) - last_meal_time;
     time_to_die = table->time_to_die / 1000;
-    //printf("Last Meal: %ld Elapsed: %ld Time to die: %ld\n", last_meal_time, elapsed, time_to_die);
-
-    if (elapsed > time_to_die)
+    if (elapsed >= time_to_die)
         return (true);
     return (false);
-
-
 }
 
-void philo_think(t_philo *philo)
+void philo_think(t_philo *philo, t_table *table)
 {
-    t_table *table;
     long time_to_think;
 
-    table = get_table(NULL);
-    write_status(THINKING, philo);
+    write_status(THINKING, philo, table);
     if (table->philo_number % 2 == 0)
         return ;
     time_to_think = (table->time_to_eat * 2) - table->time_to_sleep;   
@@ -36,19 +30,15 @@ void philo_think(t_philo *philo)
 
 }
 
-void philo_eat(t_philo *philo)
+void philo_eat(t_philo *philo, t_table *table)
 {
-    t_table *table;
-
-    table = get_table(NULL);
     safe_mutex_handle(&philo->first_fork->fork, LOCK);
-    write_status(TAKE_FIRST_FORK, philo);
+    write_status(TAKE_FIRST_FORK, philo, table);
     safe_mutex_handle(&philo->second_fork->fork, LOCK);
-    write_status(TAKE_SECOND_FORK, philo);
+    write_status(TAKE_SECOND_FORK, philo, table);
     set_long(&philo->philo_mutex, &philo->last_meal_time, get_time(MILLISECOND));
     philo->meal_counter++;
-    write_status(EATING,philo);
-    //printf("Im going to eat for %ld\n", table->time_to_eat / 1000);
+    write_status(EATING,philo, table);
     custom_usleep(table->time_to_eat, table);
     if (table->nbr_limit_meals > 0 && philo->meal_counter == table->nbr_limit_meals)
         set_bool(&philo->philo_mutex, &philo->full, true);
@@ -72,7 +62,7 @@ static void assign_forks(t_philo *philo, t_fork *forks, int philo_pos)
     
 }
 
-void philo_init(t_table *table)
+bool philo_init(t_table *table)
 {
     int i;
     t_philo *philo;
@@ -85,8 +75,10 @@ void philo_init(t_table *table)
         philo->full = false;
         philo->meal_counter = 0;
         philo->table = table;
-        safe_mutex_handle(&philo->philo_mutex, INIT);
+        if (!safe_mutex_handle(&philo->philo_mutex, INIT))
+            return (false);
         assign_forks(philo, table->forks, i);
         i++;
     }
+    return (true);
 }

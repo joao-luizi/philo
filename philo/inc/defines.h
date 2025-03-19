@@ -11,7 +11,6 @@
 # include <string.h>
 # include <errno.h>
 
-# define DEBUG false
 //default color
 # define RST "\033[0m" 
 //RED Color (Bold)

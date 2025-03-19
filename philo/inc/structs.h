@@ -6,6 +6,7 @@
 typedef pthread_mutex_t t_mtx;
 typedef struct s_table t_table;
 
+
 typedef struct s_fork
 {
     t_mtx   fork;

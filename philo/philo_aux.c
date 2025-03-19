@@ -28,16 +28,13 @@ long get_time(t_time_code timecode)
 {
     struct timeval tv;
 
-    if (gettimeofday(&tv, NULL))
-        error_exit("getimeofday failed.", "get_time @ aux.c");
+    gettimeofday(&tv, NULL);
     if (timecode == SECOND)
         return (tv.tv_sec + (tv.tv_usec / 1000000));
     else if (timecode == MILLISECOND)
         return ((tv.tv_sec  * 1000) + (tv.tv_usec / 1000));
     else if (timecode == MICROSECOND)
         return ((tv.tv_sec  * 1000000) + tv.tv_usec);
-    else
-        error_exit("Unknown timecode", "get_time @ aux.c");
     return(0);
 }
 

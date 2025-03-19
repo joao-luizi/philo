@@ -11,6 +11,7 @@ bool philo_dead(t_table *table, long last_meal, long time_to_die)
 {
     long time = get_time(MILLISECOND, table);
     long elapsed = time - last_meal;
+   
     return (elapsed >= time_to_die);
 }
 

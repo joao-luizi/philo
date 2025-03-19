@@ -1,5 +1,5 @@
 # include "inc/philo.h"
-void custom_usleep(long usec, t_table *table)
+void custom_usleep(long usec, t_table *table, long last_meal)
 {
     long start;
     long elapsed;
@@ -10,8 +10,7 @@ void custom_usleep(long usec, t_table *table)
     {
         elapsed = get_time(MICROSECOND, table) - start;  
         remaining = usec - elapsed;  
-        //printf("Custom u elapsed is %ld remaining is %ld\n", elapsed, remaining);
-        if (remaining <= 0)
+        if (remaining <= 0 || philo_dead(table, last_meal, table->time_to_die))
             break;  
         if (remaining < 500)
         {

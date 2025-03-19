@@ -34,7 +34,7 @@ void write_eating(int id, long elapsed);
 void write_take_fork(int id, long elapsed, t_status status);
 //philo_aux.c
 long get_time(t_time_code timecode, t_table *table);
-void custom_usleep(long usec, t_table *table);
+void custom_usleep(long usec, t_table *table, long last_meal);
 //philo.c
 void error_exit(const char *error, char *function_name, t_table *table);
 void clean(t_table *table);
