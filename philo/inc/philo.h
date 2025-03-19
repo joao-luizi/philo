@@ -17,7 +17,7 @@ void increase_long(t_mtx *mutex, long *dest);
 //parser/custom_atol.c
 long custom_atol(const char *str, bool *error);
 //parser/parser.c
-bool parse_input(t_table *table, char **argv);
+bool parse_input(t_table *table, char **argv, int argc);
 
 //philo/philo.c
 bool philo_died(t_philo *philo, t_table *table);

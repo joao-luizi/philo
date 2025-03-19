@@ -47,7 +47,7 @@ int main(int argc, char **argv)
     error = false;
     if (argc == 5 || argc == 6)
     {
-        if (!parse_input(&table, argv))
+        if (!parse_input(&table, argv, argc))
             return (1);
         error = !table_init(&table);
         if (!error)
