@@ -4,6 +4,8 @@
 # include "defines.h"
 # include "structs.h"
 
+//philo/philo.c
+bool	philo_init(t_table *table);
 //sem/safe_accessors.c
 bool	get_bool(sem_t *sem, t_table *table, bool *dest);
 void	set_bool(sem_t *sem, t_table *table, bool *dest, bool value);
@@ -17,6 +19,20 @@ void safe_sem_handle(sem_t **sem, const char *name, t_sem_action opcode, t_table
 long	custom_atol(const char *str, bool *error);
 // parser/parser.c
 bool	parse_input(t_table *table, char **argv, int argc);
+//table/table.c
+void	de_sync_philos(t_philo *philo, t_table *table);
+bool	table_init(t_table *table);
+
+//threads/write_output.c
+void	write_status(t_status status, t_philo *philo, t_table *table);
+//threads/write_aux.c
+void	write_dead(t_philo *philo, long elapsed);
+void	write_thinking(t_philo *philo, long elapsed);
+void	write_sleeping(t_philo *philo, long elapsed);
+void	write_eating(t_philo *philo, long elapsed);
+void	write_take_fork(t_philo *philo, long elapsed);
+//threads/error_handler.c
+bool	safe_thread_handle(pthread_t *thread, void *(*foo)(void *), void *data, t_opcode opcode);
 
 // philo_aux.c
 void 	error_exit(const char *message, t_table *table);

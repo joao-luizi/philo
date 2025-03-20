@@ -5,6 +5,19 @@
 
 typedef struct s_table	t_table;
 
+typedef struct s_philo
+{
+	int					id;
+	long				meal_counter;
+	long				last_meal_time;
+	bool				full;
+	bool				dead;
+	sem_t				*philo_semaphore;
+    pid_t				process_id; 
+    pthread_t			monitor;
+	t_table				*table;
+}						t_philo;
+
 typedef struct s_table
 {
 	long				philo_number;
@@ -15,24 +28,15 @@ typedef struct s_table
 	long				nbr_limit_meals;
 	long				start_simulation;
 	bool				end_simulation;
-	bool				all_processes_ready;
 	long				process_running_count;
+	sem_t               *start_semaphore;
     sem_t				*table_semaphore;    
     sem_t				*write_semaphore;    
-    sem_t				*forks;              
+    sem_t				*forks;   
+    t_philo				*philos;           
 }						t_table;
 
-typedef struct s_philo
-{
-	int					id;
-	long				meal_counter;
-	long				last_meal_time;
-	bool				full;
-	sem_t				*philo_semaphore;
-    pid_t				process_id; 
-    pthread_t			monitor;
-	t_table				*table;
-}						t_philo;
+
 
 
 

@@ -6,12 +6,11 @@
 /*   By: joaomigu <joaomigu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 00:15:53 by joaomigu          #+#    #+#             */
-/*   Updated: 2025/03/20 15:42:10 by joaomigu         ###   ########.fr       */
+/*   Updated: 2025/03/20 22:35:59 by joaomigu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/philo.h"
-
 /**
  * @brief Checks if a philosopher has died.
  *
@@ -30,9 +29,9 @@ bool	philo_died(t_philo *philo, t_table *table)
 	long	time_to_die;
 	long	last_meal_time;
 
-	if (get_bool(&philo->philo_mutex, &philo->full))
+	if (get_bool(&philo->philo_semaphore, table, &philo->full))
 		return (false);
-	last_meal_time = get_long(&philo->philo_mutex, &philo->last_meal_time);
+	last_meal_time = get_long(&philo->philo_semaphore,table, &philo->last_meal_time);
 	elapsed = get_time(MILLISECOND) - last_meal_time;
 	time_to_die = table->time_to_die / 1000;
 	return (elapsed >= time_to_die);
@@ -74,82 +73,58 @@ void	philo_think(t_philo *philo, t_table *table)
  */
 void	philo_eat(t_philo *philo, t_table *table)
 {
-	safe_mutex_handle(&philo->first_fork->fork, LOCK);
+	safe_sem_handle(&table->forks, NULL, SEM_LOCK, table);
 	write_status(TAKE_FIRST_FORK, philo, table);
-	safe_mutex_handle(&philo->second_fork->fork, LOCK);
+	safe_sem_handle(&table->forks, NULL, SEM_LOCK, table);
 	write_status(TAKE_SECOND_FORK, philo, table);
-	set_long(&philo->philo_mutex, &philo->last_meal_time,
+	set_long(&philo->philo_semaphore, table, &philo->last_meal_time,
 		get_time(MILLISECOND));
 	philo->meal_counter++;
 	write_status(EATING, philo, table);
 	custom_usleep(table->time_to_eat, table);
 	if (table->nbr_limit_meals > 0
 		&& philo->meal_counter == table->nbr_limit_meals)
-		set_bool(&philo->philo_mutex, &philo->full, true);
-	safe_mutex_handle(&philo->first_fork->fork, UNLOCK);
-	safe_mutex_handle(&philo->second_fork->fork, UNLOCK);
+		set_bool(&philo->philo_semaphore, table, &philo->full, true);
+	safe_sem_handle(&table->forks, NULL, SEM_UNLOCK, table);
+	safe_sem_handle(&table->forks, NULL, SEM_UNLOCK, table);
 }
 
-/**
- * @brief Assigns forks to a philosopher.
- *
- * The assignment of forks depends on the philosopher's 
- * position at the table and
- * their ID. If the philosopher's ID is even, the first 
- * fork is assigned to the
- * current position and the second fork is assigned to the 
- * next position. If the
- * philosopher's ID is odd, the first fork is assigned to 
- * the next position and
- * the second fork is assigned to the current position.
- *
- * @param philo The philosopher to assign forks to.
- * @param forks The array of forks.
- * @param philo_pos The position of the philosopher at the table.
- */
-static void	assign_forks(t_philo *philo, t_fork *forks, int philo_pos)
+
+static void set_philo_defaults(t_philo *philo, int id, t_table *table)
 {
-	int	philo_number;
-
-	philo_number = philo->table->philo_number;
-	philo->first_fork = &forks[(philo_pos + 1) % philo_number];
-	philo->second_fork = &forks[philo_pos];
-	if (philo->id % 2 == 0)
-	{
-		philo->first_fork = &forks[philo_pos];
-		philo->second_fork = &forks[(philo_pos + 1) % philo_number];
-	}
+	philo->meal_counter = 0;
+	philo->last_meal_time = 0;
+	philo->full = false;
+	philo->dead = false;
+	philo->id = id;
+	philo->table = table;
 }
-
-/**
- * @brief Initializes the philosophers at the table.
- *
- * Each philosopher is assigned an ID, marked as not full, and 
- * initialized with
- * a meal counter of 0. Their mutex is also initialized. The forks
- *  are assigned
- * to each philosopher using the assign_forks function.
- *
- * @param table The table where the philosophers are sitting.
- *
- * @return true if the initialization is successful, false otherwise.
- */
 bool	philo_init(t_table *table)
 {
 	int		i;
-	t_philo	*philo;
+	t_philo	philo;
 
+	i = -1;
+	while (++i < table->philo_number)
+	{
+		philo = table->philos[i];
+		set_philo_defaults(&philo, i + 1, table);
+		philo.process_id = fork();
+		if (philo.process_id < 0)
+			return (false);
+		if (philo.process_id == 0)
+			philo_routine(philo);
+	}
+	sleep(5);
 	i = 0;
+	//this is part of dinner init that is missing.
+	//it releases each philo and it's monitor thread starting the simulation
+	//it also waits on all pids and as soon as one exits it analysys the exit_status to determine if it died
+	//if it died all other processes must be killed
 	while (i < table->philo_number)
 	{
-		philo = table->philos + i;
-		philo->id = i + 1;
-		philo->full = false;
-		philo->meal_counter = 0;
-		philo->table = table;
-		if (!safe_mutex_handle(&philo->philo_mutex, INIT))
-			return (false);
-		assign_forks(philo, table->forks, i);
+		safe_sem_handle(&table->start_semaphore, NULL, SEM_UNLOCK, table);
+		safe_sem_handle(&table->start_semaphore, NULL, SEM_UNLOCK, table);
 		i++;
 	}
 	return (true);

@@ -6,7 +6,7 @@
 /*   By: joaomigu <joaomigu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 00:03:21 by joaomigu          #+#    #+#             */
-/*   Updated: 2025/03/20 13:26:09 by joaomigu         ###   ########.fr       */
+/*   Updated: 2025/03/20 14:45:50 by joaomigu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,18 +63,25 @@ void	clean(t_table *table)
     if (table->forks)
     {   
         sem_close(table->forks);    
-        sem_unlink("forks");
+        sem_unlink("/forks");
     }
     if (table->table_semaphore)
     {  
         sem_close(table->table_semaphore);
-        sem_unlink("table");
+        sem_unlink("/table_semaphore");
     }
     if (table->write_semaphore)
     {   
         sem_close(table->write_semaphore);
-        sem_unlink("write");
+        sem_unlink("/write_semaphore");
     }
+    if (table->start_semaphore)
+    {
+        sem_close(table->start_semaphore);
+        sem_unlink("/start_semaphore");
+    }
+    if (table->philos)
+        free(table->philos);
 }
 
 /**
@@ -127,7 +134,9 @@ int	main(int argc, char **argv)
 			return (1);
         if (error)
             return (1);
-		//error = !table_init(&table);
+		error = !table_init(&table);
+        if (!error)
+            error = !philo_init(&table);
 		clean(&table);
 	}
 	else

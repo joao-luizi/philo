@@ -115,6 +115,12 @@ void safe_sem_handle(sem_t **sem, const char *name, t_sem_action opcode, t_table
         if (*sem == SEM_FAILED)
             handle_sem_error(errno, opcode, table);
     }
+    else if(opcode == SEM_INIT)
+    {
+        *sem = sem_open(name, 0);
+        if (*sem == SEM_FAILED)
+            handle_sem_error(errno, opcode, table);
+    }
     else
         error_exit("Unrecognized semaphore operation", table);
 }

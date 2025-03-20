@@ -46,7 +46,8 @@ typedef enum e_opcode
 
 typedef enum e_sem_action
 {
-    SEM_CREATE,   
+    SEM_CREATE,
+    SEM_INIT, 
     CLOSE,    
     UNLINK,   
     SEM_LOCK,     
