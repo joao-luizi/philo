@@ -6,12 +6,26 @@
 /*   By: joaomigu <joaomigu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 00:06:11 by joaomigu          #+#    #+#             */
-/*   Updated: 2025/03/20 00:15:45 by joaomigu         ###   ########.fr       */
+/*   Updated: 2025/03/20 11:24:52 by joaomigu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/philo.h"
 
+/**
+ * @brief Monitors the dinner simulation and checks for philosopher
+ *  deaths.
+ *
+ * This function runs in a separate thread and continuously checks 
+ * if any
+ * philosophers have died. If a philosopher has died, it sets the 
+ end simulation
+ * flag and writes the death status to the output.
+ *
+ * @param data A pointer to the t_table structure containing 
+ * the simulation data.
+ * @return NULL
+ */
 void	*monitor_dinner(void *data)
 {
 	t_table	*table;
@@ -38,6 +52,17 @@ void	*monitor_dinner(void *data)
 	return (NULL);
 }
 
+/**
+ * @brief Simulates a philosopher's dinner.
+ *
+ * This function runs in a separate thread for each philosopher and simulates
+ * their dinner. It waits for all threads to start, then enters a loop where
+ * the philosopher eats, sleeps, and thinks.
+ *
+ * @param data A pointer to the t_philo structure containing the philosopher's 
+ * data.
+ * @return NULL
+ */
 void	*dinner_simulation(void *data)
 {
 	t_philo	*philo;
@@ -62,7 +87,18 @@ void	*dinner_simulation(void *data)
 	return (NULL);
 }
 
-bool	join_all_threads(t_table *table)
+/**
+ * @brief Joins all threads in the simulation.
+ *
+ * This function joins all philosopher threads and the monitor thread, then 
+ * sets
+ * the end simulation flag.
+ *
+ * @param table A pointer to the t_table structure containing the simulation 
+ * data.
+ * @return true if all threads were joined successfully, false otherwise.
+ */
+static bool	join_all_threads(t_table *table)
 {
 	int	i;
 
@@ -80,6 +116,17 @@ bool	join_all_threads(t_table *table)
 	return (true);
 }
 
+/**
+ * @brief Initializes the dinner simulation.
+ *
+ * This function initializes the simulation by creating threads for each
+ * philosopher and the monitor, then starts the simulation.
+ *
+ * @param table A pointer to the t_table structure containing the simulation 
+ * data.
+ * @return true if the simulation was initialized successfully, false 
+ * otherwise.
+ */
 bool	dinner_init(t_table *table)
 {
 	int	i;
@@ -104,7 +151,5 @@ bool	dinner_init(t_table *table)
 	}
 	if (!safe_thread_handle(&table->monitor, monitor_dinner, table, CREATE))
 		return (false);
-	if (!join_all_threads(table))
-		return (false);
-	return (true);
+	return (join_all_threads(table));
 }

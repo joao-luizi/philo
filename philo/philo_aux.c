@@ -6,12 +6,25 @@
 /*   By: joaomigu <joaomigu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 00:03:50 by joaomigu          #+#    #+#             */
-/*   Updated: 2025/03/20 00:03:51 by joaomigu         ###   ########.fr       */
+/*   Updated: 2025/03/20 11:16:27 by joaomigu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "inc/philo.h"
 
+/**
+ * @brief Custom implementation of usleep that takes into 
+ * account the end of simulation flag.
+ * 
+ * This function pauses the execution of the current thread 
+ * for a specified amount of time.
+ * It checks the end of simulation flag and breaks the loop 
+ * if it's set.
+ * 
+ * @param usec The time to sleep in microseconds.
+ * @param table A pointer to the table containing the end of 
+ * simulation flag.
+ */
 void	custom_usleep(long usec, t_table *table)
 {
 	long	start;
@@ -29,14 +42,28 @@ void	custom_usleep(long usec, t_table *table)
 		if (remaining < 500)
 		{
 			while (get_time(MICROSECOND) - start < usec)
-			{
-			}
+				;
 		}
 		else
-			usleep(remaining / 2);
+		{
+			if (remaining * 0.8 < 1000)
+				usleep(1000);
+			else
+				usleep(remaining * 0.8);
+		}
 	}
 }
 
+/**
+ * @brief Retrieves the current time in the specified time unit.
+ * 
+ * This function uses the gettimeofday function to get the current
+ *  time and converts it to the desired time unit.
+ * 
+ * @param timecode The time unit to retrieve the time in. Can be 
+ * SECOND, MILLISECOND, or MICROSECOND.
+ * @return The current time in the specified time unit.
+ */
 long	get_time(t_time_code timecode)
 {
 	struct timeval	tv;

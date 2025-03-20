@@ -6,7 +6,7 @@
 /*   By: joaomigu <joaomigu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 00:19:32 by joaomigu          #+#    #+#             */
-/*   Updated: 2025/03/20 00:19:33 by joaomigu         ###   ########.fr       */
+/*   Updated: 2025/03/20 10:52:42 by joaomigu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@ typedef struct s_table
 	long				time_to_die;
 	long				time_to_eat;
 	long				time_to_sleep;
+	long				time_to_think;
 	long				nbr_limit_meals;
 	long				start_simulation;
 	bool				end_simulation;

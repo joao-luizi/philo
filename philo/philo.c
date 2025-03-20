@@ -6,7 +6,7 @@
 /*   By: joaomigu <joaomigu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 00:03:21 by joaomigu          #+#    #+#             */
-/*   Updated: 2025/03/20 00:03:22 by joaomigu         ###   ########.fr       */
+/*   Updated: 2025/03/20 11:16:09 by joaomigu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,16 @@ should error and not run (no crashing)
 should error and not run (no crashing)
 */
 
+/**
+ * @brief Cleans up resources used by the table.
+ * 
+ * This function destroys all mutexes associated with 
+ * philosophers and forks,
+ * then frees the memory allocated for the philosophers 
+ * and forks.
+ * 
+ * @param table The table to clean up.
+ */
 void	clean(t_table *table)
 {
 	t_philo	*philo;
@@ -71,6 +81,17 @@ void	clean(t_table *table)
 		free(table->philos);
 }
 
+/**
+ * @brief Allocates memory safely.
+ * 
+ * This function allocates memory using malloc, checks for 
+ * allocation errors,
+ * and initializes the allocated memory to zero.
+ * 
+ * @param bytes The number of bytes to allocate.
+ * @return A pointer to the allocated memory, or NULL if 
+ * allocation failed.
+ */
 void	*safe_malloc(size_t bytes)
 {
 	void	*ret;
@@ -85,6 +106,19 @@ void	*safe_malloc(size_t bytes)
 	return (ret);
 }
 
+/**
+ * @brief The main entry point of the program.
+ * 
+ * This function initializes the table, parses the input arguments, 
+ * and starts
+ * the dinner simulation. If any errors occur during initialization 
+ * or simulation,
+ * it cleans up resources and returns an error code.
+ * 
+ * @param argc The number of command-line arguments.
+ * @param argv The array of command-line arguments.
+ * @return An error code (0 for success, 1 for failure).
+ */
 int	main(int argc, char **argv)
 {
 	t_table	table;

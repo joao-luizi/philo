@@ -6,12 +6,25 @@
 /*   By: joaomigu <joaomigu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 00:06:11 by joaomigu          #+#    #+#             */
-/*   Updated: 2025/03/20 00:15:12 by joaomigu         ###   ########.fr       */
+/*   Updated: 2025/03/20 11:25:43 by joaomigu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/philo.h"
 
+/**
+ * @brief Simulates a lone philosopher's dinner.
+ *
+ * This function runs in a separate thread for a lone philosopher and
+ *  simulates
+ * their dinner. It waits for all threads to start, then enters a loop
+ *  where
+ * the philosopher takes a fork and waits for a short period of time.
+ *
+ * @param data A pointer to the t_philo structure containing the 
+ * philosopher's data.
+ * @return NULL
+ */
 void	*lone_philo(void *data)
 {
 	t_philo	*philo;
@@ -29,6 +42,19 @@ void	*lone_philo(void *data)
 	return (NULL);
 }
 
+/**
+ * @brief De-synchronizes philosophers to prevent simultaneous 
+ * actions.
+ *
+ * This function introduces a delay or thinking period for philosophers
+ *  to
+ * prevent them from taking actions at the same time.
+ *
+ * @param philo A pointer to the t_philo structure containing the 
+ * philosopher's data.
+ * @param table A pointer to the t_table structure containing the 
+ * simulation data.
+ */
 void	de_sync_philos(t_philo *philo, t_table *table)
 {
 	if (table->philo_number % 2 == 0)
@@ -43,6 +69,18 @@ void	de_sync_philos(t_philo *philo, t_table *table)
 	}
 }
 
+/**
+ * @brief Initializes the table data structure.
+ *
+ * This function initializes the table data structure by allocating
+ *  memory for
+ * the philosophers and forks, and initializing the mutexes.
+ *
+ * @param table A pointer to the t_table structure containing the 
+ simulation data.
+ * @return true if the table was initialized successfully, false 
+ otherwise.
+ */
 bool	table_init(t_table *table)
 {
 	int	i;

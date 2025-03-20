@@ -6,12 +6,24 @@
 /*   By: joaomigu <joaomigu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 00:15:53 by joaomigu          #+#    #+#             */
-/*   Updated: 2025/03/20 00:17:03 by joaomigu         ###   ########.fr       */
+/*   Updated: 2025/03/20 11:28:27 by joaomigu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/philo.h"
 
+/**
+ * @brief Checks if a philosopher has died.
+ *
+ * A philosopher is considered dead if the time elapsed since their 
+ * last meal
+ * exceeds the time to die.
+ *
+ * @param philo The philosopher to check.
+ * @param table The table where the philosopher is sitting.
+ *
+ * @return true if the philosopher has died, false otherwise.
+ */
 bool	philo_died(t_philo *philo, t_table *table)
 {
 	long	elapsed;
@@ -28,19 +40,40 @@ bool	philo_died(t_philo *philo, t_table *table)
 	return (false);
 }
 
+/**
+ * @brief Simulates a philosopher thinking.
+ *
+ * If the number of philosophers at the table is even, the function 
+ * returns
+ * immediately. Otherwise, it simulates the thinking process by sleeping 
+ * for a
+ * fraction of the time to think.
+ *
+ * @param philo The philosopher who is thinking.
+ * @param table The table where the philosopher is sitting.
+ */
 void	philo_think(t_philo *philo, t_table *table)
 {
-	long	time_to_think;
-
 	write_status(THINKING, philo, table);
 	if (table->philo_number % 2 == 0)
 		return ;
-	time_to_think = (table->time_to_eat * 2) - table->time_to_sleep;
-	if (time_to_think < 0)
-		time_to_think = 0;
-	custom_usleep(time_to_think * 0.4, table);
+	custom_usleep(table->time_to_think * 0.4, table);
 }
 
+/**
+ * @brief Simulates a philosopher eating.
+ *
+ * The philosopher attempts to acquire both their first and 
+ * second forks. If
+ * successful, they eat for the specified time and update their 
+ * last meal time.
+ * If the philosopher has reached the maximum number of meals, 
+ * they are marked as
+ * full.
+ *
+ * @param philo The philosopher who is eating.
+ * @param table The table where the philosopher is sitting.
+ */
 void	philo_eat(t_philo *philo, t_table *table)
 {
 	safe_mutex_handle(&philo->first_fork->fork, LOCK);
@@ -59,6 +92,23 @@ void	philo_eat(t_philo *philo, t_table *table)
 	safe_mutex_handle(&philo->second_fork->fork, UNLOCK);
 }
 
+/**
+ * @brief Assigns forks to a philosopher.
+ *
+ * The assignment of forks depends on the philosopher's 
+ * position at the table and
+ * their ID. If the philosopher's ID is even, the first 
+ * fork is assigned to the
+ * current position and the second fork is assigned to the 
+ * next position. If the
+ * philosopher's ID is odd, the first fork is assigned to 
+ * the next position and
+ * the second fork is assigned to the current position.
+ *
+ * @param philo The philosopher to assign forks to.
+ * @param forks The array of forks.
+ * @param philo_pos The position of the philosopher at the table.
+ */
 static void	assign_forks(t_philo *philo, t_fork *forks, int philo_pos)
 {
 	int	philo_number;
@@ -73,6 +123,19 @@ static void	assign_forks(t_philo *philo, t_fork *forks, int philo_pos)
 	}
 }
 
+/**
+ * @brief Initializes the philosophers at the table.
+ *
+ * Each philosopher is assigned an ID, marked as not full, and 
+ * initialized with
+ * a meal counter of 0. Their mutex is also initialized. The forks
+ *  are assigned
+ * to each philosopher using the assign_forks function.
+ *
+ * @param table The table where the philosophers are sitting.
+ *
+ * @return true if the initialization is successful, false otherwise.
+ */
 bool	philo_init(t_table *table)
 {
 	int		i;

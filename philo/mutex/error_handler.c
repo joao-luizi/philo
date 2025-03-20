@@ -6,12 +6,24 @@
 /*   By: joaomigu <joaomigu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 00:18:33 by joaomigu          #+#    #+#             */
-/*   Updated: 2025/03/20 00:19:22 by joaomigu         ###   ########.fr       */
+/*   Updated: 2025/03/20 11:44:05 by joaomigu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/philo.h"
 
+/**
+ * @brief Handles errors related to mutex operations.
+ * 
+ * This function checks the status of a mutex operation and prints an 
+ * appropriate error message if an error occurred. It returns `true` if 
+ * the operation was successful and `false` otherwise.
+ * 
+ * @param status The status code returned by the mutex operation.
+ * @param opcode The operation being performed (e.g., LOCK, UNLOCK, 
+ * INIT, DESTROY).
+ * @return true If the operation was successful, false otherwise.
+ */
 static bool	handle_mutex_error(int status, t_opcode opcode)
 {
 	if (status == 0)
@@ -36,6 +48,19 @@ static bool	handle_mutex_error(int status, t_opcode opcode)
 		return (printf(R "Unknown error\n" RST), false);
 }
 
+/**
+ * @brief Safely handles mutex operations.
+ * 
+ * This function performs various mutex operations (e.g., LOCK, UNLOCK, INIT,
+ *  DESTROY) 
+ * and ensures that errors are handled appropriately. It uses 
+ * `handle_mutex_error` to check the status of each operation and print error 
+ * messages if necessary.
+ * 
+ * @param mutex The mutex to operate on.
+ * @param opcode The operation to perform (e.g., LOCK, UNLOCK, INIT, DESTROY).
+ * @return true If the operation was successful, false otherwise.
+ */
 bool	safe_mutex_handle(t_mtx *mutex, t_opcode opcode)
 {
 	if (opcode == LOCK)

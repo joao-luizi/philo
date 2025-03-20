@@ -6,12 +6,22 @@
 /*   By: joaomigu <joaomigu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 00:17:17 by joaomigu          #+#    #+#             */
-/*   Updated: 2025/03/20 00:17:18 by joaomigu         ###   ########.fr       */
+/*   Updated: 2025/03/20 11:35:58 by joaomigu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/philo.h"
 
+/**
+ * @brief Checks for extra errors in the input table.
+ * 
+ * This function checks if the number of philosophers, time to die, time to eat, 
+ * and time to sleep are valid (i.e., not zero). If any of these values are 
+ * zero, it prints an error message and returns true.
+ * 
+ * @param table The input table to be checked.
+ * @return true If an error is found, false otherwise.
+ */
 bool	extra_errors(t_table *table)
 {
 	if (table->philo_number == 0)
@@ -37,6 +47,24 @@ bool	extra_errors(t_table *table)
 	return (false);
 }
 
+/**
+ * @brief Parses the input arguments and populates the table 
+ * structure.
+ * 
+ * This function parses the input arguments and populates the 
+ * table structure 
+ * with the number of philosophers, time to die, time to eat, 
+ * time to sleep, 
+ * and the optional number of meals limit. It also checks for 
+ * errors in the 
+ * input values and returns false if any error is found.
+ * 
+ * @param table The table structure to be populated.
+ * @param argv The array of input arguments.
+ * @param argc The number of input arguments.
+ * @return true If the input is parsed successfully, false 
+ * otherwise.
+ */
 bool	parse_input(t_table *table, char **argv, int argc)
 {
 	bool	error;
@@ -54,5 +82,8 @@ bool	parse_input(t_table *table, char **argv, int argc)
 		table->nbr_limit_meals = -1;
 	if (error || extra_errors(table))
 		return (false);
+	table->time_to_think = (table->time_to_eat * 2) - table->time_to_sleep;
+	if (table->time_to_think < 0)
+		table->time_to_think = 0;
 	return (true);
 }

@@ -6,7 +6,7 @@
 /*   By: joaomigu <joaomigu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 00:19:37 by joaomigu          #+#    #+#             */
-/*   Updated: 2025/03/20 00:19:38 by joaomigu         ###   ########.fr       */
+/*   Updated: 2025/03/20 11:48:08 by joaomigu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,26 +31,28 @@ long	custom_atol(const char *str, bool *error);
 bool	parse_input(t_table *table, char **argv, int argc);
 
 // philo/philo.c
+bool	philo_init(t_table *table);
 bool	philo_died(t_philo *philo, t_table *table);
 void	philo_eat(t_philo *philo, t_table *table);
 void	philo_think(t_philo *philo, t_table *table);
-bool	philo_init(t_table *table);
 
 // table/table.c
-bool	table_init(t_table *table);
 bool	dinner_init(t_table *table);
 void	*dinner_simulation(void *data);
 void	*monitor_dinner(void *data);
-void	*lone_philo(void *data);
-void	de_sync_philos(t_philo *philo, t_table *table);
+
+//table/table_aux.
 bool	table_init(t_table *table);
+void	de_sync_philos(t_philo *philo, t_table *table);
+void	*lone_philo(void *data);
 
 // threads/error_handler.c
 bool	safe_thread_handle(pthread_t *thread, void *(*foo)(void *), void *data,
 			t_opcode opcode);
-// threads/auxiliary.c
+// threads/threads_aux.c
 void	wait_all_threads(t_table *table);
 bool	all_threads_running(t_mtx *mutex, long *threads, long philo_nbr);
+
 // threads/write_output.c
 void	write_status(t_status status, t_philo *philo, t_table *table);
 // threads/write_aux.c

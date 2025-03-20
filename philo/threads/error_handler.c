@@ -6,12 +6,22 @@
 /*   By: joaomigu <joaomigu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 00:04:12 by joaomigu          #+#    #+#             */
-/*   Updated: 2025/03/20 00:06:00 by joaomigu         ###   ########.fr       */
+/*   Updated: 2025/03/20 11:15:27 by joaomigu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/philo.h"
 
+/**
+ * @brief Handles thread creation errors.
+ *
+ * This function handles errors that may occur during thread creation, such as
+ * lack of resources or invalid thread attributes.
+ *
+ * @param status The status code returned by the thread operation.
+ * @param opcode The operation code (CREATE, JOIN, or DETACH).
+ * @return True if the error is handled successfully, false otherwise.
+ */
 static bool	handle_thread_error(int status, t_opcode opcode)
 {
 	if (status == 0)
@@ -36,6 +46,18 @@ static bool	handle_thread_error(int status, t_opcode opcode)
 		return (printf(R "Unrecognized thread operation\n" RST), false);
 }
 
+/**
+ * @brief Handles thread operations safely.
+ *
+ * This function handles thread creation, joining, and detachment safely by
+ * checking the operation code and handling any errors that may occur.
+ *
+ * @param thread The thread to operate on.
+ * @param foo The function to be executed by the thread.
+ * @param data The data to be passed to the thread function.
+ * @param opcode The operation code (CREATE, JOIN, or DETACH).
+ * @return True if the operation is successful, false otherwise.
+ */
 bool	safe_thread_handle(pthread_t *thread, void *(*foo)(void *), void *data,
 		t_opcode opcode)
 {
