@@ -1,48 +1,59 @@
-# ifndef STRUCTS_H
-#define STRUCTS_H
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   structs.h                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: joaomigu <joaomigu@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/03/20 00:19:32 by joaomigu          #+#    #+#             */
+/*   Updated: 2025/03/20 00:19:33 by joaomigu         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-#include "defines.h"
+#ifndef STRUCTS_H
+# define STRUCTS_H
 
-typedef pthread_mutex_t t_mtx;
-typedef struct s_table t_table;
+# include "defines.h"
 
+typedef pthread_mutex_t	t_mtx;
+typedef struct s_table	t_table;
 
 typedef struct s_fork
 {
-    t_mtx   fork;
-    int     fork_id;
+	t_mtx				fork;
+	int					fork_id;
 
-}t_fork;
+}						t_fork;
 typedef struct s_philo
 {
-    int         id;
-    long        meal_counter;
-    long        last_meal_time;
-    bool         full;
-    t_fork      *first_fork;
-    t_fork      *second_fork;
-    t_mtx       philo_mutex;
-    pthread_t   thread_id;
-	t_table		*table;
-}   t_philo;
+	int					id;
+	long				meal_counter;
+	long				last_meal_time;
+	bool				full;
+	t_fork				*first_fork;
+	t_fork				*second_fork;
+	t_mtx				philo_mutex;
+	pthread_t			thread_id;
+	t_table				*table;
+}						t_philo;
 
 typedef struct s_table
 {
-    long	philo_number;
-    long	time_to_die;
-    long	time_to_eat;
-    long	time_to_sleep;
-    long	nbr_limit_meals;
-    long	start_simulation;
-    bool	end_simulation;
-    bool    all_threads_ready;
-    long    thread_running_count;
-    t_mtx   table_mutex;
-    t_mtx   write_mutex;
-    pthread_t   monitor;
-	t_fork	*forks;
-	t_philo	*philos;
+	long				philo_number;
+	long				time_to_die;
+	long				time_to_eat;
+	long				time_to_sleep;
+	long				nbr_limit_meals;
+	long				start_simulation;
+	bool				end_simulation;
+	bool				all_threads_ready;
+	long				thread_running_count;
+	t_mtx				table_mutex;
+	t_mtx				write_mutex;
+	pthread_t			monitor;
+	t_fork				*forks;
+	t_philo				*philos;
 
-}t_table;
+}						t_table;
 
 #endif

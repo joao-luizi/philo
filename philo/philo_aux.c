@@ -1,40 +1,52 @@
-# include "inc/philo.h"
-void custom_usleep(long usec, t_table *table)
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   philo_aux.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: joaomigu <joaomigu@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/03/20 00:03:50 by joaomigu          #+#    #+#             */
+/*   Updated: 2025/03/20 00:03:51 by joaomigu         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "inc/philo.h"
+
+void	custom_usleep(long usec, t_table *table)
 {
-    long start;
-    long elapsed;
-    long remaining;
+	long	start;
+	long	elapsed;
+	long	remaining;
 
-    start = get_time(MICROSECOND);
-    while (1)
-    {
-        elapsed = get_time(MICROSECOND) - start;  
-        remaining = usec - elapsed;  
-        if (remaining <= 0 || get_bool(&table->table_mutex, &table->end_simulation))
-            break;  
-        if (remaining < 500)
-        {
-            while (get_time(MICROSECOND) - start < usec)
-            {
-
-            }
-        }
-        else 
-            usleep(remaining / 2);
-    }
+	start = get_time(MICROSECOND);
+	while (1)
+	{
+		elapsed = get_time(MICROSECOND) - start;
+		remaining = usec - elapsed;
+		if (remaining <= 0 || get_bool(&table->table_mutex,
+				&table->end_simulation))
+			break ;
+		if (remaining < 500)
+		{
+			while (get_time(MICROSECOND) - start < usec)
+			{
+			}
+		}
+		else
+			usleep(remaining / 2);
+	}
 }
 
-long get_time(t_time_code timecode)
+long	get_time(t_time_code timecode)
 {
-    struct timeval tv;
+	struct timeval	tv;
 
-    gettimeofday(&tv, NULL);
-    if (timecode == SECOND)
-        return (tv.tv_sec + (tv.tv_usec / 1000000));
-    else if (timecode == MILLISECOND)
-        return ((tv.tv_sec  * 1000) + (tv.tv_usec / 1000));
-    else if (timecode == MICROSECOND)
-        return ((tv.tv_sec  * 1000000) + tv.tv_usec);
-    return(0);
+	gettimeofday(&tv, NULL);
+	if (timecode == SECOND)
+		return (tv.tv_sec + (tv.tv_usec / 1000000));
+	else if (timecode == MILLISECOND)
+		return ((tv.tv_sec * 1000) + (tv.tv_usec / 1000));
+	else if (timecode == MICROSECOND)
+		return ((tv.tv_sec * 1000000) + tv.tv_usec);
+	return (0);
 }
-
