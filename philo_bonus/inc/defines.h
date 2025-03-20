@@ -35,12 +35,23 @@
 
 typedef enum e_opcode
 {
-    LOCK,
-    UNLOCK, 
-    UNLINK,
-    CREATE,
-    CLOSE
-}t_opcode;
+	LOCK,
+	UNLOCK,
+	INIT,
+	DESTROY,
+	CREATE,
+	JOIN,
+	DETACH
+}	t_opcode;
+
+typedef enum e_sem_action
+{
+    SEM_CREATE,   
+    CLOSE,    
+    UNLINK,   
+    SEM_LOCK,     
+    SEM_UNLOCK    
+}	t_sem_action;
 
 typedef enum e_time_code
 {

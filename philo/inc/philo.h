@@ -6,7 +6,7 @@
 /*   By: joaomigu <joaomigu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 00:19:37 by joaomigu          #+#    #+#             */
-/*   Updated: 2025/03/20 11:48:08 by joaomigu         ###   ########.fr       */
+/*   Updated: 2025/03/20 13:39:45 by joaomigu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,7 @@ void	write_eating(t_philo *philo, long elapsed);
 void	write_take_fork(t_philo *philo, long elapsed);
 
 // philo_aux.c
+void	ft_putstr_fd(const char *s, int fd);
 long	get_time(t_time_code timecode);
 void	custom_usleep(long usec, t_table *table);
 // philo.c

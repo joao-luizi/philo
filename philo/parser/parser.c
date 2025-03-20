@@ -6,7 +6,7 @@
 /*   By: joaomigu <joaomigu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 00:17:17 by joaomigu          #+#    #+#             */
-/*   Updated: 2025/03/20 11:35:58 by joaomigu         ###   ########.fr       */
+/*   Updated: 2025/03/20 13:43:19 by joaomigu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,26 +22,26 @@
  * @param table The input table to be checked.
  * @return true If an error is found, false otherwise.
  */
-bool	extra_errors(t_table *table)
+static bool	extra_errors(t_table *table)
 {
 	if (table->philo_number == 0)
 	{
-		printf(R "Invalid Input: There must be at least one philosopher\n" RST);
+		ft_putstr_fd(R "Invalid Input: There must be at least one philosopher\n" RST, STDERR_FILENO);
 		return (true);
 	}
 	if (table->time_to_die == 0)
 	{
-		printf(R "Invalid Input: time to die is 0\n" RST);
+		ft_putstr_fd(R "Invalid Input: time to die is 0\n" RST, STDERR_FILENO);
 		return (true);
 	}
 	if (table->time_to_eat == 0)
 	{
-		printf(R "Invalid Input: time to eat is 0\n" RST);
+		ft_putstr_fd(R "Invalid Input: time to eat is 0\n" RST, STDERR_FILENO);
 		return (true);
 	}
 	if (table->time_to_sleep == 0)
 	{
-		printf(R "Invalid Input: time to sleep is 0\n" RST);
+		ft_putstr_fd(R "Invalid Input: time to sleep is 0\n" RST, STDERR_FILENO);
 		return (true);
 	}
 	return (false);
