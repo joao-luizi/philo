@@ -6,7 +6,7 @@
 /*   By: joaomigu <joaomigu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 00:15:53 by joaomigu          #+#    #+#             */
-/*   Updated: 2025/03/20 22:35:59 by joaomigu         ###   ########.fr       */
+/*   Updated: 2025/03/21 14:52:05 by joaomigu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,9 +29,9 @@ bool	philo_died(t_philo *philo, t_table *table)
 	long	time_to_die;
 	long	last_meal_time;
 
-	if (get_bool(&philo->philo_semaphore, table, &philo->full))
+	if (get_bool(philo->philo_semaphore, table, &philo->full))
 		return (false);
-	last_meal_time = get_long(&philo->philo_semaphore,table, &philo->last_meal_time);
+	last_meal_time = get_long(philo->philo_semaphore,table, &philo->last_meal_time);
 	elapsed = get_time(MILLISECOND) - last_meal_time;
 	time_to_die = table->time_to_die / 1000;
 	return (elapsed >= time_to_die);
@@ -77,14 +77,14 @@ void	philo_eat(t_philo *philo, t_table *table)
 	write_status(TAKE_FIRST_FORK, philo, table);
 	safe_sem_handle(&table->forks, NULL, SEM_LOCK, table);
 	write_status(TAKE_SECOND_FORK, philo, table);
-	set_long(&philo->philo_semaphore, table, &philo->last_meal_time,
+	set_long(philo->philo_semaphore, table, &philo->last_meal_time,
 		get_time(MILLISECOND));
 	philo->meal_counter++;
 	write_status(EATING, philo, table);
 	custom_usleep(table->time_to_eat, table);
 	if (table->nbr_limit_meals > 0
 		&& philo->meal_counter == table->nbr_limit_meals)
-		set_bool(&philo->philo_semaphore, table, &philo->full, true);
+		set_bool(philo->philo_semaphore, table, &philo->full, true);
 	safe_sem_handle(&table->forks, NULL, SEM_UNLOCK, table);
 	safe_sem_handle(&table->forks, NULL, SEM_UNLOCK, table);
 }
@@ -102,30 +102,19 @@ static void set_philo_defaults(t_philo *philo, int id, t_table *table)
 bool	philo_init(t_table *table)
 {
 	int		i;
-	t_philo	philo;
 
 	i = -1;
 	while (++i < table->philo_number)
 	{
-		philo = table->philos[i];
-		set_philo_defaults(&philo, i + 1, table);
-		philo.process_id = fork();
-		if (philo.process_id < 0)
-			return (false);
-		if (philo.process_id == 0)
-			philo_routine(philo);
-	}
-	sleep(5);
-	i = 0;
-	//this is part of dinner init that is missing.
-	//it releases each philo and it's monitor thread starting the simulation
-	//it also waits on all pids and as soon as one exits it analysys the exit_status to determine if it died
-	//if it died all other processes must be killed
-	while (i < table->philo_number)
-	{
+		set_philo_defaults(&table->philos[i], i + 1, table);
+		set_long(table->table_semaphore, table, &table->start_simulation, get_time(MILLISECOND));
+        table->philos[i].process_id = fork();
+        if (table->philos[i].process_id < 0)
+            return (false);
+        if (table->philos[i].process_id == 0)
+            philo_routine(table->philos[i]);
 		safe_sem_handle(&table->start_semaphore, NULL, SEM_UNLOCK, table);
 		safe_sem_handle(&table->start_semaphore, NULL, SEM_UNLOCK, table);
-		i++;
 	}
 	return (true);
 }

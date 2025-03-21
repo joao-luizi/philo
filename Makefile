@@ -27,7 +27,7 @@ SRC			=		${SRC_DIR}/philo.c ${SRC_DIR}/philo_aux.c 								\
 SRC_BONUS	=		${SRC_DIR_BO}/philo.c ${SRC_DIR_BO}/philo_aux.c 						\
 					${SRC_DIR_BO}/parser/parser.c ${SRC_DIR_BO}/parser/custom_atol.c 		\
 					${SRC_DIR_BO}/sem/safe_accessors.c ${SRC_DIR_BO}/sem/error_handler.c 	\
-					${SRC_DIR_BO}/table/table.c  											\
+					${SRC_DIR_BO}/table/table.c ${SRC_DIR_BO}/table/table_aux.c 			\
 					${SRC_DIR_BO}/philo/philo.c  											\
 					${SRC_DIR_BO}/threads/error_handler.c 									\
 					${SRC_DIR_BO}/threads/write_aux.c ${SRC_DIR_BO}/threads/write_output.c	\

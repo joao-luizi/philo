@@ -49,6 +49,7 @@ bool table_init(t_table *table)
     safe_sem_handle(&table->table_semaphore,"/table_semaphore", UNLINK, table);
     safe_sem_handle(&table->write_semaphore,"/write_semaphore", UNLINK, table);
     safe_sem_handle(&table->start_semaphore,"/start_semaphore", UNLINK, table);
+    safe_sem_handle(&table->death_semaphore, "/death_semaphore", UNLINK, table);
     safe_sem_handle(&table->forks, "/forks", UNLINK, table);
     table->end_simulation = false;
     table->process_running_count = 0;
@@ -63,6 +64,8 @@ bool table_init(t_table *table)
     safe_sem_handle(&table->table_semaphore,"/table_semaphore", SEM_CREATE, table);
     safe_sem_handle(&table->write_semaphore,"/write_semaphore", SEM_CREATE, table);
     safe_sem_handle(&table->start_semaphore,"/start_semaphore", SEM_CREATE, table);
+    safe_sem_handle(&table->death_semaphore, "/death_semaphore", SEM_CREATE, table);
+    safe_sem_handle(&table->death_semaphore, NULL, SEM_LOCK, table);
     safe_sem_handle(&table->start_semaphore, NULL, SEM_LOCK, table);
     return (true);
 }

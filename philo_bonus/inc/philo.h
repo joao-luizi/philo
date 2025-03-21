@@ -6,6 +6,10 @@
 
 //philo/philo.c
 bool	philo_init(t_table *table);
+bool	philo_died(t_philo *philo, t_table *table);
+void	philo_eat(t_philo *philo, t_table *table);
+void	philo_think(t_philo *philo, t_table *table);
+
 //sem/safe_accessors.c
 bool	get_bool(sem_t *sem, t_table *table, bool *dest);
 void	set_bool(sem_t *sem, t_table *table, bool *dest, bool value);
@@ -13,15 +17,20 @@ long	get_long(sem_t *sem, t_table *table, long *dest);
 void	set_long(sem_t *sem, t_table *table, long *dest, long value);
 void	increase_long(sem_t *sem, t_table *table, long *dest);
 
-//sem/safe_sem_handle.c
+//sem/error_handler.c
 void safe_sem_handle(sem_t **sem, const char *name, t_sem_action opcode, t_table *table);
 // parser/custom_atol.c
 long	custom_atol(const char *str, bool *error);
 // parser/parser.c
 bool	parse_input(t_table *table, char **argv, int argc);
 //table/table.c
+void	*monitor_routine(void *arg);
+void	philo_routine(t_philo philo);
+bool	dinner_init(t_table *table);
+//table/table_aux.c
 void	de_sync_philos(t_philo *philo, t_table *table);
 bool	table_init(t_table *table);
+
 
 //threads/write_output.c
 void	write_status(t_status status, t_philo *philo, t_table *table);

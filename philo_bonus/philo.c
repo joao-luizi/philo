@@ -6,7 +6,7 @@
 /*   By: joaomigu <joaomigu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 00:03:21 by joaomigu          #+#    #+#             */
-/*   Updated: 2025/03/20 14:45:50 by joaomigu         ###   ########.fr       */
+/*   Updated: 2025/03/21 14:31:12 by joaomigu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,6 +80,11 @@ void	clean(t_table *table)
         sem_close(table->start_semaphore);
         sem_unlink("/start_semaphore");
     }
+    if (table->death_semaphore)
+    {
+        sem_close(table->death_semaphore);
+        sem_unlink("/death_semaphore");
+    }
     if (table->philos)
         free(table->philos);
 }
@@ -137,6 +142,8 @@ int	main(int argc, char **argv)
 		error = !table_init(&table);
         if (!error)
             error = !philo_init(&table);
+        if (!error)
+            error = !dinner_init(&table);
 		clean(&table);
 	}
 	else

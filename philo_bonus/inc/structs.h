@@ -29,10 +29,12 @@ typedef struct s_table
 	long				start_simulation;
 	bool				end_simulation;
 	long				process_running_count;
+	pthread_t 			death_thread;
 	sem_t               *start_semaphore;
     sem_t				*table_semaphore;    
     sem_t				*write_semaphore;    
     sem_t				*forks;   
+	sem_t 				*death_semaphore;
     t_philo				*philos;           
 }						t_table;
 

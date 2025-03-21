@@ -3,22 +3,24 @@
 
 void *monitor_routine(void *arg)
 {
-    t_philo *philo = (t_philo *)arg;
-	t_table *table = philo->table;
+	t_philo *philo;
+	t_table *table;
    
-    safe_sem_handle(&philo->table->start_semaphore, NULL, SEM_LOCK, philo->table);
-	usleep(1000);
-    while (!get_bool(&table->table_semaphore, table, &table->end_simulation))
+	philo = (t_philo *)arg;
+	table = philo->table;
+    safe_sem_handle(&table->start_semaphore, NULL, SEM_LOCK, table);
+    while (!get_bool(table->table_semaphore, table, &table->end_simulation))
 	{
 		if (philo_died(philo, table))
 		{
 			write_status(DEAD, philo, table);
-			set_bool(&philo->philo_semaphore, table, &philo->dead, true);
-			set_bool(&table->table_semaphore, table, &table->end_simulation, true);
-			break;
+			safe_sem_handle(&table->write_semaphore, NULL, SEM_LOCK, table);
+			safe_sem_handle(&table->death_semaphore, NULL, SEM_UNLOCK, table);
+			return (NULL);
 		}
-		if (get_bool(&philo->philo_semaphore, table, &philo->full))
-            break;
+		if (get_bool(philo->philo_semaphore, table, &philo->full))
+			return (NULL);
+		usleep(100);	
 	}
 	return (NULL);
 }
@@ -26,15 +28,18 @@ void *monitor_routine(void *arg)
 void philo_routine(t_philo philo)
 {
 	t_table *table;
+	sem_t sem;
 
 	table = philo.table;
+	philo.philo_semaphore = &sem;
 	safe_sem_handle(&philo.philo_semaphore, NULL, SEM_INIT, table);
+	set_long(philo.philo_semaphore, table, &philo.last_meal_time, get_time(MILLISECOND));
 	if (!safe_thread_handle(&philo.monitor, monitor_routine, &philo, CREATE))
 		exit(EXIT_FAILURE);
+	safe_thread_handle(&philo.monitor, NULL, NULL, DETACH);
 	safe_sem_handle(&philo.table->start_semaphore, NULL, SEM_LOCK, table);
-	set_long(&philo.philo_semaphore, table, &philo.last_meal_time, get_time(MILLISECOND));
 	de_sync_philos(&philo, philo.table);
-	while (!get_bool(&table->table_semaphore, table, &table->end_simulation))
+	while (!get_bool(table->table_semaphore, table, &table->end_simulation))
 	{
 		if (philo.full)
 			break ;
@@ -43,8 +48,40 @@ void philo_routine(t_philo philo)
 		custom_usleep(philo.table->time_to_sleep, table);
 		philo_think(&philo, table);
 	}
-	safe_thread_handle(&philo.monitor, NULL, NULL, JOIN);
-	if (philo.dead)
-		exit(EXIT_FAILURE);
+	sem_destroy(philo.philo_semaphore);
     exit(EXIT_SUCCESS);
+}
+
+void *death_monitor_thread(void *arg)
+{
+    t_table *table = (t_table *)arg;
+
+    safe_sem_handle(&table->death_semaphore, NULL, SEM_LOCK, table);
+    for (int j = 0; j < table->philo_number; j++)
+    {
+        if (table->philos[j].process_id > 0)
+            kill(table->philos[j].process_id, SIGKILL);
+    }
+
+    return NULL;
+}
+
+bool	dinner_init(t_table *table)
+{
+	int	i;
+
+	if (table->nbr_limit_meals == 0 || table->philo_number == 0)
+		return (true);
+	safe_thread_handle(&table->death_thread, death_monitor_thread, table, CREATE);
+	safe_thread_handle(&table->death_thread, NULL, NULL, DETACH);
+	//i = -1;
+	//while (++i < table->philo_number)
+	//{
+//		safe_sem_handle(&table->start_semaphore, NULL, SEM_UNLOCK, table);
+//		safe_sem_handle(&table->start_semaphore, NULL, SEM_UNLOCK, table);
+//	}
+    i = -1;	
+    while (++i < table->philo_number)
+		waitpid(table->philos[i].process_id, NULL, 0);
+	return (true);
 }

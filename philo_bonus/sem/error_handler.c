@@ -85,6 +85,16 @@ static void handle_sem_error(int status, t_sem_action opcode, t_table *table)
         if (status == EINVAL)
             error_exit("Specified semaphore is not valid.", table);
     }
+    else if (opcode == SEM_INIT)
+    {
+        printf("status: %d\n", status);
+        if (status == EINVAL)
+            error_exit("Specified semaphore is not valid.", table);
+        else if (status == ENOSYS)
+            error_exit("The system does not support unnamed semaphores.", table);
+    }
+    else
+        error_exit("Unrecognized semaphore operation", table);
 }
 
 /**
@@ -116,11 +126,7 @@ void safe_sem_handle(sem_t **sem, const char *name, t_sem_action opcode, t_table
             handle_sem_error(errno, opcode, table);
     }
     else if(opcode == SEM_INIT)
-    {
-        *sem = sem_open(name, 0);
-        if (*sem == SEM_FAILED)
-            handle_sem_error(errno, opcode, table);
-    }
+        handle_sem_error(sem_init(*sem, 0, 1), opcode, table);
     else
         error_exit("Unrecognized semaphore operation", table);
 }
