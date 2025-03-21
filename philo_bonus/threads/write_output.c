@@ -6,7 +6,7 @@
 /*   By: joaomigu <joaomigu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 00:04:43 by joaomigu          #+#    #+#             */
-/*   Updated: 2025/03/21 11:59:32 by joaomigu         ###   ########.fr       */
+/*   Updated: 2025/03/21 16:02:57 by joaomigu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,22 +30,17 @@ void	write_status(t_status status, t_philo *philo, t_table *table)
 
 	if (philo->full)
 		return ;
-	elapsed = get_time(MILLISECOND) - table->start_simulation;
 	safe_sem_handle(&table->write_semaphore, NULL, SEM_LOCK, table);
-	if ((status == TAKE_FIRST_FORK || status == TAKE_SECOND_FORK)
-		&& !get_bool(table->table_semaphore, table, &table->end_simulation))
+	elapsed = get_time(MILLISECOND) - table->start_simulation;
+	if ((status == TAKE_FIRST_FORK || status == TAKE_SECOND_FORK))
 		write_take_fork(philo, elapsed);
-	else if (status == EATING && !get_bool(table->table_semaphore, table,
-			&table->end_simulation))
+	else if (status == EATING)
 		write_eating(philo, elapsed);
-	else if (status == SLEEPING && !get_bool(table->table_semaphore, table,
-			&table->end_simulation))
+	else if (status == SLEEPING)
 		write_sleeping(philo, elapsed);
-	else if (status == THINKING && !get_bool(table->table_semaphore, table,
-			&table->end_simulation))
+	else if (status == THINKING)
 		write_thinking(philo, elapsed);
-	else if (status == DEAD && !get_bool(table->table_semaphore, table,
-			&table->end_simulation))
+	else if (status == DEAD)
 		write_dead(philo, elapsed);
 	safe_sem_handle(&table->write_semaphore, NULL, SEM_UNLOCK, table);
 }

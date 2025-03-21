@@ -6,7 +6,7 @@
 /*   By: joaomigu <joaomigu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 00:15:53 by joaomigu          #+#    #+#             */
-/*   Updated: 2025/03/21 14:52:05 by joaomigu         ###   ########.fr       */
+/*   Updated: 2025/03/21 16:14:39 by joaomigu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,8 +77,8 @@ void	philo_eat(t_philo *philo, t_table *table)
 	write_status(TAKE_FIRST_FORK, philo, table);
 	safe_sem_handle(&table->forks, NULL, SEM_LOCK, table);
 	write_status(TAKE_SECOND_FORK, philo, table);
-	set_long(philo->philo_semaphore, table, &philo->last_meal_time,
-		get_time(MILLISECOND));
+	set_long(philo->philo_semaphore, table, &philo->last_meal_time, get_time(MILLISECOND));
+	//philo->last_meal_time = get_time(MILLISECOND);
 	philo->meal_counter++;
 	write_status(EATING, philo, table);
 	custom_usleep(table->time_to_eat, table);
@@ -104,17 +104,17 @@ bool	philo_init(t_table *table)
 	int		i;
 
 	i = -1;
+	set_long(table->table_semaphore, table, &table->start_simulation, get_time(MILLISECOND));
 	while (++i < table->philo_number)
 	{
 		set_philo_defaults(&table->philos[i], i + 1, table);
-		set_long(table->table_semaphore, table, &table->start_simulation, get_time(MILLISECOND));
         table->philos[i].process_id = fork();
         if (table->philos[i].process_id < 0)
             return (false);
         if (table->philos[i].process_id == 0)
             philo_routine(table->philos[i]);
-		safe_sem_handle(&table->start_semaphore, NULL, SEM_UNLOCK, table);
-		safe_sem_handle(&table->start_semaphore, NULL, SEM_UNLOCK, table);
+		//safe_sem_handle(&table->start_semaphore, NULL, SEM_UNLOCK, table);
+		//safe_sem_handle(&table->start_semaphore, NULL, SEM_UNLOCK, table);
 	}
 	return (true);
 }

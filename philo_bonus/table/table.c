@@ -9,7 +9,7 @@ void *monitor_routine(void *arg)
 	philo = (t_philo *)arg;
 	table = philo->table;
     safe_sem_handle(&table->start_semaphore, NULL, SEM_LOCK, table);
-    while (!get_bool(table->table_semaphore, table, &table->end_simulation))
+    while (true)
 	{
 		if (philo_died(philo, table))
 		{
@@ -20,7 +20,7 @@ void *monitor_routine(void *arg)
 		}
 		if (get_bool(philo->philo_semaphore, table, &philo->full))
 			return (NULL);
-		usleep(100);	
+			
 	}
 	return (NULL);
 }
@@ -33,14 +33,16 @@ void philo_routine(t_philo philo)
 	table = philo.table;
 	philo.philo_semaphore = &sem;
 	safe_sem_handle(&philo.philo_semaphore, NULL, SEM_INIT, table);
+	de_sync_philos(&philo, philo.table);
 	set_long(philo.philo_semaphore, table, &philo.last_meal_time, get_time(MILLISECOND));
 	if (!safe_thread_handle(&philo.monitor, monitor_routine, &philo, CREATE))
 		exit(EXIT_FAILURE);
 	safe_thread_handle(&philo.monitor, NULL, NULL, DETACH);
 	safe_sem_handle(&philo.table->start_semaphore, NULL, SEM_LOCK, table);
-	de_sync_philos(&philo, philo.table);
-	while (!get_bool(table->table_semaphore, table, &table->end_simulation))
+	//while (!get_bool(table->table_semaphore, table, &table->end_simulation))
+	while (true)
 	{
+		usleep(100);
 		if (philo.full)
 			break ;
 		philo_eat(&philo,  table);
@@ -74,12 +76,12 @@ bool	dinner_init(t_table *table)
 		return (true);
 	safe_thread_handle(&table->death_thread, death_monitor_thread, table, CREATE);
 	safe_thread_handle(&table->death_thread, NULL, NULL, DETACH);
-	//i = -1;
-	//while (++i < table->philo_number)
-	//{
-//		safe_sem_handle(&table->start_semaphore, NULL, SEM_UNLOCK, table);
-//		safe_sem_handle(&table->start_semaphore, NULL, SEM_UNLOCK, table);
-//	}
+	i = -1;
+	while (++i < table->philo_number)
+	{
+		safe_sem_handle(&table->start_semaphore, NULL, SEM_UNLOCK, table);
+		safe_sem_handle(&table->start_semaphore, NULL, SEM_UNLOCK, table);
+	}
     i = -1;	
     while (++i < table->philo_number)
 		waitpid(table->philos[i].process_id, NULL, 0);
