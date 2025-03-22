@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   write_output.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: joao <joao@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: joaomigu <joaomigu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 00:04:43 by joaomigu          #+#    #+#             */
-/*   Updated: 2025/03/21 23:08:05 by joao             ###   ########.fr       */
+/*   Updated: 2025/03/21 16:02:57 by joaomigu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,14 +33,14 @@ void	write_status(t_status status, t_philo *philo, t_table *table)
 	safe_sem_handle(&table->write_semaphore, NULL, SEM_LOCK, table);
 	elapsed = get_time(MILLISECOND) - table->start_simulation;
 	if ((status == TAKE_FIRST_FORK || status == TAKE_SECOND_FORK))
-		printf("%-6ld %d has taken a fork\n", elapsed, philo->id);
+		write_take_fork(philo, elapsed);
 	else if (status == EATING)
-		printf("%-6ld %d is eating\n", elapsed, philo->id);
+		write_eating(philo, elapsed);
 	else if (status == SLEEPING)
-		printf("%-6ld %d is sleeping\n", elapsed, philo->id);
+		write_sleeping(philo, elapsed);
 	else if (status == THINKING)
-		printf("%-6ld %d is thinking\n", elapsed, philo->id);
+		write_thinking(philo, elapsed);
 	else if (status == DEAD)
-		printf("%-6ld %d is dead\n", elapsed, philo->id);
+		write_dead(philo, elapsed);
 	safe_sem_handle(&table->write_semaphore, NULL, SEM_UNLOCK, table);
 }

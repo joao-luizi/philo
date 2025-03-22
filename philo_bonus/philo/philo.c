@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: joao <joao@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: joaomigu <joaomigu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 00:15:53 by joaomigu          #+#    #+#             */
-/*   Updated: 2025/03/21 21:01:28 by joao             ###   ########.fr       */
+/*   Updated: 2025/03/21 16:14:39 by joaomigu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,8 +54,7 @@ void	philo_think(t_philo *philo, t_table *table)
 	write_status(THINKING, philo, table);
 	if (table->philo_number % 2 == 0)
 		return ;
-	usleep(table->time_to_think * 0.4);
-	//custom_usleep(table->time_to_think * 0.4, table);
+	custom_usleep(table->time_to_think * 0.4, table);
 }
 
 /**
@@ -78,15 +77,11 @@ void	philo_eat(t_philo *philo, t_table *table)
 	write_status(TAKE_FIRST_FORK, philo, table);
 	safe_sem_handle(&table->forks, NULL, SEM_LOCK, table);
 	write_status(TAKE_SECOND_FORK, philo, table);
-	//philo->last_meal_time = get_time(MILLISECOND);
-	//safe_sem_handle(&table->write_semaphore, NULL, SEM_LOCK, table);
-	//printf("	Philo %d is Eat: Last Meal Time %ld\n", philo->id, get_long(philo->philo_semaphore, table, &philo->last_meal_time));
-	//safe_sem_handle(&table->write_semaphore, NULL, SEM_UNLOCK, table);
-	write_status(EATING, philo, table);
 	set_long(philo->philo_semaphore, table, &philo->last_meal_time, get_time(MILLISECOND));
+	//philo->last_meal_time = get_time(MILLISECOND);
 	philo->meal_counter++;
-	//custom_usleep(table->time_to_eat, table);
-	usleep(table->time_to_eat);
+	write_status(EATING, philo, table);
+	custom_usleep(table->time_to_eat, table);
 	if (table->nbr_limit_meals > 0
 		&& philo->meal_counter == table->nbr_limit_meals)
 		set_bool(philo->philo_semaphore, table, &philo->full, true);
