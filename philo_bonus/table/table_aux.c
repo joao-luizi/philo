@@ -18,10 +18,7 @@ void	de_sync_philos(t_philo *philo, t_table *table)
 	if (table->philo_number % 2 == 0)
 	{
 		if (philo->id % 2 == 0)
-        {
             usleep(30000);
-			//custom_usleep(30000, table);
-        }
 	}
 	else
 	{

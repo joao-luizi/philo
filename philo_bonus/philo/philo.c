@@ -6,7 +6,7 @@
 /*   By: joaomigu <joaomigu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 00:15:53 by joaomigu          #+#    #+#             */
-/*   Updated: 2025/03/23 18:34:01 by joaomigu         ###   ########.fr       */
+/*   Updated: 2025/03/23 18:48:51 by joaomigu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,10 +52,9 @@ bool	philo_died(t_philo *philo, t_table *table)
 void	philo_think(t_philo *philo, t_table *table)
 {
 	write_status(THINKING, philo, table);
-	if (table->philo_number % 2 == 0)
+	if (table->philo_number % 2 == 0 || table->philo_number >= 100)
 		return ;
-	//custom_usleep(table->time_to_think * 0.4, table);
-	usleep(table->time_to_think * 0.4);
+	usleep(table->time_to_think * 0.2);
 }
 
 /**
@@ -79,10 +78,8 @@ void	philo_eat(t_philo *philo, t_table *table)
 	safe_sem_handle(&table->forks, NULL, SEM_LOCK, table);
 	write_status(TAKE_SECOND_FORK, philo, table);
 	set_long(philo->philo_semaphore, table, &philo->last_meal_time, get_time(MILLISECOND));
-	//philo->last_meal_time = get_time(MILLISECOND);
 	philo->meal_counter++;
 	write_status(EATING, philo, table);
-	//custom_usleep(table->time_to_eat, table);
 	usleep(table->time_to_eat);
 	if (table->nbr_limit_meals > 0
 		&& philo->meal_counter == table->nbr_limit_meals)

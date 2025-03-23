@@ -20,7 +20,7 @@ void *monitor_routine(void *arg)
 		}
 		if (get_bool(philo->philo_semaphore, table, &philo->full))
 			return (NULL);
-			
+		usleep(100);
 	}
 	return (NULL);
 }
@@ -33,11 +33,11 @@ void philo_routine(t_philo philo)
 	table = philo.table;
 	philo.philo_semaphore = &sem;
 	safe_sem_handle(&philo.philo_semaphore, NULL, SEM_INIT, table);
-	safe_sem_handle(&philo.table->start_semaphore, NULL, SEM_LOCK, table);
-	set_long(philo.philo_semaphore, table, &philo.last_meal_time, get_time(MILLISECOND));
 	if (!safe_thread_handle(&philo.monitor, monitor_routine, &philo, CREATE))
 	exit(EXIT_FAILURE);
 	safe_thread_handle(&philo.monitor, NULL, NULL, DETACH);
+	set_long(philo.philo_semaphore, table, &philo.last_meal_time, get_time(MILLISECOND));
+	safe_sem_handle(&philo.table->start_semaphore, NULL, SEM_LOCK, table);
 	de_sync_philos(&philo, philo.table);
 	//while (!get_bool(table->table_semaphore, table, &table->end_simulation))
 	while (true)
