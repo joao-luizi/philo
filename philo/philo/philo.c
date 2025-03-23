@@ -6,7 +6,7 @@
 /*   By: joaomigu <joaomigu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 00:15:53 by joaomigu          #+#    #+#             */
-/*   Updated: 2025/03/20 15:42:10 by joaomigu         ###   ########.fr       */
+/*   Updated: 2025/03/23 18:11:42 by joaomigu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ void	philo_think(t_philo *philo, t_table *table)
 	write_status(THINKING, philo, table);
 	if (table->philo_number % 2 == 0)
 		return ;
-	custom_usleep(table->time_to_think * 0.4, table);
+	usleep(table->time_to_think * 0.4);
 }
 
 /**
@@ -82,7 +82,7 @@ void	philo_eat(t_philo *philo, t_table *table)
 		get_time(MILLISECOND));
 	philo->meal_counter++;
 	write_status(EATING, philo, table);
-	custom_usleep(table->time_to_eat, table);
+	usleep(table->time_to_eat);
 	if (table->nbr_limit_meals > 0
 		&& philo->meal_counter == table->nbr_limit_meals)
 		set_bool(&philo->philo_mutex, &philo->full, true);

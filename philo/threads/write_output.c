@@ -6,7 +6,7 @@
 /*   By: joaomigu <joaomigu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 00:04:43 by joaomigu          #+#    #+#             */
-/*   Updated: 2025/03/20 11:17:33 by joaomigu         ###   ########.fr       */
+/*   Updated: 2025/03/23 18:06:01 by joaomigu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,22 +29,22 @@ void	write_status(t_status status, t_philo *philo, t_table *table)
 
 	if (philo->full)
 		return ;
-	elapsed = get_time(MILLISECOND) - table->start_simulation;
 	safe_mutex_handle(&table->write_mutex, LOCK);
+	elapsed = get_time(MILLISECOND) - table->start_simulation;
 	if ((status == TAKE_FIRST_FORK || status == TAKE_SECOND_FORK)
 		&& !get_bool(&table->table_mutex, &table->end_simulation))
-		write_take_fork(philo, elapsed);
+		printf(W "%-6ld" RST " %d has taken a fork\n", elapsed, philo->id);
 	else if (status == EATING && !get_bool(&table->table_mutex,
 			&table->end_simulation))
-		write_eating(philo, elapsed);
+		printf(W "%-6ld" RST " %d is eating\n", elapsed, philo->id);
 	else if (status == SLEEPING && !get_bool(&table->table_mutex,
 			&table->end_simulation))
-		write_sleeping(philo, elapsed);
+		printf(W "%-6ld" RST " %d is sleeping\n", elapsed, philo->id);
 	else if (status == THINKING && !get_bool(&table->table_mutex,
 			&table->end_simulation))
-		write_thinking(philo, elapsed);
+		printf(W "%-6ld" RST " %d is thinking\n", elapsed, philo->id);
 	else if (status == DEAD && !get_bool(&table->table_mutex,
 			&table->end_simulation))
-		write_dead(philo, elapsed);
+		printf(W "%-6ld" RST " %d is dead\n", elapsed, philo->id);
 	safe_mutex_handle(&table->write_mutex, UNLOCK);
 }
