@@ -6,7 +6,7 @@
 /*   By: joaomigu <joaomigu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 00:17:17 by joaomigu          #+#    #+#             */
-/*   Updated: 2025/03/20 13:45:57 by joaomigu         ###   ########.fr       */
+/*   Updated: 2025/03/23 19:11:19 by joaomigu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,11 @@
 
 /**
  * @brief Checks for extra errors in the input table.
- * 
- * This function checks if the number of philosophers, time to die, time to eat, 
- * and time to sleep are valid (i.e., not zero). If any of these values are 
+ *
+ * This function checks if the number of philosophers, time to die, time to eat,
+ * and time to sleep are valid (i.e., not zero). If any of these values are
  * zero, it prints an error message and returns true.
- * 
+ *
  * @param table The input table to be checked.
  * @return true If an error is found, false otherwise.
  */
@@ -26,7 +26,8 @@ static bool	extra_errors(t_table *table)
 {
 	if (table->philo_number == 0)
 	{
-		ft_putstr_fd(R "Invalid Input: There must be at least one philosopher\n" RST, STDERR_FILENO);
+		ft_putstr_fd(R "Invalid Input: There must be at \
+			least one philosopher\n" RST, STDERR_FILENO);
 		return (true);
 	}
 	if (table->time_to_die == 0)
@@ -41,28 +42,29 @@ static bool	extra_errors(t_table *table)
 	}
 	if (table->time_to_sleep == 0)
 	{
-		ft_putstr_fd(R "Invalid Input: time to sleep is 0\n" RST, STDERR_FILENO);
+		ft_putstr_fd(R "Invalid Input: time to sleep is 0\n" RST,
+			STDERR_FILENO);
 		return (true);
 	}
 	return (false);
 }
 
 /**
- * @brief Parses the input arguments and populates the table 
+ * @brief Parses the input arguments and populates the table
  * structure.
- * 
- * This function parses the input arguments and populates the 
- * table structure 
- * with the number of philosophers, time to die, time to eat, 
- * time to sleep, 
- * and the optional number of meals limit. It also checks for 
- * errors in the 
+ *
+ * This function parses the input arguments and populates the
+ * table structure
+ * with the number of philosophers, time to die, time to eat,
+ * time to sleep,
+ * and the optional number of meals limit. It also checks for
+ * errors in the
  * input values and returns false if any error is found.
- * 
+ *
  * @param table The table structure to be populated.
  * @param argv The array of input arguments.
  * @param argc The number of input arguments.
- * @return true If the input is parsed successfully, false 
+ * @return true If the input is parsed successfully, false
  * otherwise.
  */
 bool	parse_input(t_table *table, char **argv, int argc)
@@ -76,7 +78,7 @@ bool	parse_input(t_table *table, char **argv, int argc)
 	table->time_to_sleep = custom_atol(argv[4], &error) * 1000;
 	table->forks = NULL;
 	table->table_semaphore = NULL;
-    table->write_semaphore = NULL;
+	table->write_semaphore = NULL;
 	if (argc == 6)
 		table->nbr_limit_meals = custom_atol(argv[5], &error);
 	else
@@ -88,4 +90,3 @@ bool	parse_input(t_table *table, char **argv, int argc)
 		table->time_to_think = 0;
 	return (true);
 }
-

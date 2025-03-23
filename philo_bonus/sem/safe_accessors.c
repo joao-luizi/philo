@@ -6,7 +6,7 @@
 /*   By: joaomigu <joaomigu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 00:18:12 by joaomigu          #+#    #+#             */
-/*   Updated: 2025/03/20 13:36:22 by joaomigu         ###   ########.fr       */
+/*   Updated: 2025/03/23 19:00:21 by joaomigu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,11 @@
 
 /**
  * @brief Safely retrieves the value of a boolean variable using a semaphore.
- * 
- * This function locks the provided semaphore, retrieves the value of the boolean 
+ *
+ * This function locks the provided semaphore,
+	retrieves the value of the boolean
  * variable, and then unlocks the semaphore.
- * 
+ *
  * @param sem The semaphore protecting the boolean variable.
  * @param table The table structure used for error handling and cleanup.
  * @param dest Pointer to the boolean variable to retrieve.
@@ -35,10 +36,10 @@ bool	get_bool(sem_t *sem, t_table *table, bool *dest)
 
 /**
  * @brief Safely sets the value of a boolean variable using a semaphore.
- * 
- * This function locks the provided semaphore, sets the value of the boolean 
+ *
+ * This function locks the provided semaphore, sets the value of the boolean
  * variable, and then unlocks the semaphore.
- * 
+ *
  * @param sem The semaphore protecting the boolean variable.
  * @param table The table structure used for error handling and cleanup.
  * @param dest Pointer to the boolean variable to set.
@@ -53,10 +54,10 @@ void	set_bool(sem_t *sem, t_table *table, bool *dest, bool value)
 
 /**
  * @brief Safely retrieves the value of a long variable using a semaphore.
- * 
- * This function locks the provided semaphore, retrieves the value of the long 
+ *
+ * This function locks the provided semaphore, retrieves the value of the long
  * variable, and then unlocks the semaphore.
- * 
+ *
  * @param sem The semaphore protecting the long variable.
  * @param table The table structure used for error handling and cleanup.
  * @param dest Pointer to the long variable to retrieve.
@@ -74,10 +75,10 @@ long	get_long(sem_t *sem, t_table *table, long *dest)
 
 /**
  * @brief Safely sets the value of a long variable using a semaphore.
- * 
- * This function locks the provided semaphore, sets the value of the long 
+ *
+ * This function locks the provided semaphore, sets the value of the long
  * variable, and then unlocks the semaphore.
- * 
+ *
  * @param sem The semaphore protecting the long variable.
  * @param table The table structure used for error handling and cleanup.
  * @param dest Pointer to the long variable to set.
@@ -92,10 +93,10 @@ void	set_long(sem_t *sem, t_table *table, long *dest, long value)
 
 /**
  * @brief Safely increments the value of a long variable using a semaphore.
- * 
- * This function locks the provided semaphore, increments the value of the long 
+ *
+ * This function locks the provided semaphore, increments the value of the long
  * variable, and then unlocks the semaphore.
- * 
+ *
  * @param sem The semaphore protecting the long variable.
  * @param table The table structure used for error handling and cleanup.
  * @param dest Pointer to the long variable to increment.

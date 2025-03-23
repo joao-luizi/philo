@@ -6,7 +6,7 @@
 /*   By: joaomigu <joaomigu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 00:19:37 by joaomigu          #+#    #+#             */
-/*   Updated: 2025/03/20 13:39:45 by joaomigu         ###   ########.fr       */
+/*   Updated: 2025/03/23 18:57:39 by joaomigu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,17 +55,10 @@ bool	all_threads_running(t_mtx *mutex, long *threads, long philo_nbr);
 
 // threads/write_output.c
 void	write_status(t_status status, t_philo *philo, t_table *table);
-// threads/write_aux.c
-void	write_dead(t_philo *philo, long elapsed);
-void	write_thinking(t_philo *philo, long elapsed);
-void	write_sleeping(t_philo *philo, long elapsed);
-void	write_eating(t_philo *philo, long elapsed);
-void	write_take_fork(t_philo *philo, long elapsed);
 
 // philo_aux.c
 void	ft_putstr_fd(const char *s, int fd);
 long	get_time(t_time_code timecode);
-void	custom_usleep(long usec, t_table *table);
 // philo.c
 void	*safe_malloc(size_t bytes);
 void	clean(t_table *table);

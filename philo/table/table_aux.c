@@ -6,7 +6,7 @@
 /*   By: joaomigu <joaomigu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 00:06:11 by joaomigu          #+#    #+#             */
-/*   Updated: 2025/03/23 18:12:25 by joaomigu         ###   ########.fr       */
+/*   Updated: 2025/03/23 18:59:40 by joaomigu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,10 +60,7 @@ void	de_sync_philos(t_philo *philo, t_table *table)
 	if (table->philo_number % 2 == 0)
 	{
 		if (philo->id % 2 == 0)
-		{
 			usleep(30000);
-			//custom_usleep(30000, table);
-		}
 	}
 	else
 	{

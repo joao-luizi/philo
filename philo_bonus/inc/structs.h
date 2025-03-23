@@ -1,7 +1,19 @@
-# ifndef STRUCTS_H
-#define STRUCTS_H
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   structs.h                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: joaomigu <joaomigu@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/03/23 19:10:40 by joaomigu          #+#    #+#             */
+/*   Updated: 2025/03/23 19:10:42 by joaomigu         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-#include "defines.h"
+#ifndef STRUCTS_H
+# define STRUCTS_H
+
+# include "defines.h"
 
 typedef struct s_table	t_table;
 
@@ -13,8 +25,8 @@ typedef struct s_philo
 	bool				full;
 	bool				dead;
 	sem_t				*philo_semaphore;
-    pid_t				process_id; 
-    pthread_t			monitor;
+	pid_t				process_id;
+	pthread_t			monitor;
 	t_table				*table;
 }						t_philo;
 
@@ -29,19 +41,13 @@ typedef struct s_table
 	long				start_simulation;
 	bool				end_simulation;
 	long				process_running_count;
-	pthread_t 			death_thread;
-	sem_t               *start_semaphore;
-    sem_t				*table_semaphore;    
-    sem_t				*write_semaphore;    
-    sem_t				*forks;   
-	sem_t 				*death_semaphore;
-    t_philo				*philos;           
+	pthread_t			death_thread;
+	sem_t				*start_semaphore;
+	sem_t				*table_semaphore;
+	sem_t				*write_semaphore;
+	sem_t				*forks;
+	sem_t				*death_semaphore;
+	t_philo				*philos;
 }						t_table;
-
-
-
-
-
-
 
 #endif

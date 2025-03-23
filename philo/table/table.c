@@ -6,7 +6,7 @@
 /*   By: joaomigu <joaomigu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 00:06:11 by joaomigu          #+#    #+#             */
-/*   Updated: 2025/03/23 18:15:37 by joaomigu         ###   ########.fr       */
+/*   Updated: 2025/03/23 18:59:18 by joaomigu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,6 @@ void	*dinner_simulation(void *data)
 		philo_eat(philo, table);
 		write_status(SLEEPING, philo, table);
 		usleep(table->time_to_sleep);
-		//custom_usleep(table->time_to_sleep, table);
 		philo_think(philo, table);
 	}
 	return (NULL);

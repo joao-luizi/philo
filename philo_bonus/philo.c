@@ -6,7 +6,7 @@
 /*   By: joaomigu <joaomigu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 00:03:21 by joaomigu          #+#    #+#             */
-/*   Updated: 2025/03/21 14:31:12 by joaomigu         ###   ########.fr       */
+/*   Updated: 2025/03/23 19:14:45 by joaomigu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,54 +50,44 @@ should error and not run (no crashing)
 
 /**
  * @brief Cleans up resources used by the table.
- * 
- * This function destroys all mutexes associated with 
+ *
+ * This function destroys all mutexes associated with
  * philosophers and forks,
- * then frees the memory allocated for the philosophers 
+ * then frees the memory allocated for the philosophers
  * and forks.
- * 
+ *
  * @param table The table to clean up.
  */
 void	clean(t_table *table)
-{   
-    if (table->forks)
-    {   
-        sem_close(table->forks);    
-        sem_unlink("/forks");
-    }
-    if (table->table_semaphore)
-    {  
-        sem_close(table->table_semaphore);
-        sem_unlink("/table_semaphore");
-    }
-    if (table->write_semaphore)
-    {   
-        sem_close(table->write_semaphore);
-        sem_unlink("/write_semaphore");
-    }
-    if (table->start_semaphore)
-    {
-        sem_close(table->start_semaphore);
-        sem_unlink("/start_semaphore");
-    }
-    if (table->death_semaphore)
-    {
-        sem_close(table->death_semaphore);
-        sem_unlink("/death_semaphore");
-    }
-    if (table->philos)
-        free(table->philos);
+{
+	if (table->forks)
+		sem_close(table->forks);
+	if (table->table_semaphore)
+		sem_close(table->table_semaphore);
+	if (table->write_semaphore)
+		sem_close(table->write_semaphore);
+	if (table->start_semaphore)
+		sem_close(table->start_semaphore);
+	if (table->death_semaphore)
+		sem_close(table->death_semaphore);
+	sem_unlink("/forks");
+	sem_unlink("/write_semaphore");
+	sem_unlink("/start_semaphore");
+	sem_unlink("/table_semaphore");
+	sem_unlink("/death_semaphore");
+	if (table->philos)
+		free(table->philos);
 }
 
 /**
  * @brief Allocates memory safely.
- * 
- * This function allocates memory using malloc, checks for 
+ *
+ * This function allocates memory using malloc, checks for
  * allocation errors,
  * and initializes the allocated memory to zero.
- * 
+ *
  * @param bytes The number of bytes to allocate.
- * @return A pointer to the allocated memory, or NULL if 
+ * @return A pointer to the allocated memory, or NULL if
  * allocation failed.
  */
 void	*safe_malloc(size_t bytes)
@@ -116,13 +106,13 @@ void	*safe_malloc(size_t bytes)
 
 /**
  * @brief The main entry point of the program.
- * 
- * This function initializes the table, parses the input arguments, 
+ *
+ * This function initializes the table, parses the input arguments,
  * and starts
- * the dinner simulation. If any errors occur during initialization 
+ * the dinner simulation. If any errors occur during initialization
  * or simulation,
  * it cleans up resources and returns an error code.
- * 
+ *
  * @param argc The number of command-line arguments.
  * @param argv The array of command-line arguments.
  * @return An error code (0 for success, 1 for failure).
@@ -137,13 +127,13 @@ int	main(int argc, char **argv)
 	{
 		if (!parse_input(&table, argv, argc))
 			return (1);
-        if (error)
-            return (1);
+		if (error)
+			return (1);
 		error = !table_init(&table);
-        if (!error)
-            error = !philo_init(&table);
-        if (!error)
-            error = !dinner_init(&table);
+		if (!error)
+			error = !philo_init(&table);
+		if (!error)
+			error = !dinner_init(&table);
 		clean(&table);
 	}
 	else
