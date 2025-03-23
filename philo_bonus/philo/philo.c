@@ -6,7 +6,7 @@
 /*   By: joaomigu <joaomigu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 00:15:53 by joaomigu          #+#    #+#             */
-/*   Updated: 2025/03/21 16:14:39 by joaomigu         ###   ########.fr       */
+/*   Updated: 2025/03/23 18:34:01 by joaomigu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,8 @@ void	philo_think(t_philo *philo, t_table *table)
 	write_status(THINKING, philo, table);
 	if (table->philo_number % 2 == 0)
 		return ;
-	custom_usleep(table->time_to_think * 0.4, table);
+	//custom_usleep(table->time_to_think * 0.4, table);
+	usleep(table->time_to_think * 0.4);
 }
 
 /**
@@ -81,7 +82,8 @@ void	philo_eat(t_philo *philo, t_table *table)
 	//philo->last_meal_time = get_time(MILLISECOND);
 	philo->meal_counter++;
 	write_status(EATING, philo, table);
-	custom_usleep(table->time_to_eat, table);
+	//custom_usleep(table->time_to_eat, table);
+	usleep(table->time_to_eat);
 	if (table->nbr_limit_meals > 0
 		&& philo->meal_counter == table->nbr_limit_meals)
 		set_bool(philo->philo_semaphore, table, &philo->full, true);
@@ -113,8 +115,6 @@ bool	philo_init(t_table *table)
             return (false);
         if (table->philos[i].process_id == 0)
             philo_routine(table->philos[i]);
-		//safe_sem_handle(&table->start_semaphore, NULL, SEM_UNLOCK, table);
-		//safe_sem_handle(&table->start_semaphore, NULL, SEM_UNLOCK, table);
 	}
 	return (true);
 }
