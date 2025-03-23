@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   table.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: joaomigu <joaomigu@student.42.fr>          +#+  +:+       +#+        */
+/*   By: joao <joao@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 19:08:28 by joaomigu          #+#    #+#             */
-/*   Updated: 2025/03/23 19:09:56 by joaomigu         ###   ########.fr       */
+/*   Updated: 2025/03/23 23:02:08 by joao             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void	*monitor_routine(void *arg)
 
 	philo = (t_philo *)arg;
 	table = philo->table;
-	safe_sem_handle(&table->start_semaphore, NULL, SEM_LOCK, table);
+	usleep(1000);
 	while (true)
 	{
 		if (philo_died(philo, table))
@@ -31,7 +31,7 @@ void	*monitor_routine(void *arg)
 		}
 		if (get_bool(philo->philo_semaphore, table, &philo->full))
 			return (NULL);
-		usleep(100);
+		usleep(1000);
 	}
 	return (NULL);
 }
@@ -44,12 +44,13 @@ void	philo_routine(t_philo philo)
 	table = philo.table;
 	philo.philo_semaphore = &sem;
 	safe_sem_handle(&philo.philo_semaphore, NULL, SEM_INIT, table);
+	safe_sem_handle(&philo.table->start_semaphore, NULL, SEM_LOCK, table);
+	safe_sem_handle(&philo.table->start_semaphore, NULL, SEM_UNLOCK, table);
+	set_long(philo.philo_semaphore, table, &philo.last_meal_time,
+		get_time(MILLISECOND));
 	if (!safe_thread_handle(&philo.monitor, monitor_routine, &philo, CREATE))
 		exit(EXIT_FAILURE);
 	safe_thread_handle(&philo.monitor, NULL, NULL, DETACH);
-	set_long(philo.philo_semaphore, table, &philo.last_meal_time,
-		get_time(MILLISECOND));
-	safe_sem_handle(&philo.table->start_semaphore, NULL, SEM_LOCK, table);
 	de_sync_philos(&philo, philo.table);
 	while (true)
 	{
@@ -59,7 +60,7 @@ void	philo_routine(t_philo philo)
 		write_status(SLEEPING, &philo, table);
 		usleep(philo.table->time_to_sleep);
 		philo_think(&philo, table);
-		usleep(100);
+		usleep(1000);
 	}
 	sem_destroy(philo.philo_semaphore);
 	exit(EXIT_SUCCESS);
@@ -90,12 +91,13 @@ bool	dinner_init(t_table *table)
 	safe_thread_handle(&table->death_thread, death_monitor_thread, table,
 		CREATE);
 	safe_thread_handle(&table->death_thread, NULL, NULL, DETACH);
-	i = -1;
-	while (++i < table->philo_number)
-	{
-		safe_sem_handle(&table->start_semaphore, NULL, SEM_UNLOCK, table);
-		safe_sem_handle(&table->start_semaphore, NULL, SEM_UNLOCK, table);
-	}
+	//i = -1;
+	//while (++i < table->philo_number)
+	//{
+	//	safe_sem_handle(&table->start_semaphore, NULL, SEM_UNLOCK, table);
+	//	safe_sem_handle(&table->start_semaphore, NULL, SEM_UNLOCK, table);
+	//}
+	safe_sem_handle(&table->start_semaphore, NULL, SEM_UNLOCK, table);
 	i = -1;
 	while (++i < table->philo_number)
 		waitpid(table->philos[i].process_id, NULL, 0);
