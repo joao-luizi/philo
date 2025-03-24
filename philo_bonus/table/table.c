@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   table.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: joao <joao@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: joaomigu <joaomigu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 19:08:28 by joaomigu          #+#    #+#             */
-/*   Updated: 2025/03/23 23:02:08 by joao             ###   ########.fr       */
+/*   Updated: 2025/03/24 14:34:45 by joaomigu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ void	*death_monitor_thread(void *arg)
 
 	table = (t_table *)arg;
 	safe_sem_handle(&table->death_semaphore, NULL, SEM_LOCK, table);
-	i = -1;
+	i = 0;
 	while (++i < table->philo_number)
 	{
 		if (table->philos[i].process_id > 0)

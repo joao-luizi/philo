@@ -6,7 +6,7 @@
 /*   By: joaomigu <joaomigu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 00:06:11 by joaomigu          #+#    #+#             */
-/*   Updated: 2025/03/23 18:59:18 by joaomigu         ###   ########.fr       */
+/*   Updated: 2025/03/24 14:41:57 by joaomigu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,12 +29,15 @@
 void	*monitor_dinner(void *data)
 {
 	t_table	*table;
-	int		i;
+	unsigned int		i;
 
 	table = (t_table *)data;
 	while (!all_threads_running(&table->table_mutex,
 			&table->thread_running_count, table->philo_number))
-		;
+			{
+				usleep(1000);
+			}
+		
 	while (!get_bool(&table->table_mutex, &table->end_simulation))
 	{
 		i = 0;
@@ -48,7 +51,7 @@ void	*monitor_dinner(void *data)
 			}
 			i++;
 		}
-		usleep(100);
+		usleep(1000);
 	}
 	return (NULL);
 }
@@ -84,6 +87,7 @@ void	*dinner_simulation(void *data)
 		write_status(SLEEPING, philo, table);
 		usleep(table->time_to_sleep);
 		philo_think(philo, table);
+		usleep(1000);
 	}
 	return (NULL);
 }
@@ -101,15 +105,16 @@ void	*dinner_simulation(void *data)
  */
 static bool	join_all_threads(t_table *table)
 {
-	int	i;
+	unsigned int	i;
 
 	table->start_simulation = get_time(MILLISECOND);
 	set_bool(&table->table_mutex, &table->all_threads_ready, true);
-	i = -1;
-	while (++i < table->philo_number)
+	i = 0;
+	while (i < table->philo_number)
 	{
 		if (!safe_thread_handle(&table->philos[i].thread_id, NULL, NULL, JOIN))
 			return (false);
+		i++;
 	}
 	set_bool(&table->table_mutex, &table->end_simulation, true);
 	if (!safe_thread_handle(&table->monitor, NULL, NULL, JOIN))
@@ -130,12 +135,12 @@ static bool	join_all_threads(t_table *table)
  */
 bool	dinner_init(t_table *table)
 {
-	int	i;
+	unsigned int	i;
 
 	if (table->nbr_limit_meals == 0 || table->philo_number == 0)
 		return (true);
-	i = -1;
-	while (++i < table->philo_number)
+	i = 0;
+	while (i < table->philo_number)
 	{
 		if (table->philo_number < 2)
 		{
@@ -149,6 +154,7 @@ bool	dinner_init(t_table *table)
 					dinner_simulation, &table->philos[i], CREATE))
 				return (false);
 		}
+		i++;
 	}
 	if (!safe_thread_handle(&table->monitor, monitor_dinner, table, CREATE))
 		return (false);

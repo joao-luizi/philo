@@ -6,7 +6,7 @@
 /*   By: joaomigu <joaomigu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 00:06:11 by joaomigu          #+#    #+#             */
-/*   Updated: 2025/03/23 18:59:40 by joaomigu         ###   ########.fr       */
+/*   Updated: 2025/03/24 14:33:49 by joaomigu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,7 @@ void	de_sync_philos(t_philo *philo, t_table *table)
  */
 bool	table_init(t_table *table)
 {
-	int	i;
+	unsigned int	i;
 
 	table->end_simulation = false;
 	table->all_threads_ready = false;

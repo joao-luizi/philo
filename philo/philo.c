@@ -6,7 +6,7 @@
 /*   By: joaomigu <joaomigu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 00:03:21 by joaomigu          #+#    #+#             */
-/*   Updated: 2025/03/20 11:16:09 by joaomigu         ###   ########.fr       */
+/*   Updated: 2025/03/24 14:25:04 by joaomigu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ void	clean(t_table *table)
 {
 	t_philo	*philo;
 	t_fork	*fork;
-	int		i;
+	unsigned int		i;
 
 	i = 0;
 	while (i < table->philo_number)

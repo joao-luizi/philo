@@ -6,7 +6,7 @@
 /*   By: joaomigu <joaomigu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 00:17:41 by joaomigu          #+#    #+#             */
-/*   Updated: 2025/03/23 18:58:20 by joaomigu         ###   ########.fr       */
+/*   Updated: 2025/03/24 14:24:24 by joaomigu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,7 +102,7 @@ static const char	*valid_input(const char *str, bool *error)
  * occurred.
  * @return The converted long integer, or 0 if an error occurred.
  */
-long	custom_atol(const char *str, bool *error)
+unsigned int	custom_atol(const char *str, bool *error)
 {
 	long	num;
 

@@ -6,7 +6,7 @@
 /*   By: joaomigu <joaomigu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 00:03:50 by joaomigu          #+#    #+#             */
-/*   Updated: 2025/03/23 18:57:25 by joaomigu         ###   ########.fr       */
+/*   Updated: 2025/03/24 14:30:09 by joaomigu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ void	ft_putstr_fd(const char *s, int fd)
  * SECOND, MILLISECOND, or MICROSECOND.
  * @return The current time in the specified time unit.
  */
-long	get_time(t_time_code timecode)
+unsigned int	get_time(t_time_code timecode)
 {
 	struct timeval	tv;
 

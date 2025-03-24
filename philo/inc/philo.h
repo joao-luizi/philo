@@ -6,7 +6,7 @@
 /*   By: joaomigu <joaomigu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 00:19:37 by joaomigu          #+#    #+#             */
-/*   Updated: 2025/03/23 18:57:39 by joaomigu         ###   ########.fr       */
+/*   Updated: 2025/03/24 14:33:30 by joaomigu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,12 +21,12 @@ bool	safe_mutex_handle(t_mtx *mutex, t_opcode opcode);
 // mutex/safe_accessors.c
 bool	get_bool(t_mtx *mutex, bool *dest);
 void	set_bool(t_mtx *mutex, bool *dest, bool value);
-long	get_long(t_mtx *mutex, long *dest);
-void	set_long(t_mtx *mutex, long *dest, long value);
-void	increase_long(t_mtx *mutex, long *dest);
+unsigned int	get_long(t_mtx *mutex, unsigned int *dest);
+void	set_long(t_mtx *mutex, unsigned int *dest, unsigned int value);
+void	increase_long(t_mtx *mutex, unsigned int *dest);
 
 // parser/custom_atol.c
-long	custom_atol(const char *str, bool *error);
+unsigned int	custom_atol(const char *str, bool *error);
 // parser/parser.c
 bool	parse_input(t_table *table, char **argv, int argc);
 
@@ -51,14 +51,14 @@ bool	safe_thread_handle(pthread_t *thread, void *(*foo)(void *), void *data,
 			t_opcode opcode);
 // threads/threads_aux.c
 void	wait_all_threads(t_table *table);
-bool	all_threads_running(t_mtx *mutex, long *threads, long philo_nbr);
+bool	all_threads_running(t_mtx *mutex, unsigned int *threads, unsigned int philo_nbr);
 
 // threads/write_output.c
 void	write_status(t_status status, t_philo *philo, t_table *table);
 
 // philo_aux.c
 void	ft_putstr_fd(const char *s, int fd);
-long	get_time(t_time_code timecode);
+unsigned int	get_time(t_time_code timecode);
 // philo.c
 void	*safe_malloc(size_t bytes);
 void	clean(t_table *table);

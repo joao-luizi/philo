@@ -6,7 +6,7 @@
 /*   By: joaomigu <joaomigu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 00:18:12 by joaomigu          #+#    #+#             */
-/*   Updated: 2025/03/20 11:42:09 by joaomigu         ###   ########.fr       */
+/*   Updated: 2025/03/24 14:33:37 by joaomigu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,9 +59,9 @@ void	set_bool(t_mtx *mutex, bool *dest, bool value)
  * @param dest Pointer to the long variable to retrieve.
  * @return The value of the long variable.
  */
-long	get_long(t_mtx *mutex, long *dest)
+unsigned int	get_long(t_mtx *mutex, unsigned int *dest)
 {
-	long	result;
+	unsigned int	result;
 
 	safe_mutex_handle(mutex, LOCK);
 	result = *dest;
@@ -79,12 +79,14 @@ long	get_long(t_mtx *mutex, long *dest)
  * @param dest Pointer to the long variable to set.
  * @param value The value to set the long variable to.
  */
-void	set_long(t_mtx *mutex, long *dest, long value)
+void	set_long(t_mtx *mutex, unsigned int *dest, unsigned int value)
 {
 	safe_mutex_handle(mutex, LOCK);
 	*dest = value;
 	safe_mutex_handle(mutex, UNLOCK);
 }
+
+
 
 /**
  * @brief Safely increments the value of a long variable.
@@ -95,7 +97,7 @@ void	set_long(t_mtx *mutex, long *dest, long value)
  * @param mutex The mutex protecting the long variable.
  * @param dest Pointer to the long variable to increment.
  */
-void	increase_long(t_mtx *mutex, long *dest)
+void	increase_long(t_mtx *mutex, unsigned int *dest)
 {
 	safe_mutex_handle(mutex, LOCK);
 	(*dest)++;

@@ -6,7 +6,7 @@
 /*   By: joaomigu <joaomigu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 00:15:53 by joaomigu          #+#    #+#             */
-/*   Updated: 2025/03/23 18:33:36 by joaomigu         ###   ########.fr       */
+/*   Updated: 2025/03/24 14:51:14 by joaomigu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,9 +26,9 @@
  */
 bool	philo_died(t_philo *philo, t_table *table)
 {
-	long	elapsed;
-	long	time_to_die;
-	long	last_meal_time;
+	unsigned int	elapsed;
+	unsigned int	time_to_die;
+	unsigned int	last_meal_time;
 
 	if (get_bool(&philo->philo_mutex, &philo->full))
 		return (false);
@@ -80,11 +80,12 @@ void	philo_eat(t_philo *philo, t_table *table)
 	write_status(TAKE_SECOND_FORK, philo, table);
 	set_long(&philo->philo_mutex, &philo->last_meal_time,
 		get_time(MILLISECOND));
-	philo->meal_counter++;
+	increase_long(&philo->philo_mutex, &philo->meal_counter);
+	//philo->meal_counter++;
 	write_status(EATING, philo, table);
 	usleep(table->time_to_eat);
 	if (table->nbr_limit_meals > 0
-		&& philo->meal_counter == table->nbr_limit_meals)
+		&& (int)philo->meal_counter == table->nbr_limit_meals)
 		set_bool(&philo->philo_mutex, &philo->full, true);
 	safe_mutex_handle(&philo->first_fork->fork, UNLOCK);
 	safe_mutex_handle(&philo->second_fork->fork, UNLOCK);
@@ -136,7 +137,7 @@ static void	assign_forks(t_philo *philo, t_fork *forks, int philo_pos)
  */
 bool	philo_init(t_table *table)
 {
-	int		i;
+	unsigned int		i;
 	t_philo	*philo;
 
 	i = 0;
@@ -147,6 +148,8 @@ bool	philo_init(t_table *table)
 		philo->full = false;
 		philo->meal_counter = 0;
 		philo->table = table;
+		philo->last_meal_time = 0;
+		philo->thread_id = 0;
 		if (!safe_mutex_handle(&philo->philo_mutex, INIT))
 			return (false);
 		assign_forks(philo, table->forks, i);

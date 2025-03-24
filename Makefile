@@ -1,8 +1,8 @@
 .SILENT:
 
 CC				=	cc
-CFLAGS 			= -Wall -Wextra -Werror -g -I$(INC_DIR)
-CFLAGS_BO 		= -Wall -Wextra -Werror -g -I$(INC_DIR_BO)
+CFLAGS 			= -Wall -Wextra -Werror -g -fsanitize=thread -I$(INC_DIR)
+CFLAGS_BO 		= -Wall -Wextra -Werror -g -fsanitize=thread -I$(INC_DIR_BO)
 RM				=	rm -rf
 
 SRC_DIR			= ./philo

@@ -6,7 +6,7 @@
 /*   By: joaomigu <joaomigu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 00:17:17 by joaomigu          #+#    #+#             */
-/*   Updated: 2025/03/23 18:59:04 by joaomigu         ###   ########.fr       */
+/*   Updated: 2025/03/24 14:53:23 by joaomigu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,7 @@ bool	parse_input(t_table *table, char **argv, int argc)
 	if (error || extra_errors(table))
 		return (false);
 	table->time_to_think = (table->time_to_eat * 2) - table->time_to_sleep;
-	if (table->time_to_think < 0)
+	if (((table->time_to_eat * 2) - table->time_to_sleep) < 0)
 		table->time_to_think = 0;
 	else if (table->time_to_think > table->time_to_sleep)
 		table->time_to_think = table->time_to_sleep;
