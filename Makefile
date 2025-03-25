@@ -1,8 +1,8 @@
 .SILENT:
 
 CC				=	cc
-CFLAGS 			= -Wall -Wextra -Werror -g -fsanitize=thread -I$(INC_DIR)
-CFLAGS_BO 		= -Wall -Wextra -Werror -g -fsanitize=thread -I$(INC_DIR_BO)
+CFLAGS 			= -Wall -Wextra -Werror -g  -I$(INC_DIR)
+CFLAGS_BO 		= -Wall -Wextra -Werror -g  -I$(INC_DIR_BO)
 RM				=	rm -rf
 
 SRC_DIR			= ./philo
@@ -16,13 +16,10 @@ NAME			=	${BIN_DIR}/philo
 NAME_BONUS		=	${BIN_DIR}/philo_bonus
 
 
-SRC			=		${SRC_DIR}/philo.c ${SRC_DIR}/philo_aux.c 								\
-					${SRC_DIR}/mutex/error_handler.c ${SRC_DIR}/mutex/safe_accessors.c  	\
-					${SRC_DIR}/parser/parser.c ${SRC_DIR}/parser/custom_atol.c 				\
-					${SRC_DIR}/table/table.c ${SRC_DIR}/table/table_aux.c   				\
-					${SRC_DIR}/threads/error_handler.c ${SRC_DIR}/threads/threads_aux.c		\
-					${SRC_DIR}/threads/write_output.c										\
-					${SRC_DIR}/philo/philo.c   												\
+SRC			=		${SRC_DIR}/philo.c ${SRC_DIR}/philo_aux.c ${SRC_DIR}/philo_mem.c 				\
+					${SRC_DIR}/parser/parser.c ${SRC_DIR}/parser/custom_atol.c 						\
+					${SRC_DIR}/philo_monitor.c ${SRC_DIR}/philo_life.c ${SRC_DIR}/philo_states.c	\
+					${SRC_DIR}/table.c ${SRC_DIR}/mutex_helpers.c	 								\
 
 SRC_BONUS	=		${SRC_DIR_BO}/philo.c ${SRC_DIR_BO}/philo_aux.c 						\
 					${SRC_DIR_BO}/parser/parser.c ${SRC_DIR_BO}/parser/custom_atol.c 		\

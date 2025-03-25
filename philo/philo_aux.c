@@ -6,11 +6,65 @@
 /*   By: joaomigu <joaomigu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 00:03:50 by joaomigu          #+#    #+#             */
-/*   Updated: 2025/03/24 14:30:09 by joaomigu         ###   ########.fr       */
+/*   Updated: 2025/03/25 12:34:27 by joaomigu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "inc/philo.h"
+
+void	custom_sleep(unsigned int sleep_time_ms, t_shared *shared)
+{
+	unsigned int	elapsed;
+	unsigned int	interval;
+	bool			end_simulation;
+
+	end_simulation = false;
+	interval = 100;
+	elapsed = 0;
+	while (elapsed < sleep_time_ms)
+	{
+		if (!safe_get(&end_simulation, &shared->end_simulation,
+				shared->table_mutex, TYPE_BOOL))
+		{
+			ft_putstr_fd("Failed to safely get end_simulation\n", 2);
+			return ;
+		}
+		if (end_simulation)
+			return ;
+		if (sleep_time_ms - elapsed < interval)
+			usleep((sleep_time_ms - elapsed) * 1000);
+		else
+			usleep(interval * 1000);
+		elapsed += interval;
+	}
+}
+
+/**
+ * @brief Allocates memory safely.
+ *
+ * This function allocates memory using malloc, checks for
+ * allocation errors,
+ * and initializes the allocated memory to zero.
+ *
+ * @param bytes The number of bytes to allocate.
+ * @return A pointer to the allocated memory, or NULL if
+ * allocation failed.
+ */
+void	*ft_calloc(size_t bytes)
+{
+	void	*ret;
+
+	if (bytes == 0)
+		return (NULL);
+	ret = malloc(bytes);
+	if (!ret)
+	{
+		printf(R "Error on memory allocation\n" RST);
+		return (NULL);
+	}
+	memset(ret, 0, bytes);
+	return (ret);
+}
 
 /**
  * @brief Writes a string to the specified file descriptor.
@@ -20,9 +74,6 @@
  *
  * @param s The string to write.
  * @param fd The file descriptor to write to.
- *           - 0: Standard input
- *           - 1: Standard output
- *           - 2: Standard error
  */
 void	ft_putstr_fd(const char *s, int fd)
 {

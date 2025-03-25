@@ -6,7 +6,7 @@
 /*   By: joaomigu <joaomigu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 00:17:41 by joaomigu          #+#    #+#             */
-/*   Updated: 2025/03/24 14:24:24 by joaomigu         ###   ########.fr       */
+/*   Updated: 2025/03/25 12:36:59 by joaomigu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ static const char	*valid_input(const char *str, bool *error)
 		{
 			*error = true;
 			ft_putstr_fd(R "Invalid Input: Only positive numbers allowed\n" RST,
-				STDERR_FILENO);
+				2);
 			return (str);
 		}
 		else
@@ -80,8 +80,7 @@ static const char	*valid_input(const char *str, bool *error)
 	if (!is_digit(*str))
 	{
 		*error = true;
-		ft_putstr_fd(R "Invalid Input: Only numbers allowed\n" RST,
-			STDERR_FILENO);
+		ft_putstr_fd(R "Invalid Input: Only numbers allowed\n" RST, 2);
 		return (str);
 	}
 	return (str);
@@ -118,8 +117,8 @@ unsigned int	custom_atol(const char *str, bool *error)
 		if (num > INT_MAX)
 		{
 			*error = true;
-			ft_putstr_fd(R "Invalid Input: INT_MAX is the \
-				maximun allowed\n" RST, STDERR_FILENO);
+			ft_putstr_fd(R "Invalid Input: INT_MAX \
+is the maximun allowed\n" RST, 2);
 			return (0);
 		}
 		str++;

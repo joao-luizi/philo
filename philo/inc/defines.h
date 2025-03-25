@@ -6,7 +6,7 @@
 /*   By: joaomigu <joaomigu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 00:19:40 by joaomigu          #+#    #+#             */
-/*   Updated: 2025/03/20 00:20:26 by joaomigu         ###   ########.fr       */
+/*   Updated: 2025/03/25 12:16:34 by joaomigu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,17 +40,6 @@
 // WHITE Color (Bold)
 # define W "\033[1;37m"
 
-typedef enum e_opcode
-{
-	LOCK,
-	UNLOCK,
-	INIT,
-	DESTROY,
-	CREATE,
-	JOIN,
-	DETACH
-}	t_opcode;
-
 typedef enum e_time_code
 {
 	SECOND,
@@ -65,6 +54,16 @@ typedef enum e_status
 	THINKING,
 	TAKE_FIRST_FORK,
 	TAKE_SECOND_FORK,
-	DEAD,
+	DEAD
 }	t_status;
+
+typedef enum e_type
+{
+	TYPE_BOOL,
+	TYPE_INT,
+	TYPE_LONG,
+	TYPE_UINT,
+	TYPE_SIZE_T
+}	t_type;
+
 #endif

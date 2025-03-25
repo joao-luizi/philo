@@ -6,7 +6,7 @@
 /*   By: joaomigu <joaomigu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 00:03:21 by joaomigu          #+#    #+#             */
-/*   Updated: 2025/03/24 14:25:04 by joaomigu         ###   ########.fr       */
+/*   Updated: 2025/03/25 12:26:35 by joaomigu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,100 +48,49 @@ should error and not run (no crashing)
 should error and not run (no crashing)
 */
 
-/**
- * @brief Cleans up resources used by the table.
- * 
- * This function destroys all mutexes associated with 
- * philosophers and forks,
- * then frees the memory allocated for the philosophers 
- * and forks.
- * 
- * @param table The table to clean up.
- */
-void	clean(t_table *table)
+static void	display_arg_error(void)
 {
-	t_philo	*philo;
-	t_fork	*fork;
-	unsigned int		i;
-
-	i = 0;
-	while (i < table->philo_number)
-	{
-		philo = table->philos + i;
-		fork = table->forks + i;
-		safe_mutex_handle(&philo->philo_mutex, DESTROY);
-		safe_mutex_handle(&fork->fork, DESTROY);
-		i++;
-	}
-	safe_mutex_handle(&table->write_mutex, DESTROY);
-	safe_mutex_handle(&table->table_mutex, DESTROY);
-	if (table->forks)
-		free(table->forks);
-	if (table->philos)
-		free(table->philos);
-}
-
-/**
- * @brief Allocates memory safely.
- * 
- * This function allocates memory using malloc, checks for 
- * allocation errors,
- * and initializes the allocated memory to zero.
- * 
- * @param bytes The number of bytes to allocate.
- * @return A pointer to the allocated memory, or NULL if 
- * allocation failed.
- */
-void	*safe_malloc(size_t bytes)
-{
-	void	*ret;
-
-	ret = malloc(bytes);
-	if (!ret)
-	{
-		printf(R "Error on memory allocation\n" RST);
-		return (NULL);
-	}
-	memset(ret, 0, bytes);
-	return (ret);
+	printf(R "Wrong input\n" G "Example usage: ./philo (number of philosophers) (time to die) (time to eat) \
+		(time to sleep) [number of meals]\n ./philo 5 800 200 200\n()\
+	- required [] - optional" RST);
 }
 
 /**
  * @brief The main entry point of the program.
- * 
- * This function initializes the table, parses the input arguments, 
+ *
+ * This function initializes the table, parses the input arguments,
  * and starts
- * the dinner simulation. If any errors occur during initialization 
+ * the dinner simulation. If any errors occur during initialization
  * or simulation,
  * it cleans up resources and returns an error code.
- * 
+ *
  * @param argc The number of command-line arguments.
  * @param argv The array of command-line arguments.
  * @return An error code (0 for success, 1 for failure).
  */
 int	main(int argc, char **argv)
 {
-	t_table	table;
+	t_table	*table;
 	bool	error;
 
-	error = false;
-	if (argc == 5 || argc == 6)
+	if (argc != 5 && argc != 6)
+		return (display_arg_error(), 1);
+	table = ft_calloc(sizeof(t_table));
+	if (!table)
+		return (ft_putstr_fd("Failed to allocate memory for table\n", 2), 1);
+	table->shared = ft_calloc(sizeof(t_shared));
+	if (!table->shared)
 	{
-		if (!parse_input(&table, argv, argc))
-			return (1);
-		error = !table_init(&table);
-		if (!error)
-			error = !philo_init(&table);
-		if (!error)
-			error = !dinner_init(&table);
-		clean(&table);
+		free(table);
+		return (ft_putstr_fd("Failed to allocate memory for shared\n", 2), 1);
 	}
-	else
-	{
-		printf(R "Wrong input\n" G "Example usage: ./philo (number of philosophers) (time to die) (time to eat) \
-            (time to sleep) [number of meals]\n ./philo 5 800 200 200\n()\
-	- required [] - optional" RST);
+	error = parse_input(table->shared, argv, argc);
+	if (!error)
+		error = table_init(table);
+	if (!error)
+		error = dinner_init(table);
+	clean_table(&table);
+	if (error)
 		return (1);
-	}
 	return (0);
 }

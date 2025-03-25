@@ -6,10 +6,11 @@
 /*   By: joaomigu <joaomigu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 00:17:17 by joaomigu          #+#    #+#             */
-/*   Updated: 2025/03/24 14:53:23 by joaomigu         ###   ########.fr       */
+/*   Updated: 2025/03/25 12:33:09 by joaomigu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "../inc/message.h"
 #include "../inc/philo.h"
 
 /**
@@ -22,31 +23,41 @@
  * @param table The input table to be checked.
  * @return true If an error is found, false otherwise.
  */
-static bool	extra_errors(t_table *table)
+static bool	extra_errors(t_shared *shared)
 {
-	if (table->philo_number == 0)
-	{
-		ft_putstr_fd(R "Invalid Input: There must be at \
-			least one philosopher\n" RST, STDERR_FILENO);
-		return (true);
-	}
-	if (table->time_to_die == 0)
-	{
-		ft_putstr_fd(R "Invalid Input: time to die is 0\n" RST, STDERR_FILENO);
-		return (true);
-	}
-	if (table->time_to_eat == 0)
-	{
-		ft_putstr_fd(R "Invalid Input: time to eat is 0\n" RST, STDERR_FILENO);
-		return (true);
-	}
-	if (table->time_to_sleep == 0)
-	{
-		ft_putstr_fd(R "Invalid Input: time to sleep is \
-			0\n" RST, STDERR_FILENO);
-		return (true);
-	}
+	if (shared->philo_number == 0)
+		return (ft_putstr_fd(R NO_P RST, 2), true);
+	if (shared->philo_number > 200)
+		return (ft_putstr_fd(R TOO_MANY_P RST, 2), true);
+	if (shared->time_to_die == 0)
+		return (ft_putstr_fd(R TT_DIE RST, 2), true);
+	if (shared->time_to_eat == 0)
+		return (ft_putstr_fd(R TT_EAT RST, 2), true);
+	if (shared->time_to_sleep == 0)
+		return (ft_putstr_fd(R TT_SLEEP RST, 2), true);
 	return (false);
+}
+
+static bool	set_defaults(t_shared *shared)
+{
+	shared->start_simulation = 0;
+	shared->end_simulation = false;
+	if (((shared->time_to_eat * 2) < shared->time_to_sleep))
+		shared->time_to_think = 0;
+	else
+		shared->time_to_think = (shared->time_to_eat * 2)
+			- shared->time_to_sleep;
+	shared->table_mutex = NULL;
+	shared->write_mutex = NULL;
+	shared->table_mutex = ft_calloc(sizeof(pthread_mutex_t));
+	if (!shared->table_mutex || pthread_mutex_init(shared->table_mutex,
+			NULL) != 0)
+		return (printf("Failed to initialize table_mutex\n"), false);
+	shared->write_mutex = ft_calloc(sizeof(pthread_mutex_t));
+	if (!shared->write_mutex || pthread_mutex_init(shared->write_mutex,
+			NULL) != 0)
+		return (printf("Failed to initialize write_mutex\n"), false);
+	return (true);
 }
 
 /**
@@ -67,27 +78,20 @@ static bool	extra_errors(t_table *table)
  * @return true If the input is parsed successfully, false
  * otherwise.
  */
-bool	parse_input(t_table *table, char **argv, int argc)
+bool	parse_input(t_shared *shared, char **argv, int argc)
 {
 	bool	error;
 
 	error = false;
-	table->philo_number = custom_atol(argv[1], &error);
-	table->time_to_die = custom_atol(argv[2], &error) * 1000;
-	table->time_to_eat = custom_atol(argv[3], &error) * 1000;
-	table->time_to_sleep = custom_atol(argv[4], &error) * 1000;
-	table->forks = NULL;
-	table->philos = NULL;
+	shared->philo_number = custom_atol(argv[1], &error);
+	shared->time_to_die = custom_atol(argv[2], &error) * 1000;
+	shared->time_to_eat = custom_atol(argv[3], &error) * 1000;
+	shared->time_to_sleep = custom_atol(argv[4], &error) * 1000;
 	if (argc == 6)
-		table->nbr_limit_meals = custom_atol(argv[5], &error);
+		shared->nbr_limit_meals = custom_atol(argv[5], &error);
 	else
-		table->nbr_limit_meals = -1;
-	if (error || extra_errors(table))
-		return (false);
-	table->time_to_think = (table->time_to_eat * 2) - table->time_to_sleep;
-	if (((table->time_to_eat * 2) - table->time_to_sleep) < 0)
-		table->time_to_think = 0;
-	else if (table->time_to_think > table->time_to_sleep)
-		table->time_to_think = table->time_to_sleep;
-	return (true);
+		shared->nbr_limit_meals = -1;
+	if (error || extra_errors(shared))
+		return (true);
+	return (!set_defaults(shared));
 }
