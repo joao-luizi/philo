@@ -6,7 +6,7 @@
 /*   By: joaomigu <joaomigu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 00:17:17 by joaomigu          #+#    #+#             */
-/*   Updated: 2025/03/26 13:53:57 by joaomigu         ###   ########.fr       */
+/*   Updated: 2025/03/26 15:15:29 by joaomigu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,19 @@ static bool	extra_errors(t_shared *shared)
 	return (false);
 }
 
+/**
+ * @brief Initializes the semaphores used for writing, forks, and death detection.
+ *
+ * This function unlinks and then opens three named POSIX semaphores used for:
+ * - Synchronizing output (`/write_semaphore`)
+ * - Managing access to forks (`/forks_semaphore`)
+ * - Signaling philosopher death (`/death_semaphore`)
+ *
+ * If any of the semaphores fail to open, an error message is printed and the function returns false.
+ *
+ * @param shared Pointer to the shared simulation data structure where semaphores are stored.
+ * @return true if all semaphores are successfully created and opened, false otherwise.
+ */
 static bool	set_defaults_aux(t_shared *shared)
 {
 	sem_unlink("/write_semaphore");
@@ -58,6 +71,22 @@ static bool	set_defaults_aux(t_shared *shared)
 	return (true);
 }
 
+/**
+ * @brief Sets default values and initializes core semaphores for the simulation.
+ *
+ * This function:
+ * - Initializes simulation start and end state values.
+ * - Calculates the time philosophers should spend thinking based on eating and sleeping times.
+ * - Creates two named semaphores:
+ *   - `/start_semaphore` for synchronizing the simulation start.
+ *   - `/table_semaphore` for protecting shared state.
+ * - Delegates further semaphore setup to `set_defaults_aux()`.
+ *
+ * If any semaphore fails to open, the function prints an error message and returns false.
+ *
+ * @param shared Pointer to the shared simulation data structure.
+ * @return true if all initializations and semaphore setups succeed, false otherwise.
+ */
 static bool	set_defaults(t_shared *shared)
 {
 	shared->start_simulation = 0;
