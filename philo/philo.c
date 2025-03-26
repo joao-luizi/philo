@@ -6,7 +6,7 @@
 /*   By: joaomigu <joaomigu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 00:03:21 by joaomigu          #+#    #+#             */
-/*   Updated: 2025/03/26 13:50:05 by joaomigu         ###   ########.fr       */
+/*   Updated: 2025/03/26 13:56:54 by joaomigu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ no one should die
 105 800 200 200
 no one should die
 200 800 200 200
-no one should die
+no one should die, unless the cluster is crowded
 
 1 800 200 200
 a philo should die
