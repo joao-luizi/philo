@@ -6,7 +6,7 @@
 /*   By: joaomigu <joaomigu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 00:17:17 by joaomigu          #+#    #+#             */
-/*   Updated: 2025/03/25 12:33:09 by joaomigu         ###   ########.fr       */
+/*   Updated: 2025/03/26 14:55:15 by joaomigu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,16 @@ static bool	extra_errors(t_shared *shared)
 	return (false);
 }
 
+/**
+
+	@brief Sets default values for the shared structure and initializes mutexes.
+	This function resets the shared structure to its default state, including
+	simulation flags, time variables, and mutexes. It allocates memory for
+	mutexes and initializes them using pthread_mutex_init. If any of these
+	operations fail, the function returns false and prints an error message.
+	@param shared A pointer to the shared structure to be initialized.
+	@return true if the initialization is successful, false otherwise.
+	*/
 static bool	set_defaults(t_shared *shared)
 {
 	shared->start_simulation = 0;

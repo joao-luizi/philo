@@ -6,12 +6,22 @@
 /*   By: joaomigu <joaomigu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 11:58:56 by joaomigu          #+#    #+#             */
-/*   Updated: 2025/03/26 14:06:43 by joaomigu         ###   ########.fr       */
+/*   Updated: 2025/03/26 15:09:06 by joaomigu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "inc/philo.h"
 
+/**
+ * @brief Checks if a philosopher has eaten enough meals to be considered full.
+ *
+ * Retrieves the meal limit and the philosopher's current meal count in a thread-safe
+ * manner. If the limit is reached, it marks the philosopher as full.
+ *
+ * @param philo Pointer to the philosopher structure.
+ * @return true if the philosopher is full or if an error occurred during safe_get/set;
+ *         false otherwise.
+ */
 static bool	philo_full(t_philo *philo)
 {
 	int				local_limit_meals;
@@ -35,6 +45,15 @@ static bool	philo_full(t_philo *philo)
 	return (false);
 }
 
+/**
+ * @brief Checks whether a philosopher has died due to starvation.
+ *
+ * Locks the philosopher's mutex and checks the time elapsed since the last meal.
+ * If it exceeds `time_to_die`, the philosopher is considered dead.
+ *
+ * @param philo Pointer to the philosopher structure.
+ * @return true if the philosopher died; false if still alive or full, or in case of an error.
+ */
 bool	philo_died(t_philo *philo)
 {
 	unsigned int	elapsed;
@@ -59,6 +78,14 @@ bool	philo_died(t_philo *philo)
 	return (false);
 }
 
+/**
+ * @brief Handles the thinking phase of a philosopher.
+ *
+ * Logs the THINKING state and applies a small sleep delay for odd-numbered philosopher
+ * counts to help stagger the execution and avoid contention for forks.
+ *
+ * @param philo Pointer to the philosopher structure.
+ */
 void	philo_think(t_philo *philo)
 {
 	unsigned int	local_philo_number;
@@ -82,6 +109,15 @@ void	philo_think(t_philo *philo)
 	custom_sleep((local_time_to_think / 1000) * 0.5, philo->shared);
 }
 
+/**
+ * @brief Locks both forks for a philosopher in the correct order.
+ *
+ * First locks the mutex for the first fork and logs the action. Then does the same for
+ * the second fork. If locking or logging fails at any point, the function returns false.
+ *
+ * @param philo Pointer to the philosopher structure.
+ * @return true if both forks were successfully taken; false otherwise.
+ */
 static bool	take_forks(t_philo *philo)
 {
 	if (pthread_mutex_lock(philo->first_fork->fork) != 0)
@@ -95,6 +131,17 @@ static bool	take_forks(t_philo *philo)
 	return (true);
 }
 
+ /**
+ * @brief Executes the eating routine for a philosopher.
+ *
+ * The philosopher locks both forks, logs the EATING state, updates the last meal time,
+ * increments the meal counter, and sleeps for the eating duration. If the philosopher
+ * has reached the meal limit, they are marked as full. Finally, the forks are released.
+ *
+ * @param philo Pointer to the philosopher structure.
+ * @param shared Pointer to the shared simulation data.
+ * @return true if the eating routine completed successfully; false otherwise.
+ */
 bool	philo_eat(t_philo *philo, t_shared *shared)
 {
 	size_t	current_time;

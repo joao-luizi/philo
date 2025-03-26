@@ -6,13 +6,28 @@
 /*   By: joaomigu <joaomigu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 12:00:31 by joaomigu          #+#    #+#             */
-/*   Updated: 2025/03/25 12:34:35 by joaomigu         ###   ########.fr       */
+/*   Updated: 2025/03/26 15:02:52 by joaomigu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "inc/message.h"
 #include "inc/philo.h"
 
+/**
+ * @brief Writes the philosopher's current state to the console in a thread-safe manner.
+ *
+ * This function locks the shared write mutex before printing the philosopher's state.
+ * It first checks if the simulation has ended and returns early if so. If the simulation
+ * is still running, it prints a message corresponding to the provided status.
+ *
+ * @param status The current status of the philosopher (e.g., eating, sleeping).
+ * @param philo Pointer to the philosopher whose state is being printed.
+ * 
+ * @return true if the message was written successfully or if simulation ended; 
+ *         false if a mutex lock/unlock or state retrieval fails.
+ *
+ * @see safe_get
+ */
 bool	write_states(t_status status, t_philo *philo)
 {
 	unsigned int	elapsed;
@@ -41,6 +56,20 @@ bool	write_states(t_status status, t_philo *philo)
 	return (true);
 }
 
+/**
+ * @brief Desynchronizes philosophers to prevent simultaneous resource access at simulation start.
+ *
+ * For even-numbered philosopher counts:
+ * - Even-indexed philosophers sleep briefly to create offset.
+ * For odd-numbered counts:
+ * - Even-indexed philosophers begin by thinking.
+ *
+ * This helps reduce contention for forks in the initial phase of the simulation.
+ *
+ * @param philo Pointer to the philosopher to be desynchronized.
+ * @note This function is static and intended for internal use only.
+ * @see safe_get
+ */
 static void	de_sync_philos(t_philo *philo)
 {
 	t_shared		*shared;
@@ -67,6 +96,17 @@ static void	de_sync_philos(t_philo *philo)
 	}
 }
 
+/**
+ * @brief Entry point for a single philosopher thread when only one philosopher exists.
+ *
+ * Handles the special case of a simulation with just one philosopher. It initializes
+ * `last_meal_time`, attempts to take a fork, and waits for the simulation to end.
+ *
+ * @param args Pointer to a `t_philo` struct representing the philosopher.
+ * @return NULL Always returns NULL; designed for pthread usage.
+ * @note The philosopher takes the first fork and waits for `end_simulation` to become true.
+ * @see safe_get, safe_set, write_states
+ */
 void	*philo_life_single(void *args)
 {
 	t_philo	*philo;
@@ -94,6 +134,19 @@ void	*philo_life_single(void *args)
 	return (NULL);
 }
 
+/**
+ * @brief Sets up initial philosopher data before starting the main life loop.
+ *
+ * Retrieves the current simulation time and stores it as the philosopher's last meal time.
+ * Also checks if the simulation has already ended.
+ *
+ * @param philo Pointer to the philosopher to initialize.
+ * @param local_end_simulation Pointer to a boolean that will store the current simulation state.
+ * 
+ * @return true on successful setup; false if `safe_get` or `safe_set` fails.
+ *
+ * @see safe_get, safe_set
+ */
 static bool	philo_setup(t_philo *philo, bool *local_end_simulation)
 {
 	size_t	current_time;
@@ -110,6 +163,19 @@ static bool	philo_setup(t_philo *philo, bool *local_end_simulation)
 	return (true);
 }
 
+/**
+ * @brief Entry point for each philosopher thread in the multi-philosopher simulation.
+ *
+ * Sets up initial state, desynchronizes execution to reduce contention, and enters
+ * the main philosopher routine of eating, sleeping, and thinking.
+ *
+ * The loop continues until the shared `end_simulation` flag is set or the philosopher
+ * becomes full (if a meal count limit is used).
+ *
+ * @param args Pointer to a `t_philo` struct representing the philosopher.
+ * @return NULL Always returns NULL; designed for pthread usage.
+ * @see philo_setup, de_sync_philos, safe_get, philo_eat, write_states, custom_sleep, philo_think
+ */
 void	*philo_life_many(void *args)
 {
 	t_philo	*philo;

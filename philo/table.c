@@ -6,13 +6,24 @@
 /*   By: joaomigu <joaomigu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 11:49:10 by joaomigu          #+#    #+#             */
-/*   Updated: 2025/03/25 12:35:24 by joaomigu         ###   ########.fr       */
+/*   Updated: 2025/03/26 15:12:41 by joaomigu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "inc/message.h"
 #include "inc/philo.h"
 
+/**
+ * @brief Assigns forks to a philosopher.
+ *
+ * Depending on the philosopher's ID (even or odd), the order in which the forks
+ * are picked up changes to prevent deadlock.
+ *
+ * @param philo Pointer to the philosopher to assign forks to.
+ * @param forks Array of forks on the table.
+ * @param philo_pos Position of the philosopher in the array.
+ * @param philo_number Total number of philosophers at the table.
+ */
 static void	assign_forks(t_philo *philo, t_fork *forks, int philo_pos,
 		unsigned int philo_number)
 {
@@ -25,6 +36,15 @@ static void	assign_forks(t_philo *philo, t_fork *forks, int philo_pos,
 	}
 }
 
+/**
+ * @brief Initializes all philosopher structures in the table.
+ *
+ * Allocates memory for each philosopher, initializes their data fields,
+ * assigns forks, and sets up their mutex and thread data.
+ *
+ * @param table Pointer to the main table structure.
+ * @return true if initialization is successful, false otherwise.
+ */
 static bool	philos_init(t_table *table)
 {
 	unsigned int	i;
@@ -54,6 +74,15 @@ static bool	philos_init(t_table *table)
 	return (true);
 }
 
+/**
+ * @brief Initializes the dining table with forks and philosophers.
+ *
+ * Allocates memory for all required structures and initializes mutexes
+ * associated with forks. Also starts philosopher initialization.
+ *
+ * @param table Pointer to the table structure to initialize.
+ * @return true if successful, false otherwise.
+ */
 bool	table_init(t_table *table)
 {
 	unsigned int	i;
@@ -80,6 +109,16 @@ bool	table_init(t_table *table)
 	return (!philos_init(table));
 }
 
+/**
+ * @brief Creates philosopher threads and the monitor thread.
+ *
+ * Depending on the number of philosophers, it launches the appropriate routine
+ * (`philo_life_single` or `philo_life_many`) for each thread. Also creates
+ * the monitoring thread and starts the simulation timer.
+ *
+ * @param table Pointer to the table containing philosophers and shared data.
+ * @return true if all threads are created successfully, false otherwise.
+ */
 static bool	create_threads(t_table *table)
 {
 	unsigned int	i;
@@ -109,6 +148,16 @@ static bool	create_threads(t_table *table)
 	return (true);
 }
 
+/**
+ * @brief Starts the philosopher simulation.
+ *
+ * Locks the table mutex, creates all threads, waits for them to finish
+ * (joining), and then marks the simulation as ended. Handles errors throughout
+ * the process.
+ *
+ * @param table Pointer to the initialized table structure.
+ * @return true if simulation runs and ends successfully, false otherwise.
+ */
 bool	dinner_init(t_table *table)
 {
 	unsigned int	i;

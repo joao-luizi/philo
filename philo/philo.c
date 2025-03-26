@@ -6,7 +6,7 @@
 /*   By: joaomigu <joaomigu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 00:03:21 by joaomigu          #+#    #+#             */
-/*   Updated: 2025/03/26 13:56:54 by joaomigu         ###   ########.fr       */
+/*   Updated: 2025/03/26 15:10:54 by joaomigu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,13 @@ should error and not run (no crashing)
 should error and not run (no crashing)
 */
 
+/**
+ * @brief Print an error when args are incorrect
+ *
+ * Prints a helper function with an example of a correct input.
+ * Also signal required and optional fields.
+ *
+*/
 static void	display_arg_error(void)
 {
 	printf(R "Wrong input\n" G "Example usage: ./philo (number of philosophers) (time to die) (time to eat)\
