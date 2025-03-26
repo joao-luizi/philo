@@ -6,7 +6,7 @@
 /*   By: joaomigu <joaomigu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 11:58:56 by joaomigu          #+#    #+#             */
-/*   Updated: 2025/03/26 13:18:08 by joaomigu         ###   ########.fr       */
+/*   Updated: 2025/03/26 14:06:43 by joaomigu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,9 +78,8 @@ void	philo_think(t_philo *philo)
 		return ;
 	}
 	if (local_philo_number % 2 == 0)
-		custom_sleep((local_time_to_think / 1000) * 0.1, philo->shared);
-	else
-		custom_sleep((local_time_to_think / 1000) * 0.5, philo->shared);
+		return ;
+	custom_sleep((local_time_to_think / 1000) * 0.5, philo->shared);
 }
 
 static bool	take_forks(t_philo *philo)
