@@ -1,4 +1,4 @@
-.SILENT:
+
 
 CC				=	cc
 CFLAGS 			= -Wall -Wextra -Werror -g  -I$(INC_DIR)
@@ -32,12 +32,10 @@ OBJS_BONUS	= 		${patsubst ${SRC_DIR_BO}/%.c, ${OBJ_DIR_BO}/%.o, ${SRC_BONUS}}
 all:			$(NAME)
 
 $(OBJ_DIR)/%.o:	$(SRC_DIR)/%.c
-				printf "Compiling $(NAME) objects... %-33.33s\r" $(notdir $@)
 				@mkdir -p $(dir $@)
 				$(CC) $(CFLAGS) -c $< -o $@
 
 $(OBJ_DIR_BO)/%.o:	$(SRC_DIR_BO)/%.c
-				printf "Compiling $(NAME_BONUS) objects... %-33.33s\r" $(notdir $@)
 				@mkdir -p $(dir $@)
 				$(CC) $(CFLAGS_BO) -c $< -o $@
 				
@@ -49,11 +47,9 @@ bonus: 			$(NAME_BONUS)
 
 
 $(NAME):		$(OBJS) | $(BIN_DIR)
-				printf 'Compiling $(NAME)\n'
 				$(CC) $(CFLAGS) $(OBJS) -o $@ 
 
 $(NAME_BONUS):	$(OBJS_BONUS) | $(BIN_DIR)
-				printf 'Compiling $(NAME_BONUS)\n'
 				$(CC) $(CFLAGS_BO) $(OBJS_BONUS) -o $@ 
 
 
@@ -64,7 +60,7 @@ clean:
 fclean: clean
 	@$(RM) $(BIN_DIR)
 
-re:				fclean all bonus
+re:				fclean all
 
 
 .PHONY:			all clean fclean re

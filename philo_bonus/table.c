@@ -6,35 +6,30 @@
 /*   By: joaomigu <joaomigu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 11:49:10 by joaomigu          #+#    #+#             */
-/*   Updated: 2025/03/26 00:06:42 by joaomigu         ###   ########.fr       */
+/*   Updated: 2025/03/26 12:31:38 by joaomigu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "inc/message.h"
 #include "inc/philo.h"
 
-static bool	wait_for_philosophers(t_table *table)
+static bool	create_parent_monitor(t_table *table)
 {
-    unsigned int	i;
-
+    unsigned int i;
     
+    if (pthread_create(table->parent_monitor_thread, NULL, death_monitor_thread, table) != 0)
+        return (ft_putstr_fd("Failed to create death monitor thread\n", 2), false);
+    pthread_detach(*table->parent_monitor_thread);
+    if (sem_post(table->shared->start_semaphore) != 0)
+        return (ft_putstr_fd("Failed to unlock start_semaphore\n", 2), false);
     i = 0;
     while (i < table->shared->philo_number)
     {
         if (waitpid(table->philos[i].process_id, NULL, 0) < 0)
             return (ft_putstr_fd("Failed to wait on process\n", 2), false);
         i++;
-    
     }
     usleep(1000);
-    return (true);
-}
-
-static bool	create_parent_monitor(t_table *table)
-{
-    if (pthread_create(table->parent_monitor_thread, NULL, death_monitor_thread, table) != 0)
-        return (ft_putstr_fd("Failed to create death monitor thread\n", 2), false);
-    pthread_detach(*table->parent_monitor_thread);
     return (true);
 }
 
@@ -60,17 +55,21 @@ bool	dinner_init(t_table *table)
 {
     if (table->shared->nbr_limit_meals == 0 || table->shared->philo_number == 0)
         return (true);
-    //if (sem_wait(table->shared->start_semaphore) != 0)
-    //    return (ft_putstr_fd("Failed to lock start_semaphore\n", 2), false);
     if (!fork_philosophers(table))
         return (false);
     if (!create_parent_monitor(table))
         return (false);
-    if (sem_post(table->shared->start_semaphore) != 0)
-        return (ft_putstr_fd("Failed to unlock start_semaphore\n", 2), false);
-    if (!wait_for_philosophers(table))
-        return (false);
     return (true);
+}
+
+static void set_defaults(t_table *table, unsigned int i)
+{
+    table->philos[i].id = i + 1;
+    table->philos[i].meal_counter = 0;
+    table->philos[i].last_meal_time = 0;
+    table->philos[i].full = false;
+    table->philos[i].shared = table->shared;
+    table->philos[i].process_id = 0;
 }
 bool	table_init(t_table *table)
 {
@@ -85,12 +84,7 @@ bool	table_init(t_table *table)
     i = 0;
     while (i < table->shared->philo_number)
     {
-        table->philos[i].id = i + 1;
-        table->philos[i].meal_counter = 0;
-        table->philos[i].last_meal_time = 0;
-        table->philos[i].full = false;
-        table->philos[i].shared = table->shared;
-		table->philos[i].process_id = 0;
+        set_defaults(table, i);
         table->philos[i].philo_semaphore = ft_calloc(sizeof(sem_t));
         if (!table->philos[i].philo_semaphore || sem_init(table->philos[i].philo_semaphore, 0, 1) != 0)
             return (ft_putstr_fd("Failed to initialize philo semaphore\n", 2), false);
