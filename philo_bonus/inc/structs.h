@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: joaomigu <joaomigu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/23 19:10:40 by joaomigu          #+#    #+#             */
-/*   Updated: 2025/03/23 19:10:42 by joaomigu         ###   ########.fr       */
+/*   Created: 2025/03/20 00:19:32 by joaomigu          #+#    #+#             */
+/*   Updated: 2025/03/25 23:35:11 by joaomigu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,37 +17,41 @@
 
 typedef struct s_table	t_table;
 
+
+typedef struct s_shared
+{
+    unsigned int		philo_number;       // Number of philosophers
+    unsigned int		time_to_die;        // Time to die in milliseconds
+    unsigned int		time_to_eat;        // Time to eat in milliseconds
+    unsigned int		time_to_sleep;      // Time to sleep in milliseconds
+    unsigned int		time_to_think;      // Time to think in milliseconds
+    int					nbr_limit_meals;    // Number of meals a philosopher must eat
+    size_t				start_simulation;   // Start time of the simulation
+    bool				end_simulation;     // Flag to indicate if the simulation has ended
+    sem_t               *start_semaphore;
+    sem_t				*table_semaphore;   // Named semaphore for table synchronization
+    sem_t				*write_semaphore;   // Named semaphore for writing to output
+    sem_t				*forks_semaphore;   // Named semaphore for the forks
+	sem_t				*death_semaphore; 
+}						t_shared;
+
 typedef struct s_philo
 {
-	int					id;
-	long				meal_counter;
-	long				last_meal_time;
-	bool				full;
-	bool				dead;
-	sem_t				*philo_semaphore;
+    unsigned int		id;                 // Philosopher ID
+    unsigned int		meal_counter;       // Number of meals the philosopher has eaten
+    size_t				last_meal_time;     // Timestamp of the last meal
+    bool				full;               // Flag to indicate if the philosopher is full
 	pid_t				process_id;
-	pthread_t			monitor;
-	t_table				*table;
+    pthread_t			*monitor_thread;     // Monitor thread for this philosopher process
+    sem_t				*philo_semaphore;   // Unnamed binary semaphore for process-thread synchronization
+    t_shared			*shared;            // Pointer to shared resources
 }						t_philo;
 
 typedef struct s_table
 {
-	long				philo_number;
-	long				time_to_die;
-	long				time_to_eat;
-	long				time_to_sleep;
-	long				time_to_think;
-	long				nbr_limit_meals;
-	long				start_simulation;
-	bool				end_simulation;
-	long				process_running_count;
-	pthread_t			death_thread;
-	sem_t				*start_semaphore;
-	sem_t				*table_semaphore;
-	sem_t				*write_semaphore;
-	sem_t				*forks;
-	sem_t				*death_semaphore;
+	t_shared			*shared;
 	t_philo				*philos;
+	pthread_t			*parent_monitor_thread;
 }						t_table;
 
 #endif

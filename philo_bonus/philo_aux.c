@@ -5,12 +5,41 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: joaomigu <joaomigu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/23 19:13:14 by joaomigu          #+#    #+#             */
-/*   Updated: 2025/03/23 19:13:19 by joaomigu         ###   ########.fr       */
+/*   Created: 2025/03/20 00:03:50 by joaomigu          #+#    #+#             */
+/*   Updated: 2025/03/25 13:42:17 by joaomigu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "inc/philo.h"
+
+
+
+/**
+ * @brief Allocates memory safely.
+ *
+ * This function allocates memory using malloc, checks for
+ * allocation errors,
+ * and initializes the allocated memory to zero.
+ *
+ * @param bytes The number of bytes to allocate.
+ * @return A pointer to the allocated memory, or NULL if
+ * allocation failed.
+ */
+void	*ft_calloc(size_t bytes)
+{
+	void	*ret;
+
+	if (bytes == 0)
+		return (NULL);
+	ret = malloc(bytes);
+	if (!ret)
+	{
+		printf(R "Error on memory allocation\n" RST);
+		return (NULL);
+	}
+	memset(ret, 0, bytes);
+	return (ret);
+}
 
 /**
  * @brief Writes a string to the specified file descriptor.
@@ -32,25 +61,6 @@ void	ft_putstr_fd(const char *s, int fd)
 }
 
 /**
- * @brief Exits the program gracefully after handling a critical error.
- *
- * This function prints an error message, cleans up resources, and exits
- * the program with a failure status.
- *
- * @param message The error message to display.
- * @param table The table structure containing resources to clean up.
- */
-void	error_exit(const char *message, t_table *table)
-{
-	ft_putstr_fd(R "", STDERR_FILENO);
-	ft_putstr_fd(message, STDERR_FILENO);
-	ft_putstr_fd("\n" RST, STDERR_FILENO);
-	if (table)
-		clean(table);
-	exit(EXIT_FAILURE);
-}
-
-/**
  * @brief Retrieves the current time in the specified time unit.
  *
  * This function uses the gettimeofday function to get the current
@@ -60,7 +70,7 @@ void	error_exit(const char *message, t_table *table)
  * SECOND, MILLISECOND, or MICROSECOND.
  * @return The current time in the specified time unit.
  */
-long	get_time(t_time_code timecode)
+unsigned int	get_time(t_time_code timecode)
 {
 	struct timeval	tv;
 

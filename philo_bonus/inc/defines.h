@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: joaomigu <joaomigu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/23 19:10:16 by joaomigu          #+#    #+#             */
-/*   Updated: 2025/03/23 19:10:31 by joaomigu         ###   ########.fr       */
+/*   Created: 2025/03/20 00:19:40 by joaomigu          #+#    #+#             */
+/*   Updated: 2025/03/25 18:31:20 by joaomigu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,20 +14,21 @@
 # define DEFINES_H
 
 # include <errno.h>
-# include <fcntl.h>
 # include <limits.h>
 # include <pthread.h>
-# include <semaphore.h>
-# include <signal.h>
 # include <stdbool.h>
 # include <stdio.h>
 # include <stdlib.h>
 # include <string.h>
 # include <sys/time.h>
-# include <sys/wait.h>
 # include <unistd.h>
+#include <semaphore.h>
+#include <fcntl.h> 
+#include <sys/stat.h> 
+#include <sys/wait.h>
+#include <signal.h>
 
-# define DEBUG false
+
 // default color
 # define RST "\033[0m"
 // RED Color (Bold)
@@ -45,27 +46,6 @@
 // WHITE Color (Bold)
 # define W "\033[1;37m"
 
-typedef enum e_opcode
-{
-	LOCK,
-	UNLOCK,
-	INIT,
-	DESTROY,
-	CREATE,
-	JOIN,
-	DETACH
-}	t_opcode;
-
-typedef enum e_sem_action
-{
-	SEM_CREATE,
-	SEM_INIT,
-	CLOSE,
-	UNLINK,
-	SEM_LOCK,
-	SEM_UNLOCK
-}	t_sem_action;
-
 typedef enum e_time_code
 {
 	SECOND,
@@ -80,6 +60,16 @@ typedef enum e_status
 	THINKING,
 	TAKE_FIRST_FORK,
 	TAKE_SECOND_FORK,
-	DEAD,
+	DEAD
 }	t_status;
+
+typedef enum e_type
+{
+	TYPE_BOOL,
+	TYPE_INT,
+	TYPE_LONG,
+	TYPE_UINT,
+	TYPE_SIZE_T
+}	t_type;
+
 #endif
