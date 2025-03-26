@@ -6,7 +6,7 @@
 /*   By: joaomigu <joaomigu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 12:00:31 by joaomigu          #+#    #+#             */
-/*   Updated: 2025/03/26 13:40:59 by joaomigu         ###   ########.fr       */
+/*   Updated: 2025/03/26 16:24:42 by joaomigu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,12 +92,12 @@ void	philo_life(t_philo *philo)
 		if (!safe_get(&philo_full, &philo->full, philo->philo_semaphore,
 				TYPE_BOOL))
 			return (ft_putstr_fd("Failed to get philo_full\n", 2), (void)0);
-		if (philo_full)
-			break ;
 		write_states(SLEEPING, philo);
 		usleep(philo->shared->time_to_sleep);
 		philo_think(philo);
 		usleep(100);
+		if (philo_full)
+			break ;
 	}
 	exit(0);
 }

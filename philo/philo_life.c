@@ -6,7 +6,7 @@
 /*   By: joaomigu <joaomigu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 12:00:31 by joaomigu          #+#    #+#             */
-/*   Updated: 2025/03/26 15:02:52 by joaomigu         ###   ########.fr       */
+/*   Updated: 2025/03/26 16:23:59 by joaomigu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -194,11 +194,11 @@ void	*philo_life_many(void *args)
 		philo_eat(philo, philo->shared);
 		if (!safe_get(&philo_full, &philo->full, philo->philo_mutex, TYPE_BOOL))
 			return (ft_putstr_fd("Failed to get philo_full\n", 2), NULL);
+			write_states(SLEEPING, philo);
+			custom_sleep(philo->shared->time_to_sleep / 1000, philo->shared);
+			philo_think(philo);
 		if (philo_full)
 			return (NULL);
-		write_states(SLEEPING, philo);
-		custom_sleep(philo->shared->time_to_sleep / 1000, philo->shared);
-		philo_think(philo);
 	}
 	return (NULL);
 }
