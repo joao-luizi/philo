@@ -6,7 +6,7 @@
 /*   By: joaomigu <joaomigu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 00:17:17 by joaomigu          #+#    #+#             */
-/*   Updated: 2025/03/25 23:51:10 by joaomigu         ###   ########.fr       */
+/*   Updated: 2025/03/26 13:53:57 by joaomigu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,26 @@ static bool	extra_errors(t_shared *shared)
 	return (false);
 }
 
+static bool	set_defaults_aux(t_shared *shared)
+{
+	sem_unlink("/write_semaphore");
+	shared->write_semaphore = sem_open("/write_semaphore", O_CREAT | O_EXCL,
+			0644, 1);
+	if (shared->write_semaphore == SEM_FAILED)
+		return (ft_putstr_fd("Failed write_semaphore\n", 2), false);
+	sem_unlink("/forks_semaphore");
+	shared->forks_semaphore = sem_open("/forks_semaphore", O_CREAT | O_EXCL,
+			0644, shared->philo_number);
+	if (shared->forks_semaphore == SEM_FAILED)
+		return (ft_putstr_fd("Failed forks_semaphore\n", 2), false);
+	sem_unlink("/death_semaphore");
+	shared->death_semaphore = sem_open("/death_semaphore", O_CREAT | O_EXCL,
+			0644, 0);
+	if (shared->death_semaphore == SEM_FAILED)
+		return (ft_putstr_fd("Failed death_semaphore\n", 2), false);
+	return (true);
+}
+
 static bool	set_defaults(t_shared *shared)
 {
 	shared->start_simulation = 0;
@@ -51,35 +71,13 @@ static bool	set_defaults(t_shared *shared)
 	shared->start_semaphore = sem_open("/start_semaphore", O_CREAT | O_EXCL,
 			0644, 0);
 	if (shared->start_semaphore == SEM_FAILED)
-	{
-		return (ft_putstr_fd("Failed to initialize start_semaphore\n", 2),
-			false);
-	}
+		return (ft_putstr_fd("Failed start_semaphore\n", 2), false);
 	sem_unlink("/table_semaphore");
 	shared->table_semaphore = sem_open("/table_semaphore", O_CREAT | O_EXCL,
 			0644, 1);
 	if (shared->table_semaphore == SEM_FAILED)
-		return (ft_putstr_fd("Failed to initialize table_semaphore\n", 2),
-			false);
-	sem_unlink("/write_semaphore");
-	shared->write_semaphore = sem_open("/write_semaphore", O_CREAT | O_EXCL,
-			0644, 1);
-	if (shared->write_semaphore == SEM_FAILED)
-		return (ft_putstr_fd("Failed to initialize write_semaphore\n", 2),
-			false);
-	sem_unlink("/forks_semaphore");
-	shared->forks_semaphore = sem_open("/forks_semaphore", O_CREAT | O_EXCL,
-			0644, shared->philo_number);
-	if (shared->forks_semaphore == SEM_FAILED)
-		return (ft_putstr_fd("Failed to initialize forks_semaphore\n", 2),
-			false);
-	sem_unlink("/death_semaphore");
-	shared->death_semaphore = sem_open("/death_semaphore", O_CREAT | O_EXCL,
-			0644, 0);
-	if (shared->death_semaphore == SEM_FAILED)
-		return (ft_putstr_fd("Failed to initialize death_semaphore\n", 2),
-			false);
-	return (true);
+		return (ft_putstr_fd("Failed table_semaphore\n", 2), false);
+	return (set_defaults_aux(shared));
 }
 
 /**

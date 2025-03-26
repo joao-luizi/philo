@@ -6,7 +6,7 @@
 /*   By: joaomigu <joaomigu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 00:19:40 by joaomigu          #+#    #+#             */
-/*   Updated: 2025/03/25 18:31:20 by joaomigu         ###   ########.fr       */
+/*   Updated: 2025/03/26 13:39:35 by joaomigu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,20 +14,19 @@
 # define DEFINES_H
 
 # include <errno.h>
+# include <fcntl.h>
 # include <limits.h>
 # include <pthread.h>
+# include <semaphore.h>
+# include <signal.h>
 # include <stdbool.h>
 # include <stdio.h>
 # include <stdlib.h>
 # include <string.h>
+# include <sys/stat.h>
 # include <sys/time.h>
+# include <sys/wait.h>
 # include <unistd.h>
-#include <semaphore.h>
-#include <fcntl.h> 
-#include <sys/stat.h> 
-#include <sys/wait.h>
-#include <signal.h>
-
 
 // default color
 # define RST "\033[0m"

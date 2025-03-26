@@ -6,12 +6,13 @@
 /*   By: joaomigu <joaomigu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 12:00:31 by joaomigu          #+#    #+#             */
-/*   Updated: 2025/03/25 23:41:50 by joaomigu         ###   ########.fr       */
+/*   Updated: 2025/03/26 13:40:59 by joaomigu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "inc/message.h"
 #include "inc/philo.h"
+
 bool	write_states(t_status status, t_philo *philo)
 {
 	unsigned int	elapsed;
@@ -36,25 +37,25 @@ bool	write_states(t_status status, t_philo *philo)
 
 static bool	de_sync_philos(t_philo *philo)
 {
-    unsigned int	local_philo_number;
-    unsigned int	local_philo_id;
+	unsigned int	local_philo_number;
+	unsigned int	local_philo_id;
 
-    if (sem_wait(philo->philo_semaphore) != 0)
-        return (ft_putstr_fd("Failed to lock philo semaphore\n", 2), false);
-    local_philo_number = philo->shared->philo_number;
-    local_philo_id = philo->id;
-    if (sem_post(philo->philo_semaphore) != 0)
-        return (ft_putstr_fd("Failed to unlock philo semaphore\n", 2), false);
-    if (local_philo_number % 2 == 0)
-    {
-        if (local_philo_id % 2 == 0)
-            usleep(30000);
-    }
-    else
-    {
-        if (local_philo_id % 2 == 0)
-            philo_think(philo); 
-    }
+	if (sem_wait(philo->philo_semaphore) != 0)
+		return (ft_putstr_fd("Failed to lock philo semaphore\n", 2), false);
+	local_philo_number = philo->shared->philo_number;
+	local_philo_id = philo->id;
+	if (sem_post(philo->philo_semaphore) != 0)
+		return (ft_putstr_fd("Failed to unlock philo semaphore\n", 2), false);
+	if (local_philo_number % 2 == 0)
+	{
+		if (local_philo_id % 2 == 0)
+			usleep(30000);
+	}
+	else
+	{
+		if (local_philo_id % 2 == 0)
+			philo_think(philo);
+	}
 	return (true);
 }
 
@@ -62,8 +63,10 @@ static bool	philo_setup(t_philo *philo)
 {
 	if (sem_wait(philo->philo_semaphore) != 0)
 		return (ft_putstr_fd("Failed to lock table semaphore\n", 2), false);
-	if (pthread_create(philo->monitor_thread, NULL, philosopher_monitor, philo) != 0)
-		return (ft_putstr_fd("Failed to create process monitor thread\n", 2), false);
+	if (pthread_create(philo->monitor_thread, NULL, philosopher_monitor,
+			philo) != 0)
+		return (ft_putstr_fd("Failed to create process monitor thread\n", 2),
+			false);
 	pthread_detach(*philo->monitor_thread);
 	if (sem_wait(philo->shared->start_semaphore) != 0)
 		return (ft_putstr_fd("Failed to lock start_semaphore\n", 2), false);
@@ -74,26 +77,27 @@ static bool	philo_setup(t_philo *philo)
 		return (ft_putstr_fd("Failed to unlock table semaphore\n", 2), false);
 	return (true);
 }
-void philo_life(t_philo *philo)
+
+void	philo_life(t_philo *philo)
 {
-	bool philo_full;
-	
+	bool	philo_full;
+
 	if (!philo_setup(philo))
-		exit (1);
+		exit(1);
 	if (!de_sync_philos(philo))
-		exit (1);
+		exit(1);
 	while (true)
 	{
 		philo_eat(philo, philo->shared);
-		if (!safe_get(&philo_full, &philo->full, philo->philo_semaphore, TYPE_BOOL))
+		if (!safe_get(&philo_full, &philo->full, philo->philo_semaphore,
+				TYPE_BOOL))
 			return (ft_putstr_fd("Failed to get philo_full\n", 2), (void)0);
 		if (philo_full)
-			break;
+			break ;
 		write_states(SLEEPING, philo);
 		usleep(philo->shared->time_to_sleep);
 		philo_think(philo);
 		usleep(100);
 	}
-	exit (0);
-	
+	exit(0);
 }

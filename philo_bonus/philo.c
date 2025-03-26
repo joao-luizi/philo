@@ -6,7 +6,7 @@
 /*   By: joaomigu <joaomigu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 00:03:21 by joaomigu          #+#    #+#             */
-/*   Updated: 2025/03/25 22:20:40 by joaomigu         ###   ########.fr       */
+/*   Updated: 2025/03/26 13:50:17 by joaomigu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,9 +50,9 @@ should error and not run (no crashing)
 
 static void	display_arg_error(void)
 {
-	printf(R "Wrong input\n" G "Example usage: ./philo (number of philosophers) (time to die) (time to eat) \
-		(time to sleep) [number of meals]\n ./philo 5 800 200 200\n()\
-	- required [] - optional" RST);
+	printf(R "Wrong input\n" G "Example usage: ./philo (number of philosophers) (time to die) (time to eat)\
+ (time to sleep) [number of meals]\n ./philo 5 800 200 200\n() - required []\
+ - optional" RST);
 }
 
 /**

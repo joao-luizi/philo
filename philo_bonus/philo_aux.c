@@ -6,13 +6,11 @@
 /*   By: joaomigu <joaomigu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 00:03:50 by joaomigu          #+#    #+#             */
-/*   Updated: 2025/03/25 13:42:17 by joaomigu         ###   ########.fr       */
+/*   Updated: 2025/03/26 13:39:02 by joaomigu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "inc/philo.h"
-
-
 
 /**
  * @brief Allocates memory safely.
