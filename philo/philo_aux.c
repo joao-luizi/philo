@@ -6,7 +6,7 @@
 /*   By: joaomigu <joaomigu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 00:03:50 by joaomigu          #+#    #+#             */
-/*   Updated: 2025/03/26 14:59:18 by joaomigu         ###   ########.fr       */
+/*   Updated: 2025/03/26 23:20:35 by joaomigu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,31 +29,42 @@
  *
  * @see safe_get
  */
-void	custom_sleep(unsigned int sleep_time_ms, t_shared *shared)
+void custom_sleep(unsigned int sleep_time_ms, t_shared *shared)
 {
-	unsigned int	elapsed;
-	unsigned int	interval;
-	bool			end_simulation;
+    unsigned int start_time;
+    unsigned int current_time;
+    unsigned int elapsed_time;
+    bool end_simulation = false;
 
-	end_simulation = false;
-	interval = 100;
-	elapsed = 0;
-	while (elapsed < sleep_time_ms)
-	{
-		if (!safe_get(&end_simulation, &shared->end_simulation,
-				shared->table_mutex, TYPE_BOOL))
-		{
-			ft_putstr_fd("Failed to safely get end_simulation\n", 2);
-			return ;
-		}
-		if (end_simulation)
-			return ;
-		if (sleep_time_ms - elapsed < interval)
-			usleep((sleep_time_ms - elapsed) * 1000);
-		else
-			usleep(interval * 1000);
-		elapsed += interval;
-	}
+    // Convert sleep_time_ms to microseconds
+    unsigned int sleep_time_us = sleep_time_ms * 1000;
+
+    // Get the start time in microseconds
+    start_time = get_time(MICROSECOND);
+
+    while (1)
+    {
+        // Check if the simulation should end
+        if (!safe_get(&end_simulation, &shared->end_simulation,
+                      shared->table_mutex, TYPE_BOOL))
+        {
+            ft_putstr_fd("Failed to safely get end_simulation\n", 2);
+            return;
+        }
+        if (end_simulation)
+            return;
+
+        // Get the current time and calculate elapsed time
+        current_time = get_time(MICROSECOND);
+        elapsed_time = current_time - start_time;
+
+        // Break the loop if the elapsed time exceeds the sleep time
+        if (elapsed_time >= sleep_time_us)
+            break;
+
+        // Busy-wait for small intervals
+        usleep(10); // Sleep for 100 microseconds to reduce CPU usage
+    }
 }
 
 /**
