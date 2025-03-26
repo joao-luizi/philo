@@ -6,7 +6,7 @@
 /*   By: joaomigu <joaomigu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 00:17:41 by joaomigu          #+#    #+#             */
-/*   Updated: 2025/03/26 13:00:02 by joaomigu         ###   ########.fr       */
+/*   Updated: 2025/03/26 13:18:48 by joaomigu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,8 +63,8 @@ static bool	is_digit(char c)
  */
 static const char	*valid_input(const char *str, bool *error)
 {
-	char *result;
-	
+	char	*result;
+
 	while (*str && is_space(*str))
 		str++;
 	while (*str && is_signal(*str))
@@ -72,7 +72,8 @@ static const char	*valid_input(const char *str, bool *error)
 		if (*str == '-')
 		{
 			*error = true;
-			return (ft_putstr_fd(R "Only positive numbers allowed\n" RST, 2), str);
+			return (ft_putstr_fd(R "Only positive numbers allowed\n" RST, 2),
+				str);
 		}
 		str++;
 	}

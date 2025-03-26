@@ -6,7 +6,7 @@
 /*   By: joaomigu <joaomigu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 11:58:56 by joaomigu          #+#    #+#             */
-/*   Updated: 2025/03/26 13:07:54 by joaomigu         ###   ########.fr       */
+/*   Updated: 2025/03/26 13:18:08 by joaomigu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,7 +112,8 @@ bool	philo_eat(t_philo *philo, t_shared *shared)
 	custom_sleep(shared->time_to_eat / 1000, shared);
 	if (philo_full(philo))
 	{
-		if (!safe_set(&philo->full, &(bool){true}, philo->philo_mutex, TYPE_BOOL))
+		if (!safe_set(&philo->full, &(bool){true}, philo->philo_mutex,
+			TYPE_BOOL))
 			return (ft_putstr_fd("Failed to set philo full\n", 2), false);
 	}
 	if (pthread_mutex_unlock(philo->first_fork->fork) != 0)
