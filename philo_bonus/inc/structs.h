@@ -6,7 +6,7 @@
 /*   By: joaomigu <joaomigu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 00:19:32 by joaomigu          #+#    #+#             */
-/*   Updated: 2025/03/26 13:40:17 by joaomigu         ###   ########.fr       */
+/*   Updated: 2025/03/27 12:04:06 by joaomigu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,8 +41,8 @@ typedef struct s_philo
 	size_t				last_meal_time;
 	bool				full;
 	pid_t				process_id;
-	pthread_t			*monitor_thread;
-	sem_t				*philo_semaphore;
+	pthread_t			monitor_thread;
+	sem_t				philo_semaphore;
 
 	t_shared			*shared;
 }						t_philo;
@@ -51,7 +51,7 @@ typedef struct s_table
 {
 	t_shared			*shared;
 	t_philo				*philos;
-	pthread_t			*parent_monitor_thread;
+	pthread_t			parent_monitor_thread;
 }						t_table;
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: joaomigu <joaomigu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 12:00:25 by joaomigu          #+#    #+#             */
-/*   Updated: 2025/03/26 13:40:48 by joaomigu         ###   ########.fr       */
+/*   Updated: 2025/03/27 12:08:47 by joaomigu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,13 +23,7 @@ static void	clean_philos(t_table **table)
 	i = 0;
 	while (i < (int)(*table)->shared->philo_number)
 	{
-		if (philos[i].monitor_thread)
-			free(philos[i].monitor_thread);
-		if (philos[i].philo_semaphore)
-		{
-			sem_destroy(philos[i].philo_semaphore);
-			free(philos[i].philo_semaphore);
-		}
+		sem_destroy(&philos[i].philo_semaphore);
 		i++;
 	}
 	free((*table)->philos);
@@ -88,8 +82,6 @@ void	clean_table(t_table **table)
 		return ;
 	clean_philos(table);
 	clean_shared((*table)->shared);
-	if ((*table)->parent_monitor_thread)
-		free((*table)->parent_monitor_thread);
 	free(*table);
 	*table = NULL;
 }

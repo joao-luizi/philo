@@ -6,7 +6,7 @@
 /*   By: joaomigu <joaomigu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 11:49:10 by joaomigu          #+#    #+#             */
-/*   Updated: 2025/03/27 11:08:15 by joaomigu         ###   ########.fr       */
+/*   Updated: 2025/03/27 12:06:20 by joaomigu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,11 +17,11 @@ static bool	create_parent_monitor(t_table *table)
 {
 	unsigned int	i;
 
-	if (pthread_create(table->parent_monitor_thread, NULL, death_monitor_thread,
+	if (pthread_create(&table->parent_monitor_thread, NULL, death_monitor_thread,
 			table) != 0)
 		return (ft_putstr_fd("Failed to create death monitor thread\n", 2),
 			false);
-	pthread_detach(*table->parent_monitor_thread);
+	pthread_detach(table->parent_monitor_thread);
 	if (sem_post(table->shared->start_semaphore) != 0)
 		return (ft_putstr_fd("Failed to unlock start_semaphore\n", 2), false);
 	i = 0;
@@ -81,21 +81,13 @@ bool	table_init(t_table *table)
 	table->philos = ft_calloc(table->shared->philo_number * sizeof(t_philo));
 	if (!table->philos)
 		return (ft_putstr_fd("Failed to allocate memory\n", 2), false);
-	table->parent_monitor_thread = ft_calloc(sizeof(pthread_t));
-	if (!table->parent_monitor_thread)
-		return (ft_putstr_fd("Failed to allocate memory\n", 2), false);
 	i = 0;
 	while (i < table->shared->philo_number)
 	{
 		set_defaults(table, i);
-		table->philos[i].philo_semaphore = ft_calloc(sizeof(sem_t));
-		if (!table->philos[i].philo_semaphore
-			|| sem_init(table->philos[i].philo_semaphore, 0, 1) != 0)
+		if (sem_init(&table->philos[i].philo_semaphore, 0, 1) != 0)
 			return (ft_putstr_fd("Failed to initialize philo semaphore\n", 2),
 				false);
-		table->philos[i].monitor_thread = ft_calloc(sizeof(pthread_t));
-		if (!table->philos[i].monitor_thread)
-			return (ft_putstr_fd("Failed to allocate memory\n", 2), false);
 		i++;
 	}
 	return (true);

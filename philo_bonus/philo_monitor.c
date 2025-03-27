@@ -6,7 +6,7 @@
 /*   By: joaomigu <joaomigu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 12:00:17 by joaomigu          #+#    #+#             */
-/*   Updated: 2025/03/27 11:09:08 by joaomigu         ###   ########.fr       */
+/*   Updated: 2025/03/27 12:09:15 by joaomigu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,15 +38,15 @@ void	*philosopher_monitor(void *arg)
 	size_t			local_last_meal;
 
 	philo = (t_philo *)arg;
-	if (sem_wait(philo->philo_semaphore) != 0)
+	if (sem_wait(&philo->philo_semaphore) != 0)
 		return (ft_putstr_fd("Failed to lock table semaphore\n", 2), NULL);
 	local_ttodie = philo->shared->time_to_die;
-	sem_post(philo->philo_semaphore);
+	sem_post(&philo->philo_semaphore);
 	while (1)
 	{
 		current_time = get_time(MICROSECOND);
 		safe_get(&local_last_meal, &philo->last_meal_time,
-			philo->philo_semaphore, TYPE_SIZE_T);
+			&philo->philo_semaphore, TYPE_SIZE_T);
 		if (current_time - local_last_meal > local_ttodie)
 		{
 			write_states(DEAD, philo);
