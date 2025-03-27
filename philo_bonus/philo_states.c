@@ -6,7 +6,7 @@
 /*   By: joaomigu <joaomigu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 11:58:56 by joaomigu          #+#    #+#             */
-/*   Updated: 2025/03/27 12:11:07 by joaomigu         ###   ########.fr       */
+/*   Updated: 2025/03/27 12:17:04 by joaomigu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,11 +104,12 @@ bool	philo_eat(t_philo *philo, t_shared *shared)
 	current_time = get_time(MICROSECOND);
 	if (!write_states(EATING, philo))
 		return (false);
-	if (!safe_set(&philo->last_meal_time, &current_time, &philo->philo_semaphore,
-			TYPE_SIZE_T))
+	if (!safe_set(&philo->last_meal_time, &current_time,
+			&philo->philo_semaphore, TYPE_SIZE_T))
 		return (ft_putstr_fd("Failed to set last_meal_time\n", 2), false);
 	custom_sleep(shared->time_to_eat);
-	if (!safe_increase(&philo->meal_counter, &philo->philo_semaphore, TYPE_UINT))
+	if (!safe_increase(&philo->meal_counter, &philo->philo_semaphore,
+			TYPE_UINT))
 		return (ft_putstr_fd("Failed to increase meal_counter\n", 2), false);
 	if (philo_full(philo))
 	{

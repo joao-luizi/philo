@@ -6,7 +6,7 @@
 /*   By: joaomigu <joaomigu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 11:49:10 by joaomigu          #+#    #+#             */
-/*   Updated: 2025/03/27 12:06:20 by joaomigu         ###   ########.fr       */
+/*   Updated: 2025/03/27 12:16:40 by joaomigu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,8 @@ static bool	create_parent_monitor(t_table *table)
 {
 	unsigned int	i;
 
-	if (pthread_create(&table->parent_monitor_thread, NULL, death_monitor_thread,
-			table) != 0)
+	if (pthread_create(&table->parent_monitor_thread, NULL,
+			death_monitor_thread, table) != 0)
 		return (ft_putstr_fd("Failed to create death monitor thread\n", 2),
 			false);
 	pthread_detach(table->parent_monitor_thread);

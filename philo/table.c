@@ -6,7 +6,7 @@
 /*   By: joaomigu <joaomigu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 11:49:10 by joaomigu          #+#    #+#             */
-/*   Updated: 2025/03/27 11:59:54 by joaomigu         ###   ########.fr       */
+/*   Updated: 2025/03/27 12:17:57 by joaomigu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,6 @@ static bool	philos_init(t_table *table)
 		table->philos[i].shared = table->shared;
 		assign_forks(&table->philos[i], table->forks, i,
 			table->shared->philo_number);
-		
 		if (pthread_mutex_init(&table->philos[i].philo_mutex, NULL) != 0)
 			return (printf("Failed to init philo mutex %u\n", i), false);
 		i++;

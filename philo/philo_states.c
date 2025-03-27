@@ -6,7 +6,7 @@
 /*   By: joaomigu <joaomigu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 11:58:56 by joaomigu          #+#    #+#             */
-/*   Updated: 2025/03/27 12:01:51 by joaomigu         ###   ########.fr       */
+/*   Updated: 2025/03/27 12:18:20 by joaomigu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,8 +34,8 @@ static bool	philo_full(t_philo *philo)
 			&philo->shared->table_mutex, TYPE_INT))
 		return (ft_putstr_fd("Failed to safely get nbr_limit_meals\n", 2),
 			true);
-	if (!safe_get(&local_meal_counter, &philo->meal_counter, &philo->philo_mutex,
-			TYPE_UINT))
+	if (!safe_get(&local_meal_counter, &philo->meal_counter,
+			&philo->philo_mutex, TYPE_UINT))
 		return (ft_putstr_fd("Failed to safely get meal_counter\n", 2), true);
 	if (local_limit_meals > 0 && (int)local_meal_counter == local_limit_meals)
 	{

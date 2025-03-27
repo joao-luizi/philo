@@ -6,7 +6,7 @@
 /*   By: joaomigu <joaomigu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 12:00:31 by joaomigu          #+#    #+#             */
-/*   Updated: 2025/03/27 11:53:14 by joaomigu         ###   ########.fr       */
+/*   Updated: 2025/03/27 12:19:25 by joaomigu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -221,8 +221,8 @@ void	*philo_life_many(void *args)
 		if (local_end_simulation)
 			return (NULL);
 		philo_eat(philo, philo->shared);
-		if (!safe_get(&philo_full, &philo->full, &philo->philo_mutex, TYPE_BOOL))
-			return (ft_putstr_fd("Failed to get philo_full\n", 2), NULL);
+		safe_get(&philo_full, &philo->full,
+			&philo->philo_mutex, TYPE_BOOL);
 		write_states(SLEEPING, philo);
 		custom_sleep(philo->shared->time_to_sleep, philo->shared);
 		philo_think(philo);
