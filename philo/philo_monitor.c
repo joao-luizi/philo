@@ -6,7 +6,7 @@
 /*   By: joaomigu <joaomigu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 12:00:17 by joaomigu          #+#    #+#             */
-/*   Updated: 2025/03/27 10:59:58 by joaomigu         ###   ########.fr       */
+/*   Updated: 2025/03/27 11:55:20 by joaomigu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ static bool	check_philo_died(t_table *table, unsigned int i)
 			return (false);
 		set_value = true;
 		if (!safe_set(&table->shared->end_simulation, &set_value,
-				table->shared->table_mutex, TYPE_BOOL))
+				&table->shared->table_mutex, TYPE_BOOL))
 			return (ft_putstr_fd("Failed to safely set end_simulation\n", 2),
 				false);
 		return (true);
@@ -75,7 +75,7 @@ static bool	monitor_philosophers(t_table *table, bool *local_end_simulation)
 	while (i < table->shared->philo_number && !(*local_end_simulation))
 	{
 		if (!safe_get(local_end_simulation, &table->shared->end_simulation,
-				table->shared->table_mutex, TYPE_BOOL))
+				&table->shared->table_mutex, TYPE_BOOL))
 			return (ft_putstr_fd("Failed to safely get end_simulation\n", 2),
 				false);
 		if (*local_end_simulation || check_philo_died(table, i))
@@ -108,7 +108,7 @@ void	*monitor(void *args)
 
 	table = (t_table *)args;
 	if (!safe_get(&local_end_simulation, &table->shared->end_simulation,
-			table->shared->table_mutex, TYPE_BOOL))
+			&table->shared->table_mutex, TYPE_BOOL))
 		return (ft_putstr_fd("Failed to safely get end_simulation\n", 2), NULL);
 	while (!local_end_simulation)
 	{

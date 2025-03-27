@@ -6,7 +6,7 @@
 /*   By: joaomigu <joaomigu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 12:00:31 by joaomigu          #+#    #+#             */
-/*   Updated: 2025/03/27 11:09:43 by joaomigu         ###   ########.fr       */
+/*   Updated: 2025/03/27 11:53:14 by joaomigu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,14 +39,14 @@ bool	write_states(t_status status, t_philo *philo)
 	unsigned int	elapsed;
 	bool			local_end_simulation;
 
-	if (pthread_mutex_lock(philo->shared->write_mutex) != 0)
+	if (pthread_mutex_lock(&philo->shared->write_mutex) != 0)
 		return (ft_putstr_fd("Failed to lock write mutex\n", 2), false);
 	if (!safe_get(&local_end_simulation, &philo->shared->end_simulation,
-			philo->shared->table_mutex, TYPE_BOOL))
+			&philo->shared->table_mutex, TYPE_BOOL))
 		return (ft_putstr_fd("Failed to get end_simulation\n", 2), false);
 	elapsed = (get_time(MICROSECOND) - philo->shared->start_simulation) / 1000;
 	if (local_end_simulation)
-		return (pthread_mutex_unlock(philo->shared->write_mutex), true);
+		return (pthread_mutex_unlock(&philo->shared->write_mutex), true);
 	if ((status == TAKE_FIRST_FORK || status == TAKE_SECOND_FORK))
 		printf("%-6u %d has taken a fork\n", elapsed, philo->id);
 	else if (status == EATING)
@@ -57,7 +57,7 @@ bool	write_states(t_status status, t_philo *philo)
 		printf("%-6u %d is thinking\n", elapsed, philo->id);
 	else if (status == DEAD)
 		printf("%-6u %d is dead\n", elapsed, philo->id);
-	if (pthread_mutex_unlock(philo->shared->write_mutex) != 0)
+	if (pthread_mutex_unlock(&philo->shared->write_mutex) != 0)
 		return (ft_putstr_fd("Failed to unlock write mutex\n", 2), false);
 	return (true);
 }
@@ -88,10 +88,10 @@ static void	de_sync_philos(t_philo *philo)
 
 	shared = philo->shared;
 	if (!safe_get(&local_philo_number, &shared->philo_number,
-			shared->table_mutex, TYPE_UINT))
+			&shared->table_mutex, TYPE_UINT))
 		return (ft_putstr_fd("Failed to safely get philo_number\n", 2),
 			(void)0);
-	if (!safe_get(&local_philo_id, &philo->id, philo->philo_mutex, TYPE_UINT))
+	if (!safe_get(&local_philo_id, &philo->id, &philo->philo_mutex, TYPE_UINT))
 		return (ft_putstr_fd("Failed to safely get philo_number\n", 2),
 			(void)0);
 	if (local_philo_number % 2 == 0)
@@ -132,10 +132,10 @@ void	*philo_life_single(void *args)
 
 	philo = (t_philo *)args;
 	if (!safe_get(&local_end_simulation, &philo->shared->end_simulation,
-			philo->shared->table_mutex, TYPE_BOOL))
+			&philo->shared->table_mutex, TYPE_BOOL))
 		return (ft_putstr_fd("Failed to safely get end_simulation\n", 2), NULL);
 	current_time = get_time(MICROSECOND);
-	if (!safe_set(&philo->last_meal_time, &current_time, philo->philo_mutex,
+	if (!safe_set(&philo->last_meal_time, &current_time, &philo->philo_mutex,
 			TYPE_SIZE_T))
 		return (ft_putstr_fd("Failed to safely set last_meal_time\n", 2), NULL);
 	if (!write_states(TAKE_FIRST_FORK, philo))
@@ -143,7 +143,7 @@ void	*philo_life_single(void *args)
 	while (!local_end_simulation)
 	{
 		if (!safe_get(&local_end_simulation, &philo->shared->end_simulation,
-				philo->shared->table_mutex, TYPE_BOOL))
+				&philo->shared->table_mutex, TYPE_BOOL))
 			return (ft_putstr_fd("Failed to safely get end_simulation\n", 2),
 				NULL);
 		usleep(30);
@@ -173,11 +173,11 @@ static bool	philo_setup(t_philo *philo, bool *local_end_simulation)
 	size_t	current_time;
 
 	if (!safe_get(local_end_simulation, &philo->shared->end_simulation,
-			philo->shared->table_mutex, TYPE_BOOL))
+			&philo->shared->table_mutex, TYPE_BOOL))
 		return (ft_putstr_fd("Failed to safely get end_simulation\n", 2),
 			false);
 	current_time = get_time(MICROSECOND);
-	if (!safe_set(&philo->last_meal_time, &current_time, philo->philo_mutex,
+	if (!safe_set(&philo->last_meal_time, &current_time, &philo->philo_mutex,
 			TYPE_SIZE_T))
 		return (ft_putstr_fd("Failed to safely set last_meal_time\n", 2),
 			false);
@@ -216,12 +216,12 @@ void	*philo_life_many(void *args)
 	while (!local_end_simulation)
 	{
 		if (!safe_get(&local_end_simulation, &philo->shared->end_simulation,
-				philo->shared->table_mutex, TYPE_BOOL))
+				&philo->shared->table_mutex, TYPE_BOOL))
 			return (ft_putstr_fd("Failed to get end_simulation\n", 2), NULL);
 		if (local_end_simulation)
 			return (NULL);
 		philo_eat(philo, philo->shared);
-		if (!safe_get(&philo_full, &philo->full, philo->philo_mutex, TYPE_BOOL))
+		if (!safe_get(&philo_full, &philo->full, &philo->philo_mutex, TYPE_BOOL))
 			return (ft_putstr_fd("Failed to get philo_full\n", 2), NULL);
 		write_states(SLEEPING, philo);
 		custom_sleep(philo->shared->time_to_sleep, philo->shared);

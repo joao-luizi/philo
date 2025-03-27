@@ -6,7 +6,7 @@
 /*   By: joaomigu <joaomigu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 00:17:17 by joaomigu          #+#    #+#             */
-/*   Updated: 2025/03/26 14:55:15 by joaomigu         ###   ########.fr       */
+/*   Updated: 2025/03/27 11:51:35 by joaomigu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,14 +57,9 @@ static bool	set_defaults(t_shared *shared)
 	else
 		shared->time_to_think = (shared->time_to_eat * 2)
 			- shared->time_to_sleep;
-	shared->table_mutex = NULL;
-	shared->write_mutex = NULL;
-	shared->table_mutex = ft_calloc(sizeof(pthread_mutex_t));
-	if (!shared->table_mutex || pthread_mutex_init(shared->table_mutex,
-			NULL) != 0)
+	if (pthread_mutex_init(&shared->table_mutex, NULL) != 0)
 		return (printf("Failed to initialize table_mutex\n"), false);
-	shared->write_mutex = ft_calloc(sizeof(pthread_mutex_t));
-	if (!shared->write_mutex || pthread_mutex_init(shared->write_mutex,
+	if (pthread_mutex_init(&shared->write_mutex,
 			NULL) != 0)
 		return (printf("Failed to initialize write_mutex\n"), false);
 	return (true);

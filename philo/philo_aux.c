@@ -6,7 +6,7 @@
 /*   By: joaomigu <joaomigu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 00:03:50 by joaomigu          #+#    #+#             */
-/*   Updated: 2025/03/27 10:59:32 by joaomigu         ###   ########.fr       */
+/*   Updated: 2025/03/27 11:52:04 by joaomigu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ void	custom_sleep(unsigned int sleep_time_ms, t_shared *shared)
 	while (!end_simulation)
 	{
 		if (!safe_get(&end_simulation, &shared->end_simulation,
-				shared->table_mutex, TYPE_BOOL))
+				&shared->table_mutex, TYPE_BOOL))
 		{
 			ft_putstr_fd("Failed to safely get end_simulation\n", 2);
 			return ;

@@ -6,7 +6,7 @@
 /*   By: joaomigu <joaomigu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 12:00:25 by joaomigu          #+#    #+#             */
-/*   Updated: 2025/03/27 10:50:31 by joaomigu         ###   ########.fr       */
+/*   Updated: 2025/03/27 12:01:11 by joaomigu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,16 +27,8 @@ static void	clean_shared(t_shared *shared)
 {
 	if (shared)
 	{
-		if (shared->table_mutex)
-		{
-			pthread_mutex_destroy(shared->table_mutex);
-			free(shared->table_mutex);
-		}
-		if (shared->write_mutex)
-		{
-			pthread_mutex_destroy(shared->write_mutex);
-			free(shared->write_mutex);
-		}
+		pthread_mutex_destroy(&shared->table_mutex);
+		pthread_mutex_destroy(&shared->write_mutex);
 		free(shared);
 	}
 }
@@ -58,11 +50,7 @@ static void	clean_forks(t_table **table)
 	i = 0;
 	while (i < (*table)->shared->philo_number)
 	{
-		if ((*table)->forks[i].fork)
-		{
-			pthread_mutex_destroy((*table)->forks[i].fork);
-			free((*table)->forks[i].fork);
-		}
+		pthread_mutex_destroy(&(*table)->forks[i].fork);
 		i++;
 	}
 	free((*table)->forks);
@@ -88,16 +76,9 @@ static void	clean_philos(t_table **table)
 	i = 0;
 	while (i < (*table)->shared->philo_number)
 	{
-		if ((*table)->philos[i].philo_mutex)
-		{
-			pthread_mutex_destroy((*table)->philos[i].philo_mutex);
-			free((*table)->philos[i].philo_mutex);
-			free((*table)->philos[i].thread_id);
-		}
+		pthread_mutex_destroy(&(*table)->philos[i].philo_mutex);
 		i++;
 	}
-	if ((*table)->monitor)
-		free((*table)->monitor);
 	free((*table)->philos);
 }
 
