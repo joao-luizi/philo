@@ -6,7 +6,7 @@
 /*   By: joaomigu <joaomigu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 11:58:56 by joaomigu          #+#    #+#             */
-/*   Updated: 2025/03/26 16:24:59 by joaomigu         ###   ########.fr       */
+/*   Updated: 2025/03/27 11:43:46 by joaomigu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,8 +47,8 @@ bool	philo_died(t_philo *philo)
 				false);
 		return (false);
 	}
-	elapsed = get_time(MILLISECOND) - philo->last_meal_time;
-	if (elapsed > philo->shared->time_to_die / 1000)
+	elapsed = get_time(MICROSECOND) - philo->last_meal_time;
+	if (elapsed > philo->shared->time_to_die)
 	{
 		if (sem_post(philo->philo_semaphore) != 0)
 			return (ft_putstr_fd("Failed to unlock philo semaphore\n", 2),
@@ -80,7 +80,7 @@ void	philo_think(t_philo *philo)
 	}
 	if (local_philo_number % 2 == 0)
 		return ;
-	usleep(local_time_to_think * 0.5);
+	custom_sleep(local_time_to_think * 0.4);
 }
 
 static bool	take_forks(t_philo *philo)
@@ -101,13 +101,13 @@ bool	philo_eat(t_philo *philo, t_shared *shared)
 	size_t	current_time;
 
 	take_forks(philo);
-	current_time = get_time(MILLISECOND);
+	current_time = get_time(MICROSECOND);
 	if (!write_states(EATING, philo))
 		return (false);
 	if (!safe_set(&philo->last_meal_time, &current_time, philo->philo_semaphore,
 			TYPE_SIZE_T))
 		return (ft_putstr_fd("Failed to set last_meal_time\n", 2), false);
-		usleep(shared->time_to_eat);
+	custom_sleep(shared->time_to_eat);
 	if (!safe_increase(&philo->meal_counter, philo->philo_semaphore, TYPE_UINT))
 		return (ft_putstr_fd("Failed to increase meal_counter\n", 2), false);
 	if (philo_full(philo))

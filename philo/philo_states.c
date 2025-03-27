@@ -6,7 +6,7 @@
 /*   By: joaomigu <joaomigu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 11:58:56 by joaomigu          #+#    #+#             */
-/*   Updated: 2025/03/26 23:54:45 by joaomigu         ###   ########.fr       */
+/*   Updated: 2025/03/27 10:55:05 by joaomigu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,11 +15,13 @@
 /**
  * @brief Checks if a philosopher has eaten enough meals to be considered full.
  *
- * Retrieves the meal limit and the philosopher's current meal count in a thread-safe
+ * Retrieves the meal limit and the philosopher's current meal count in a 
+ * thread-safe
  * manner. If the limit is reached, it marks the philosopher as full.
  *
  * @param philo Pointer to the philosopher structure.
- * @return true if the philosopher is full or if an error occurred during safe_get/set;
+ * @return true if the philosopher is full or if an error occurred during 
+ * safe_get/set;
  *         false otherwise.
  */
 static bool	philo_full(t_philo *philo)
@@ -48,11 +50,13 @@ static bool	philo_full(t_philo *philo)
 /**
  * @brief Checks whether a philosopher has died due to starvation.
  *
- * Locks the philosopher's mutex and checks the time elapsed since the last meal.
+ * Locks the philosopher's mutex and checks the time elapsed since the last 
+ * meal.
  * If it exceeds `time_to_die`, the philosopher is considered dead.
  *
  * @param philo Pointer to the philosopher structure.
- * @return true if the philosopher died; false if still alive or full, or in case of an error.
+ * @return true if the philosopher died; false if still alive or full, or in 
+ * case of an error.
  */
 bool	philo_died(t_philo *philo)
 {
@@ -81,7 +85,8 @@ bool	philo_died(t_philo *philo)
 /**
  * @brief Handles the thinking phase of a philosopher.
  *
- * Logs the THINKING state and applies a small sleep delay for odd-numbered philosopher
+ * Logs the THINKING state and applies a small sleep delay for odd-numbered 
+ * philosopher
  * counts to help stagger the execution and avoid contention for forks.
  *
  * @param philo Pointer to the philosopher structure.
@@ -112,8 +117,10 @@ void	philo_think(t_philo *philo)
 /**
  * @brief Locks both forks for a philosopher in the correct order.
  *
- * First locks the mutex for the first fork and logs the action. Then does the same for
- * the second fork. If locking or logging fails at any point, the function returns false.
+ * First locks the mutex for the first fork and logs the action. Then does
+ *  the same for
+ * the second fork. If locking or logging fails at any point, the function
+ *  returns false.
  *
  * @param philo Pointer to the philosopher structure.
  * @return true if both forks were successfully taken; false otherwise.
@@ -131,12 +138,15 @@ static bool	take_forks(t_philo *philo)
 	return (true);
 }
 
- /**
+/**
  * @brief Executes the eating routine for a philosopher.
  *
- * The philosopher locks both forks, logs the EATING state, updates the last meal time,
- * increments the meal counter, and sleeps for the eating duration. If the philosopher
- * has reached the meal limit, they are marked as full. Finally, the forks are released.
+ * The philosopher locks both forks, logs the EATING state, updates the last
+ *  meal time,
+ * increments the meal counter, and sleeps for the eating duration. If the 
+ * philosopher
+ * has reached the meal limit, they are marked as full. Finally, the forks 
+ * are released.
  *
  * @param philo Pointer to the philosopher structure.
  * @param shared Pointer to the shared simulation data.
@@ -152,7 +162,7 @@ bool	philo_eat(t_philo *philo, t_shared *shared)
 		return (false);
 	if (!safe_set(&philo->last_meal_time, &current_time, philo->philo_mutex,
 			TYPE_SIZE_T))
-			return (ft_putstr_fd("Failed to set last_meal_time\n", 2), false);
+		return (ft_putstr_fd("Failed to set last_meal_time\n", 2), false);
 	custom_sleep(shared->time_to_eat, shared);
 	if (!safe_increase(&philo->meal_counter, philo->philo_mutex, TYPE_UINT))
 		return (ft_putstr_fd("Failed to increase meal_counter\n", 2), false);

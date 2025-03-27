@@ -6,7 +6,7 @@
 /*   By: joaomigu <joaomigu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 12:00:17 by joaomigu          #+#    #+#             */
-/*   Updated: 2025/03/26 13:54:33 by joaomigu         ###   ########.fr       */
+/*   Updated: 2025/03/27 11:09:08 by joaomigu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,10 +44,10 @@ void	*philosopher_monitor(void *arg)
 	sem_post(philo->philo_semaphore);
 	while (1)
 	{
-		current_time = get_time(MILLISECOND);
+		current_time = get_time(MICROSECOND);
 		safe_get(&local_last_meal, &philo->last_meal_time,
 			philo->philo_semaphore, TYPE_SIZE_T);
-		if (current_time - local_last_meal > local_ttodie / 1000)
+		if (current_time - local_last_meal > local_ttodie)
 		{
 			write_states(DEAD, philo);
 			sem_wait(philo->shared->write_semaphore);

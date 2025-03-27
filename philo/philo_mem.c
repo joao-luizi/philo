@@ -6,16 +6,19 @@
 /*   By: joaomigu <joaomigu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 12:00:25 by joaomigu          #+#    #+#             */
-/*   Updated: 2025/03/26 15:05:42 by joaomigu         ###   ########.fr       */
+/*   Updated: 2025/03/27 10:50:31 by joaomigu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "inc/philo.h"
 
 /**
- * @brief Frees and destroys the shared data structure used by all philosophers.
+ * @brief Frees and destroys the shared data structure used by all 
+ * philosophers.
  *
- * This function safely destroys and frees the shared mutexes (`table_mutex` and `write_mutex`)
+
+	* This function safely destroys and frees the shared mutexes 
+	(`table_mutex` and `write_mutex`)
  * and finally frees the `shared` structure itself.
  *
  * @param shared Pointer to the shared data structure.
@@ -72,7 +75,9 @@ static void	clean_forks(t_table **table)
  * destroying their individual mutexes and freeing their allocated memory.
  * It also frees the monitor thread (if allocated) and the philosopher array.
  *
- * @param table Double pointer to the table structure containing the philosophers.
+
+	* @param table Double pointer to the table structure containing the 
+	philosophers.
  */
 static void	clean_philos(t_table **table)
 {
@@ -101,9 +106,13 @@ static void	clean_philos(t_table **table)
  *
  * This function acts as a complete cleanup routine. It calls sub-cleanup
  * functions to destroy forks, philosophers, and shared data. It then frees
- * the table structure itself and sets the pointer to NULL to avoid dangling references.
+
+	* the table structure itself and sets the pointer to NULL to avoid 
+	dangling references.
  *
- * @param table Double pointer to the table structure to be cleaned and deallocated.
+
+	* @param table Double pointer to the table structure to be cleaned 
+	and deallocated.
  */
 void	clean_table(t_table **table)
 {

@@ -6,7 +6,7 @@
 /*   By: joaomigu <joaomigu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 00:19:37 by joaomigu          #+#    #+#             */
-/*   Updated: 2025/03/26 13:39:40 by joaomigu         ###   ########.fr       */
+/*   Updated: 2025/03/27 11:37:31 by joaomigu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ unsigned int	custom_atol(const char *str, bool *error);
 void			*ft_calloc(size_t bytes);
 void			ft_putstr_fd(const char *s, int fd);
 unsigned int	get_time(t_time_code timecode);
+void			custom_sleep(unsigned int sleep_time_ms);
 
 // philo_life.c
 void			philo_life(t_philo *philo);

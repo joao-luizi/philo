@@ -6,7 +6,7 @@
 /*   By: joaomigu <joaomigu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 11:49:10 by joaomigu          #+#    #+#             */
-/*   Updated: 2025/03/26 13:43:51 by joaomigu         ###   ########.fr       */
+/*   Updated: 2025/03/27 11:08:15 by joaomigu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ static bool	fork_philosophers(t_table *table)
 {
 	unsigned int	i;
 
-	table->shared->start_simulation = get_time(MILLISECOND);
+	table->shared->start_simulation = get_time(MICROSECOND);
 	i = 0;
 	while (i < table->shared->philo_number)
 	{

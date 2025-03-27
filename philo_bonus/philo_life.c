@@ -6,7 +6,7 @@
 /*   By: joaomigu <joaomigu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 12:00:31 by joaomigu          #+#    #+#             */
-/*   Updated: 2025/03/26 16:24:42 by joaomigu         ###   ########.fr       */
+/*   Updated: 2025/03/27 11:43:56 by joaomigu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ bool	write_states(t_status status, t_philo *philo)
 
 	if (sem_wait(philo->shared->write_semaphore) != 0)
 		return (ft_putstr_fd("Failed to lock write semaphore\n", 2), false);
-	elapsed = get_time(MILLISECOND) - philo->shared->start_simulation;
+	elapsed = (get_time(MICROSECOND) - philo->shared->start_simulation) / 1000;
 	if ((status == TAKE_FIRST_FORK || status == TAKE_SECOND_FORK))
 		printf("%-6u %d has taken a fork\n", elapsed, philo->id);
 	else if (status == EATING)
@@ -49,7 +49,7 @@ static bool	de_sync_philos(t_philo *philo)
 	if (local_philo_number % 2 == 0)
 	{
 		if (local_philo_id % 2 == 0)
-			usleep(30000);
+			usleep(40000);
 	}
 	else
 	{
@@ -70,7 +70,7 @@ static bool	philo_setup(t_philo *philo)
 	pthread_detach(*philo->monitor_thread);
 	if (sem_wait(philo->shared->start_semaphore) != 0)
 		return (ft_putstr_fd("Failed to lock start_semaphore\n", 2), false);
-	philo->last_meal_time = get_time(MILLISECOND);
+	philo->last_meal_time = get_time(MICROSECOND);
 	if (sem_post(philo->shared->start_semaphore) != 0)
 		return (ft_putstr_fd("Failed to unlock table semaphore\n", 2), false);
 	if (sem_post(philo->philo_semaphore) != 0)
@@ -93,11 +93,11 @@ void	philo_life(t_philo *philo)
 				TYPE_BOOL))
 			return (ft_putstr_fd("Failed to get philo_full\n", 2), (void)0);
 		write_states(SLEEPING, philo);
-		usleep(philo->shared->time_to_sleep);
+		custom_sleep(philo->shared->time_to_sleep);
 		philo_think(philo);
-		usleep(100);
 		if (philo_full)
 			break ;
+		usleep(100);
 	}
 	exit(0);
 }

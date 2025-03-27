@@ -6,11 +6,54 @@
 /*   By: joaomigu <joaomigu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 00:03:50 by joaomigu          #+#    #+#             */
-/*   Updated: 2025/03/26 13:39:02 by joaomigu         ###   ########.fr       */
+/*   Updated: 2025/03/27 11:44:08 by joaomigu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "inc/philo.h"
+
+/**
+ * @brief Sleeps for a given amount of time, checking periodically if the
+ * simulation should end.
+ *
+ * This function performs a sleep for the specified number of milliseconds
+ * (`sleep_time_ms`),
+ * but instead of sleeping all at once, it does so in small intervals (100 ms
+ *  by default).
+ * Between each interval, it checks the shared `end_simulation` flag to allow
+ *  an early exit
+ * if the simulation is requested to stop. This allows for a more responsive
+ * simulation shutdown.
+ *
+ * @param sleep_time_ms The total amount of time to sleep, in milliseconds.
+ * @param shared Pointer to a shared data structure that includes the
+ * `end_simulation` flag
+ *               and the mutex protecting access to it.
+ *
+ * @note If `safe_get` fails to retrieve the `end_simulation` value, an error
+ * message is printed
+ *       and the function returns early.
+ *
+ * @see safe_get
+ */
+void	custom_sleep(unsigned int sleep_time_ms)
+{
+	unsigned int	start_time;
+	unsigned int	current_time;
+	unsigned int	elapsed_time;
+	bool			end_simulation;
+
+	end_simulation = false;
+	start_time = get_time(MICROSECOND);
+	while (!end_simulation)
+	{
+		current_time = get_time(MICROSECOND);
+		elapsed_time = current_time - start_time;
+		if (elapsed_time >= sleep_time_ms)
+			break ;
+		usleep(100);
+	}
+}
 
 /**
  * @brief Allocates memory safely.
