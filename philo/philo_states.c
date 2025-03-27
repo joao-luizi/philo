@@ -6,7 +6,7 @@
 /*   By: joaomigu <joaomigu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 11:58:56 by joaomigu          #+#    #+#             */
-/*   Updated: 2025/03/26 23:09:42 by joaomigu         ###   ########.fr       */
+/*   Updated: 2025/03/26 23:54:45 by joaomigu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,8 +66,8 @@ bool	philo_died(t_philo *philo)
 			return (ft_putstr_fd("Failed to unlock philo mutex\n", 2), false);
 		return (false);
 	}
-	elapsed = get_time(MILLISECOND) - philo->last_meal_time;
-	if (elapsed > philo->shared->time_to_die / 1000)
+	elapsed = get_time(MICROSECOND) - philo->last_meal_time;
+	if (elapsed >= philo->shared->time_to_die)
 	{
 		if (pthread_mutex_unlock(philo->philo_mutex) != 0)
 			return (ft_putstr_fd("Failed to unlock philo mutex\n", 2), true);
@@ -106,7 +106,7 @@ void	philo_think(t_philo *philo)
 	}
 	if (local_philo_number % 2 == 0)
 		return ;
-	custom_sleep((local_time_to_think / 1000) * 0.5, philo->shared);
+	custom_sleep((local_time_to_think) * 0.5, philo->shared);
 }
 
 /**
@@ -147,13 +147,13 @@ bool	philo_eat(t_philo *philo, t_shared *shared)
 	size_t	current_time;
 
 	take_forks(philo);
-	current_time = get_time(MILLISECOND);
+	current_time = get_time(MICROSECOND);
 	if (!write_states(EATING, philo))
 		return (false);
 	if (!safe_set(&philo->last_meal_time, &current_time, philo->philo_mutex,
 			TYPE_SIZE_T))
 			return (ft_putstr_fd("Failed to set last_meal_time\n", 2), false);
-	custom_sleep(shared->time_to_eat / 1000, shared);
+	custom_sleep(shared->time_to_eat, shared);
 	if (!safe_increase(&philo->meal_counter, philo->philo_mutex, TYPE_UINT))
 		return (ft_putstr_fd("Failed to increase meal_counter\n", 2), false);
 	if (philo_full(philo))

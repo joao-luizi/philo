@@ -6,7 +6,7 @@
 /*   By: joaomigu <joaomigu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 11:49:10 by joaomigu          #+#    #+#             */
-/*   Updated: 2025/03/26 15:12:41 by joaomigu         ###   ########.fr       */
+/*   Updated: 2025/03/27 00:30:57 by joaomigu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -142,7 +142,7 @@ static bool	create_threads(t_table *table)
 	}
 	if (pthread_create(table->monitor, NULL, monitor, table) != 0)
 		return (ft_putstr_fd("Failed to create monitor thread\n", 2), false);
-	table->shared->start_simulation = get_time(MILLISECOND);
+	table->shared->start_simulation = get_time(MICROSECOND);
 	if (pthread_mutex_unlock(table->shared->table_mutex) != 0)
 		return (ft_putstr_fd("Failed to unlock table mutex\n", 2), false);
 	return (true);
@@ -179,8 +179,7 @@ bool	dinner_init(t_table *table)
 			return (printf("Failed to join thread"), false);
 		i++;
 	}
-	if (!safe_set(&table->shared->end_simulation, &(bool){true},
-		table->shared->table_mutex, TYPE_BOOL))
+	if (!safe_set(&table->shared->end_simulation, &(bool){true}, table->shared->table_mutex, TYPE_BOOL))
 		return (ft_putstr_fd("Failed to set end_simulation\n", 2), false);
 	if (pthread_join(*table->monitor, NULL) != 0)
 		return (ft_putstr_fd("Failed to join monitor thread\n", 2), false);

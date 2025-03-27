@@ -6,7 +6,7 @@
 /*   By: joaomigu <joaomigu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 12:00:17 by joaomigu          #+#    #+#             */
-/*   Updated: 2025/03/26 15:07:01 by joaomigu         ###   ########.fr       */
+/*   Updated: 2025/03/27 00:14:06 by joaomigu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,9 +64,7 @@ static bool	monitor_philosophers(t_table *table, bool *local_end_simulation)
 				table->shared->table_mutex, TYPE_BOOL))
 			return (ft_putstr_fd("Failed to safely get end_simulation\n", 2),
 				false);
-		if (*local_end_simulation)
-			return (true);
-		if (check_philo_died(table, i))
+		if (*local_end_simulation || check_philo_died(table, i))
 			return (true);
 		i++;
 	}

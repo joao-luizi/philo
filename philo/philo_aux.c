@@ -6,7 +6,7 @@
 /*   By: joaomigu <joaomigu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 00:03:50 by joaomigu          #+#    #+#             */
-/*   Updated: 2025/03/26 23:20:35 by joaomigu         ###   ########.fr       */
+/*   Updated: 2025/03/27 00:25:36 by joaomigu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,14 +35,12 @@ void custom_sleep(unsigned int sleep_time_ms, t_shared *shared)
     unsigned int current_time;
     unsigned int elapsed_time;
     bool end_simulation = false;
-
-    // Convert sleep_time_ms to microseconds
-    unsigned int sleep_time_us = sleep_time_ms * 1000;
+    
 
     // Get the start time in microseconds
     start_time = get_time(MICROSECOND);
 
-    while (1)
+    while (!end_simulation)
     {
         // Check if the simulation should end
         if (!safe_get(&end_simulation, &shared->end_simulation,
@@ -51,17 +49,13 @@ void custom_sleep(unsigned int sleep_time_ms, t_shared *shared)
             ft_putstr_fd("Failed to safely get end_simulation\n", 2);
             return;
         }
-        if (end_simulation)
-            return;
-
         // Get the current time and calculate elapsed time
         current_time = get_time(MICROSECOND);
         elapsed_time = current_time - start_time;
 
         // Break the loop if the elapsed time exceeds the sleep time
-        if (elapsed_time >= sleep_time_us)
+        if (elapsed_time >= sleep_time_ms)
             break;
-
         // Busy-wait for small intervals
         usleep(10); // Sleep for 100 microseconds to reduce CPU usage
     }
