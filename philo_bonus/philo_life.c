@@ -6,7 +6,7 @@
 /*   By: joaomigu <joaomigu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 12:00:31 by joaomigu          #+#    #+#             */
-/*   Updated: 2025/03/28 11:32:45 by joaomigu         ###   ########.fr       */
+/*   Updated: 2025/03/28 13:05:13 by joaomigu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,8 @@ bool	write_states(t_status status, t_philo *philo)
 
 	if (sem_wait(philo->shared->write_semaphore) != 0)
 		return (ft_putstr_fd("Failed to lock write semaphore\n", 2), false);
-	elapsed = (get_time(MICROSECOND) - philo->shared->start_simulation) / 1000;
+	elapsed = (get_time(MICROSECOND) - philo->shared->start_simulation)
+		/ 1000;
 	if ((status == TAKE_FIRST_FORK || status == TAKE_SECOND_FORK))
 		printf("%-6u %d has taken a fork\n", elapsed, philo->id);
 	else if (status == EATING)
@@ -40,7 +41,7 @@ static bool	de_sync_philos(t_philo *philo)
 	unsigned int	local_philo_number;
 	unsigned int	local_philo_id;
 	unsigned int	local_time_to_think;
-	
+
 	if (sem_wait(&philo->philo_semaphore) != 0)
 		return (ft_putstr_fd("Failed to lock philo semaphore\n", 2), false);
 	local_philo_number = philo->shared->philo_number;

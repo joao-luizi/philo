@@ -6,7 +6,7 @@
 /*   By: joaomigu <joaomigu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 00:03:50 by joaomigu          #+#    #+#             */
-/*   Updated: 2025/03/27 11:44:08 by joaomigu         ###   ########.fr       */
+/*   Updated: 2025/03/28 13:04:31 by joaomigu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,9 @@ void	custom_sleep(unsigned int sleep_time_ms)
 
 	end_simulation = false;
 	start_time = get_time(MICROSECOND);
+	if (sleep_time_ms <= 100)
+		return ;
+	usleep(sleep_time_ms - 100);
 	while (!end_simulation)
 	{
 		current_time = get_time(MICROSECOND);

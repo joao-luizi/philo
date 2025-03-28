@@ -6,7 +6,7 @@
 /*   By: joaomigu <joaomigu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 12:00:31 by joaomigu          #+#    #+#             */
-/*   Updated: 2025/03/27 12:19:25 by joaomigu         ###   ########.fr       */
+/*   Updated: 2025/03/28 13:04:03 by joaomigu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,8 @@ bool	write_states(t_status status, t_philo *philo)
 	if (!safe_get(&local_end_simulation, &philo->shared->end_simulation,
 			&philo->shared->table_mutex, TYPE_BOOL))
 		return (ft_putstr_fd("Failed to get end_simulation\n", 2), false);
-	elapsed = (get_time(MICROSECOND) - philo->shared->start_simulation) / 1000;
+	elapsed = (get_time(MICROSECOND) - philo->shared->start_simulation + 500)
+		/ 1000;
 	if (local_end_simulation)
 		return (pthread_mutex_unlock(&philo->shared->write_mutex), true);
 	if ((status == TAKE_FIRST_FORK || status == TAKE_SECOND_FORK))
@@ -85,15 +86,14 @@ static void	de_sync_philos(t_philo *philo)
 	t_shared		*shared;
 	unsigned int	local_philo_number;
 	unsigned int	local_philo_id;
+	unsigned int	local_time_to_think;
 
 	shared = philo->shared;
-	if (!safe_get(&local_philo_number, &shared->philo_number,
-			&shared->table_mutex, TYPE_UINT))
-		return (ft_putstr_fd("Failed to safely get philo_number\n", 2),
-			(void)0);
-	if (!safe_get(&local_philo_id, &philo->id, &philo->philo_mutex, TYPE_UINT))
-		return (ft_putstr_fd("Failed to safely get philo_number\n", 2),
-			(void)0);
+	pthread_mutex_lock(&shared->table_mutex);
+	local_philo_number = shared->philo_number;
+	local_philo_id = philo->id;
+	local_time_to_think = shared->time_to_think;
+	pthread_mutex_unlock(&shared->table_mutex);
 	if (local_philo_number % 2 == 0)
 	{
 		if (local_philo_id % 2 == 0)
@@ -102,7 +102,7 @@ static void	de_sync_philos(t_philo *philo)
 	else
 	{
 		if (local_philo_id % 2 == 0)
-			philo_think(philo);
+			custom_sleep(local_time_to_think * 0.5, shared);
 	}
 }
 
@@ -146,7 +146,7 @@ void	*philo_life_single(void *args)
 				&philo->shared->table_mutex, TYPE_BOOL))
 			return (ft_putstr_fd("Failed to safely get end_simulation\n", 2),
 				NULL);
-		usleep(30);
+		usleep(100);
 	}
 	return (NULL);
 }

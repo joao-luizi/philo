@@ -6,7 +6,7 @@
 /*   By: joaomigu <joaomigu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 11:58:56 by joaomigu          #+#    #+#             */
-/*   Updated: 2025/03/28 11:28:12 by joaomigu         ###   ########.fr       */
+/*   Updated: 2025/03/28 12:53:37 by joaomigu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,9 +96,9 @@ bool	philo_eat(t_philo *philo, t_shared *shared)
 	size_t	current_time;
 
 	take_forks(philo);
-	current_time = get_time(MICROSECOND);
 	if (!write_states(EATING, philo))
 		return (false);
+	current_time = get_time(MICROSECOND);
 	if (!safe_set(&philo->last_meal_time, &current_time,
 			&philo->philo_semaphore, TYPE_SIZE_T))
 		return (ft_putstr_fd("Failed to set last_meal_time\n", 2), false);
