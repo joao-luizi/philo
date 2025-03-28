@@ -6,7 +6,7 @@
 /*   By: joaomigu <joaomigu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 11:58:56 by joaomigu          #+#    #+#             */
-/*   Updated: 2025/03/27 12:17:04 by joaomigu         ###   ########.fr       */
+/*   Updated: 2025/03/28 11:28:12 by joaomigu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,12 +25,7 @@ static bool	philo_full(t_philo *philo)
 			&philo->philo_semaphore, TYPE_UINT))
 		return (ft_putstr_fd("Failed to safely get meal_counter\n", 2), true);
 	if (local_limit_meals > 0 && (int)local_meal_counter == local_limit_meals)
-	{
-		if (!safe_set(&philo->full, &(bool){true}, &philo->philo_semaphore,
-			TYPE_BOOL))
-			return (ft_putstr_fd("Failed to safely set philo full\n", 2), true);
 		return (true);
-	}
 	return (false);
 }
 
