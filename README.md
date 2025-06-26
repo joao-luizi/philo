@@ -2,6 +2,7 @@
 Philosophers exercise for the 42 School curriculum
 
 🎥 [Watch demo video](https://github.com/joao-luizi/philo/blob/main/assets/readme/philosophers.mp4)
+[![Watch the video](https://raw.githubusercontent.com/joao-luizi/philo/main/assets/readme/thumb.png)](https://raw.githubusercontent.com/joao-luizi/philo/main/assets/readme/philosophers.mp4)
 
 ## Introduction
 The dining philosophers problem is a classic synchronization problem that is used to illustrate the challenges of avoiding deadlock and coordinating access to shared resources. The problem is stated as follows:
